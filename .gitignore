@@ -5,3 +5,6 @@
 manuscript/output/*
 .env
 code/.ipynb_checkpoints/
+code/tesseroid_density/build
+code/tesseroid_density/_tesseroid.c
+code/tesseroid_density/_tesseroid.so
