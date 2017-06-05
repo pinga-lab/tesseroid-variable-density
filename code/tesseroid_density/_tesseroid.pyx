@@ -8,7 +8,7 @@ import numpy
 
 from fatiando import constants
 
-from libc.math cimport sin, cos, sqrt, atan2, acos
+from libc.math cimport sin, cos, sqrt, acos
 # Import Cython definitions for numpy
 cimport numpy
 cimport cython
@@ -19,12 +19,11 @@ cdef extern from "math.h":
 
 cdef:
     double d2r = numpy.pi/180.
-    double r2d = 180./numpy.pi
     double[::1] nodes
     double MEAN_EARTH_RADIUS = constants.MEAN_EARTH_RADIUS
     ctypedef double (*kernel_func)(double, double, double, double, double,
                                    object, double[::1], double[::1],
-                                   double[::1], double[::1], double[::1])
+                                   double[::1], double[::1])
 nodes = numpy.array([-0.577350269189625731058868041146,
                      0.577350269189625731058868041146])
 
@@ -50,7 +49,6 @@ cdef rediscretizer(
     cdef:
         unsigned int i, l, size
         double[::1] lonc =  numpy.empty(2, numpy.float)
-        double[::1] latc =  numpy.empty(2, numpy.float)
         double[::1] sinlatc =  numpy.empty(2, numpy.float)
         double[::1] coslatc =  numpy.empty(2, numpy.float)
         double[::1] rc =  numpy.empty(2, numpy.float)
@@ -94,10 +92,10 @@ cdef rediscretizer(
                                stack, stktop)
             else:
                 # Put the nodes in the current range
-                scale = scale_nodes(w, e, s, n, top, bottom, lonc, latc, 
-                                    sinlatc, coslatc, rc)
+                scale = scale_nodes(w, e, s, n, top, bottom, lonc, sinlatc,
+                                    coslatc, rc)
                 res += kernel(lon, sinlat, coslat, radius, scale, density, 
-                              lonc, latc, sinlatc, coslatc, rc)
+                              lonc, sinlatc, coslatc, rc)
         result[l] += res
     return error_code
 
@@ -163,13 +161,12 @@ cdef inline int divisions(double distance, double Llon, double Llat, double Lr,
 cdef inline double scale_nodes(
     double w, double e, double s, double n, double top, double bottom,
     double[::1] lonc,
-    double[::1] latc,
     double[::1] sinlatc,
     double[::1] coslatc,
     double[::1] rc):
     "Put GLQ nodes in the integration limits for a tesseroid"
     cdef:
-        double dlon, dlat, dr, mlon, mlat, mr, scale
+        double dlon, dlat, dr, mlon, mlat, mr, latc, scale
         unsigned int i
     dlon = e - w
     dlat = n - s
@@ -180,9 +177,9 @@ cdef inline double scale_nodes(
     # Scale the GLQ nodes to the integration limits
     for i in range(2):
         lonc[i] = d2r*(0.5*dlon*nodes[i] + mlon)
-        latc[i] = d2r*(0.5*dlat*nodes[i] + mlat)
-        sinlatc[i] = sin(latc[i])
-        coslatc[i] = cos(latc[i])
+        latc = d2r*(0.5*dlat*nodes[i] + mlat)
+        sinlatc[i] = sin(latc)
+        coslatc[i] = cos(latc)
         rc[i] = (0.5*dr*nodes[i] + mr)
     scale = d2r*dlon*d2r*dlat*dr*0.125
     return scale
@@ -245,8 +242,8 @@ def potential(
 @cython.cdivision(True)
 cdef inline double kernelV(
     double lon, double sinlat, double coslat, double radius, double scale,
-    object density, double[::1] lonc, double[::1] latc, double[::1] sinlatc,
-    double[::1] coslatc, double[::1] rc):
+    object density, double[::1] lonc, double[::1] sinlatc, double[::1] coslatc,
+    double[::1] rc):
     cdef:
         unsigned int i, j, k
         double kappa, r_sqr, coslon, l_sqr, cospsi
@@ -270,25 +267,23 @@ cdef inline double kernelV(
 @cython.cdivision(True)
 cdef inline double kernelV_variable(
     double lon, double sinlat, double coslat, double radius, double scale,
-    object density, double[::1] lonc, double[::1] latc, double[::1] sinlatc,
-    double[::1] coslatc, double[::1] rc):
+    object density, double[::1] lonc, double[::1] sinlatc, double[::1] coslatc,
+    double[::1] rc):
     cdef:
         unsigned int i, j, k
         double kappa, r_sqr, coslon, l_sqr, cospsi
-        double result, rc_sqr, dlonc, dlatc, dens
+        double result, rc_sqr, dens
     r_sqr = radius**2
     result = 0
     for i in range(2):
         coslon = cos(lon - lonc[i])
-        dlonc = r2d*lonc[i]
         for j in range(2):
             cospsi = sinlat*sinlatc[j] + coslat*coslatc[j]*coslon
-            dlatc = r2d*latc[j]
             for k in range(2):
                 rc_sqr = rc[k]**2
                 l_sqr = r_sqr + rc_sqr - 2*radius*rc[k]*cospsi
                 kappa = rc_sqr*coslatc[j]
-                dens = density(dlonc, dlatc, rc[k] - MEAN_EARTH_RADIUS)
+                dens = density(rc[k] - MEAN_EARTH_RADIUS)
                 result += dens*kappa/sqrt(l_sqr)
     return result*scale
 
@@ -325,8 +320,8 @@ def gx(
 @cython.cdivision(True)
 cdef inline double kernelx(
     double lon, double sinlat, double coslat, double radius, double scale,
-    object density, double[::1] lonc, double[::1] latc, double[::1] sinlatc,
-    double[::1] coslatc, double[::1] rc):
+    object density, double[::1] lonc, double[::1] sinlatc, double[::1] coslatc,
+    double[::1] rc):
     cdef:
         unsigned int i, j, k
         double kappa, r_sqr, coslon, kphi, l_sqr, cospsi
@@ -351,26 +346,24 @@ cdef inline double kernelx(
 @cython.cdivision(True)
 cdef inline double kernelx_variable(
     double lon, double sinlat, double coslat, double radius, double scale,
-    object density, double[::1] lonc, double[::1] latc, double[::1] sinlatc,
-    double[::1] coslatc, double[::1] rc):
+    object density, double[::1] lonc, double[::1] sinlatc, double[::1] coslatc,
+    double[::1] rc):
     cdef:
         unsigned int i, j, k
         double kappa, r_sqr, coslon, kphi, l_sqr, cospsi
-        double result, rc_sqr, dlonc, dlatc, dens
+        double result, rc_sqr, dens
     r_sqr = radius**2
     result = 0
     for i in range(2):
         coslon = cos(lon - lonc[i])
-        dlonc = r2d*lonc[i]
         for j in range(2):
             kphi = coslat*sinlatc[j] - sinlat*coslatc[j]*coslon
             cospsi = sinlat*sinlatc[j] + coslat*coslatc[j]*coslon
-            dlatc = r2d*latc[j]
             for k in range(2):
                 rc_sqr = rc[k]**2
                 l_sqr = r_sqr + rc_sqr - 2*radius*rc[k]*cospsi
                 kappa = rc_sqr*coslatc[j]
-                dens = density(dlonc, dlatc, rc[k] - MEAN_EARTH_RADIUS)
+                dens = density(rc[k] - MEAN_EARTH_RADIUS)
                 result += dens*kappa*rc[k]*kphi/(l_sqr**1.5)
     return result*scale
 
@@ -407,8 +400,8 @@ def gy(
 @cython.cdivision(True)
 cdef inline double kernely(
     double lon, double sinlat, double coslat, double radius, double scale,
-    object density, double[::1] lonc, double[::1] latc, double[::1] sinlatc,
-    double[::1] coslatc, double[::1] rc):
+    object density, double[::1] lonc, double[::1] sinlatc, double[::1] coslatc,
+    double[::1] rc):
     cdef:
         unsigned int i, j, k
         double kappa, r_sqr, coslon, sinlon, l_sqr, cospsi
@@ -433,26 +426,24 @@ cdef inline double kernely(
 @cython.cdivision(True)
 cdef inline double kernely_variable(
     double lon, double sinlat, double coslat, double radius, double scale,
-    object density, double[::1] lonc, double[::1] latc, double[::1] sinlatc,
-    double[::1] coslatc, double[::1] rc):
+    object density, double[::1] lonc, double[::1] sinlatc, double[::1] coslatc,
+    double[::1] rc):
     cdef:
         unsigned int i, j, k
         double kappa, r_sqr, coslon, sinlon, l_sqr, cospsi
-        double result, rc_sqr, dlonc, dlatc, dens
+        double result, rc_sqr, dens
     r_sqr = radius**2
     result = 0
     for i in range(2):
         coslon = cos(lon - lonc[i])
         sinlon = sin(lonc[i] - lon)
-        dlonc = r2d*lonc[i]
         for j in range(2):
             cospsi = sinlat*sinlatc[j] + coslat*coslatc[j]*coslon
-            dlatc = r2d*latc[j]
             for k in range(2):
                 rc_sqr = rc[k]**2
                 l_sqr = r_sqr + rc_sqr - 2*radius*rc[k]*cospsi
                 kappa = rc_sqr*coslatc[j]
-                dens = density(dlonc, dlatc, rc[k] - MEAN_EARTH_RADIUS)
+                dens = density(rc[k] - MEAN_EARTH_RADIUS)
                 result += dens*kappa*(rc[k]*coslatc[j]*sinlon/(l_sqr**1.5))
     return result*scale
 
@@ -489,8 +480,8 @@ def gz(
 @cython.cdivision(True)
 cdef inline double kernelz(
     double lon, double sinlat, double coslat, double radius, double scale,
-    object density, double[::1] lonc, double[::1] latc, double[::1] sinlatc,
-    double[::1] coslatc, double[::1] rc):
+    object density, double[::1] lonc, double[::1] sinlatc, double[::1] coslatc,
+    double[::1] rc):
     cdef:
         unsigned int i, j, k
         double kappa, r_sqr, coslon, l_sqr, cospsi
@@ -517,25 +508,23 @@ cdef inline double kernelz(
 @cython.cdivision(True)
 cdef inline double kernelz_variable(
     double lon, double sinlat, double coslat, double radius, double scale,
-    object density, double[::1] lonc, double[::1] latc, double[::1] sinlatc,
-    double[::1] coslatc, double[::1] rc):
+    object density, double[::1] lonc, double[::1] sinlatc, double[::1] coslatc,
+    double[::1] rc):
     cdef:
         unsigned int i, j, k
         double kappa, r_sqr, coslon, l_sqr, cospsi
-        double result, rc_sqr, dlonc, dlatc, dens
+        double result, rc_sqr, dens
     r_sqr = radius**2
     result = 0
     for i in range(2):
         coslon = cos(lon - lonc[i])
-        dlonc = r2d*lonc[i]
         for j in range(2):
             cospsi = sinlat*sinlatc[j] + coslat*coslatc[j]*coslon
-            dlatc = r2d*latc[j]
             for k in range(2):
                 rc_sqr = rc[k]**2
                 l_sqr = r_sqr + rc_sqr - 2*radius*rc[k]*cospsi
                 kappa = rc_sqr*coslatc[j]
-                dens = density(dlonc, dlatc, rc[k] - MEAN_EARTH_RADIUS)
+                dens = density(rc[k] - MEAN_EARTH_RADIUS)
                 result += dens*kappa*(rc[k]*cospsi - radius)/(l_sqr**1.5)
     # Multiply by -1 so that z is pointing down for gz and the gravity anomaly
     # doesn't look inverted (ie, negative for positive density)
@@ -575,8 +564,8 @@ def gxx(
 @cython.cdivision(True)
 cdef inline double kernelxx(
     double lon, double sinlat, double coslat, double radius, double scale,
-    object density, double[::1] lonc, double[::1] latc, double[::1] sinlatc,
-    double[::1] coslatc, double[::1] rc):
+    object density, double[::1] lonc, double[::1] sinlatc, double[::1] coslatc,
+    double[::1] rc):
     cdef:
         unsigned int i, j, k
         double kappa, r_sqr, coslon, l_sqr, cospsi, kphi
@@ -601,26 +590,24 @@ cdef inline double kernelxx(
 @cython.cdivision(True)
 cdef inline double kernelxx_variable(
     double lon, double sinlat, double coslat, double radius, double scale,
-    object density, double[::1] lonc, double[::1] latc, double[::1] sinlatc,
-    double[::1] coslatc, double[::1] rc):
+    object density, double[::1] lonc, double[::1] sinlatc, double[::1] coslatc,
+    double[::1] rc):
     cdef:
         unsigned int i, j, k
         double kappa, r_sqr, coslon, l_sqr, cospsi, kphi
-        double result, rc_sqr, dlonc, dlatc, dens
+        double result, rc_sqr, dens
     r_sqr = radius**2
     result = 0
     for i in range(2):
         coslon = cos(lon - lonc[i])
-        dlonc = r2d*lonc[i]
         for j in range(2):
             kphi = coslat*sinlatc[j] - sinlat*coslatc[j]*coslon
             cospsi = sinlat*sinlatc[j] + coslat*coslatc[j]*coslon
-            dlatc = r2d*latc[j]
             for k in range(2):
                 rc_sqr = rc[k]**2
                 l_sqr = r_sqr + rc_sqr - 2*radius*rc[k]*cospsi
                 kappa = rc_sqr*coslatc[j]
-                dens = density(dlonc, dlatc, rc[k] - MEAN_EARTH_RADIUS)
+                dens = density(rc[k] - MEAN_EARTH_RADIUS)
                 result += dens*kappa*(3*((rc[k]*kphi)**2) - l_sqr)/(l_sqr**2.5)
     return result*scale
 
@@ -657,8 +644,8 @@ def gxy(
 @cython.cdivision(True)
 cdef inline double kernelxy(
     double lon, double sinlat, double coslat, double radius, double scale,
-    object density, double[::1] lonc, double[::1] latc, double[::1] sinlatc,
-    double[::1] coslatc, double[::1] rc):
+    object density, double[::1] lonc, double[::1] sinlatc, double[::1] coslatc,
+    double[::1] rc):
     cdef:
         unsigned int i, j, k
         double kappa, r_sqr, rc_sqr, coslon, sinlon, l_sqr, cospsi, kphi
@@ -683,26 +670,24 @@ cdef inline double kernelxy(
 @cython.cdivision(True)
 cdef inline double kernelxy_variable(
     double lon, double sinlat, double coslat, double radius, double scale,
-    object density, double[::1] lonc, double[::1] latc, double[::1] sinlatc,
-    double[::1] coslatc, double[::1] rc):
+    object density, double[::1] lonc, double[::1] sinlatc, double[::1] coslatc,
+    double[::1] rc):
     cdef:
         unsigned int i, j, k
         double kappa, r_sqr, rc_sqr, coslon, sinlon, l_sqr, cospsi, kphi
-        double result, dlonc, dlatc, dens
+        double result, dens
     r_sqr = radius**2
     result = 0
     for i in range(2):
         sincos(lonc[i] - lon, &sinlon, &coslon)
-        dlonc = r2d*lonc[i]
         for j in range(2):
             kphi = coslat*sinlatc[j] - sinlat*coslatc[j]*coslon
             cospsi = sinlat*sinlatc[j] + coslat*coslatc[j]*coslon
-            dlatc = r2d*latc[j]
             for k in range(2):
                 rc_sqr = rc[k]**2
                 l_sqr = r_sqr + rc_sqr - 2*radius*rc[k]*cospsi
                 kappa = rc_sqr*coslatc[j]
-                dens = density(dlonc, dlatc, rc[k] - MEAN_EARTH_RADIUS)
+                dens = density(rc[k] - MEAN_EARTH_RADIUS)
                 result += dens*kappa * \
                     3*rc_sqr*kphi*coslatc[j]*sinlon/(l_sqr**2.5)
     return result*scale
@@ -740,8 +725,8 @@ def gxz(
 @cython.cdivision(True)
 cdef inline double kernelxz(
     double lon, double sinlat, double coslat, double radius, double scale,
-    object density, double[::1] lonc, double[::1] latc, double[::1] sinlatc,
-    double[::1] coslatc, double[::1] rc):
+    object density, double[::1] lonc, double[::1] sinlatc, double[::1] coslatc,
+    double[::1] rc):
     cdef:
         unsigned int i, j, k
         double kappa, r_sqr, rc_sqr, coslon, l_5, cospsi, kphi
@@ -766,26 +751,24 @@ cdef inline double kernelxz(
 @cython.cdivision(True)
 cdef inline double kernelxz_variable(
     double lon, double sinlat, double coslat, double radius, double scale,
-    object density, double[::1] lonc, double[::1] latc, double[::1] sinlatc,
-    double[::1] coslatc, double[::1] rc):
+    object density, double[::1] lonc, double[::1] sinlatc, double[::1] coslatc,
+    double[::1] rc):
     cdef:
         unsigned int i, j, k
         double kappa, r_sqr, rc_sqr, coslon, l_5, cospsi, kphi
-        double result, dlonc, dlatc, dens
+        double result, dens
     r_sqr = radius**2
     result = 0
     for i in range(2):
         coslon = cos(lon - lonc[i])
-        dlonc = r2d*lonc[i]
         for j in range(2):
             kphi = coslat*sinlatc[j] - sinlat*coslatc[j]*coslon
             cospsi = sinlat*sinlatc[j] + coslat*coslatc[j]*coslon
-            dlatc = r2d*latc[j]
             for k in range(2):
                 rc_sqr = rc[k]**2
                 l_5 = (r_sqr + rc_sqr - 2*radius*rc[k]*cospsi)**2.5
                 kappa = rc_sqr*coslatc[j]
-                dens = density(dlonc, dlatc, rc[k] - MEAN_EARTH_RADIUS)
+                dens = density(rc[k] - MEAN_EARTH_RADIUS)
                 result += dens*kappa*3*rc[k]*kphi*(rc[k]*cospsi - radius)/l_5
     return result*scale
 
@@ -822,8 +805,8 @@ def gyy(
 @cython.cdivision(True)
 cdef inline double kernelyy(
     double lon, double sinlat, double coslat, double radius, double scale,
-    object density, double[::1] lonc, double[::1] latc, double[::1] sinlatc,
-    double[::1] coslatc, double[::1] rc):
+    object density, double[::1] lonc, double[::1] sinlatc, double[::1] coslatc,
+    double[::1] rc):
     cdef:
         unsigned int i, j, k
         double kappa, r_sqr, rc_sqr, coslon, sinlon, l_sqr, cospsi, deltay
@@ -848,26 +831,24 @@ cdef inline double kernelyy(
 @cython.cdivision(True)
 cdef inline double kernelyy_variable(
     double lon, double sinlat, double coslat, double radius, double scale,
-    object density, double[::1] lonc, double[::1] latc, double[::1] sinlatc,
-    double[::1] coslatc, double[::1] rc):
+    object density, double[::1] lonc, double[::1] sinlatc, double[::1] coslatc,
+    double[::1] rc):
     cdef:
         unsigned int i, j, k
         double kappa, r_sqr, rc_sqr, coslon, sinlon, l_sqr, cospsi, deltay
-        double result, dlonc, dlatc, dens
+        double result, dens
     r_sqr = radius**2
     result = 0
     for i in range(2):
         sincos(lonc[i] - lon, &sinlon, &coslon)
-        dlonc = r2d*lonc[i]
         for j in range(2):
             cospsi = sinlat*sinlatc[j] + coslat*coslatc[j]*coslon
-            dlatc = r2d*latc[j]
             for k in range(2):
                 rc_sqr = rc[k]**2
                 l_sqr = r_sqr + rc_sqr - 2*radius*rc[k]*cospsi
                 kappa = rc_sqr*coslatc[j]
                 deltay = rc[k]*coslatc[j]*sinlon
-                dens = density(dlonc, dlatc, rc[k] - MEAN_EARTH_RADIUS)
+                dens = density(rc[k] - MEAN_EARTH_RADIUS)
                 result += dens*kappa*(3*(deltay**2) - l_sqr)/(l_sqr**2.5)
     return result*scale
 
@@ -904,8 +885,8 @@ def gyz(
 @cython.cdivision(True)
 cdef inline double kernelyz(
     double lon, double sinlat, double coslat, double radius, double scale,
-    object density, double[::1] lonc, double[::1] latc, double[::1] sinlatc,
-    double[::1] coslatc, double[::1] rc):
+    object density, double[::1] lonc, double[::1] sinlatc, double[::1] coslatc,
+    double[::1] rc):
     cdef:
         unsigned int i, j, k
         double kappa, r_sqr, rc_sqr, coslon, sinlon, l_sqr, cospsi, deltay
@@ -931,27 +912,25 @@ cdef inline double kernelyz(
 @cython.cdivision(True)
 cdef inline double kernelyz_variable(
     double lon, double sinlat, double coslat, double radius, double scale,
-    object density, double[::1] lonc, double[::1] latc, double[::1] sinlatc,
-    double[::1] coslatc, double[::1] rc):
+    object density, double[::1] lonc, double[::1] sinlatc, double[::1] coslatc,
+    double[::1] rc):
     cdef:
         unsigned int i, j, k
         double kappa, r_sqr, rc_sqr, coslon, sinlon, l_sqr, cospsi, deltay
-        double deltaz, result, dlonc, dlatc, dens
+        double deltaz, result, dens
     r_sqr = radius**2
     result = 0
     for i in range(2):
         sincos(lonc[i] - lon, &sinlon, &coslon)
-        dlonc = r2d*lonc[i]
         for j in range(2):
             cospsi = sinlat*sinlatc[j] + coslat*coslatc[j]*coslon
-            dlatc = r2d*latc[j]
             for k in range(2):
                 rc_sqr = rc[k]**2
                 l_sqr = r_sqr + rc_sqr - 2*radius*rc[k]*cospsi
                 kappa = rc_sqr*coslatc[j]
                 deltay = rc[k]*coslatc[j]*sinlon
                 deltaz = rc[k]*cospsi - radius
-                dens = density(dlonc, dlatc, rc[k] - MEAN_EARTH_RADIUS)
+                dens = density(rc[k] - MEAN_EARTH_RADIUS)
                 result += dens*kappa*3.*deltay*deltaz/(l_sqr**2.5)
     return result*scale
 
@@ -988,8 +967,8 @@ def gzz(
 @cython.cdivision(True)
 cdef inline double kernelzz(
     double lon, double sinlat, double coslat, double radius, double scale,
-    object density, double[::1] lonc, double[::1] latc, double[::1] sinlatc,
-    double[::1] coslatc, double[::1] rc):
+    object density, double[::1] lonc, double[::1] sinlatc, double[::1] coslatc,
+    double[::1] rc):
     cdef:
         unsigned int i, j, k
         double kappa, r_sqr, coslon, rc_sqr, l_sqr, l_5, cospsi, deltaz
@@ -1015,26 +994,24 @@ cdef inline double kernelzz(
 @cython.cdivision(True)
 cdef inline double kernelzz_variable(
     double lon, double sinlat, double coslat, double radius, double scale,
-    object density, double[::1] lonc, double[::1] latc, double[::1] sinlatc,
-    double[::1] coslatc, double[::1] rc):
+    object density, double[::1] lonc, double[::1] sinlatc, double[::1] coslatc,
+    double[::1] rc):
     cdef:
         unsigned int i, j, k
         double kappa, r_sqr, coslon, rc_sqr, l_sqr, l_5, cospsi, deltaz
-        double result, dlonc, dlatc, dens
+        double result, dens
     r_sqr = radius**2
     result = 0
     for i in range(2):
         coslon = cos(lon - lonc[i])
-        dlonc = r2d*lonc[i]
         for j in range(2):
             cospsi = sinlat*sinlatc[j] + coslat*coslatc[j]*coslon
-            dlatc = r2d*latc[j]
             for k in range(2):
                 rc_sqr = rc[k]**2
                 l_sqr = r_sqr + rc_sqr - 2*radius*rc[k]*cospsi
                 l_5 = l_sqr**2.5
                 kappa = rc_sqr*coslatc[j]
                 deltaz = rc[k]*cospsi - radius
-                dens = density(dlonc, dlatc, rc[k] - MEAN_EARTH_RADIUS)
+                dens = density(rc[k] - MEAN_EARTH_RADIUS)
                 result += dens*kappa*(3*deltaz**2 - l_sqr)/l_5
     return result*scale
