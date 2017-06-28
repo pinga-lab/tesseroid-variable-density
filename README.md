@@ -1,5 +1,4 @@
-# Gravity fields calculation in spherical coordinates using Tesseroids with
-variable density
+# Gravity fields calculation in spherical coordinates using Tesseroids with variable density
 
 by
 Santiago Soler,
