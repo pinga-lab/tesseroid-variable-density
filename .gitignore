@@ -8,3 +8,67 @@ code/.ipynb_checkpoints/
 code/tesseroid_density/build
 code/tesseroid_density/_tesseroid.c
 code/tesseroid_density/_tesseroid.so
+
+
+## Latex ignore files
+
+## Main PDF file
+manuscript/manuscript.pdf
+
+## Core latex/pdflatex auxiliary files:
+manuscript/*.aux
+manuscript/*.lof
+manuscript/*.log
+manuscript/*.lot
+manuscript/*.fls
+manuscript/*.out
+manuscript/*.toc
+
+## Intermediate documents:
+manuscript/*.dvi
+manuscript/*-converted-to.*
+# these rules might exclude image files for figures etc.
+# *.ps
+# *.eps
+# *.pdf
+
+## Bibliography auxiliary files (bibtex/biblatex/biber):
+manuscript/*.bbl
+manuscript/*.bcf
+manuscript/*.blg
+manuscript/*-blx.aux
+manuscript/*-blx.bib
+manuscript/*.brf
+manuscript/*.run.xml
+
+## Build tool auxiliary files:
+manuscript/*.fdb_latexmk
+manuscript/*.synctex
+manuscript/*.synctex.gz
+manuscript/*.synctex.gz(busy)
+manuscript/*.pdfsync
+
+## Auxiliary and intermediate files from other packages:
+
+# algorithms
+manuscript/*.alg
+manuscript/*.loa
+
+# achemso
+manuscript/acs-*.bib
+
+# amsthm
+manuscript/*.thm
+
+# glossaries
+manuscript*.acn
+manuscript*.acr
+manuscript*.glg
+manuscript*.glo
+manuscript*.gls
+
+# hyperref
+manuscript/*.brf
+
+# todonotes
+#*.tdo

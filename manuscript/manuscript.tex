@@ -1,17 +1,13 @@
-\documentclass[twocolumn]{article}
+\documentclass[extra]{gji}
 
-\usepackage{amsmath}
-\usepackage{graphicx}
-\usepackage{url}
-\usepackage[round]{natbib}
 \usepackage[utf8]{inputenc}
-% To make two column figures appear in the correct order
-\usepackage{fixltx2e}
-% To make annotations on the sides
-\usepackage{todonotes}
-% To generate dummy text
-\usepackage{lipsum}
-% Metadata for the generated PDF
+\usepackage{timet}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{todonotes} % to make annotations on margins
+
+\usepackage{url}
 \usepackage[pdftex,colorlinks=true]{hyperref}
 \hypersetup{
     allcolors=blue,
@@ -20,45 +16,33 @@
 
 \begin{document}
 
-\title{
-    My very cool new paper
+\title[
+    Variable Density Tesseroids]
+    {Variable Density Tesseroids: Gravity fields calculation in spherical coordinates using variable densities
 }
-\author{
-    Leonardo Uieda$^{1,2}$,
-    Valéria C. F. Barbosa$^{2}$
-    \\\\
-    {\small
-        $^1$Universidade do Estado do Rio de Janeiro, Rio de Janeiro, Brazil.
-        e-mail: leouieda@gmail.com
+\author
+    {Santiado R. Soler$^{1,2}$, Leonardo Uieda$^3$ and Mario E. Gimenez$^{1,2}$ \\
+    $^1$CONICET, Argentina. e-mail: santiago.r.soler@gmail.com\\
+    $^2$Instituto Geofísico Sismológico Volponi, Universidad Nacional de San Juan, Argentina\\
+    $^3$Universidade do Estado do Rio de Janeiro, Rio de Janeiro, Brazil
     }
-    \\
-    {\small
-        $^2$Observatório Nacional, Rio de Janeiro, Brazil.
-    }
-}
 
 
 \maketitle
 
+\begin{summary}
+Summary of this paper 
+\end{summary}
 
-\begin{abstract}
-    \lipsum[1]
-\end{abstract}
+\begin{keywords}
+tesseroids, variable density, Gravity, forward, python, fatiando
+\end{keywords}
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \section{Introduction}
 
-Cite things using \citet{tikhonov1977} or \citep{tikhonov1977}.
-
-\begin{figure}
-    \centering
-    \includegraphics[]{figures/example}
-    \caption{
-        Example image.
-    }
-    \label{fig:meh}
-\end{figure}
+\todo{escribir summary}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -69,7 +53,7 @@ software without which this work would not have been possible.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\bibliographystyle{plainnat}
+\bibliographystyle{gji}
 \bibliography{references}
 
 \end{document}
