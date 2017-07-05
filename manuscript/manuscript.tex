@@ -42,8 +42,19 @@ tesseroids, variable density, Gravity, forward, python, fatiando
 
 \section{Introduction}
 
-\todo{escribir summary}
+Variation of density of the lithosphere with depth has been studied for almost a century. 
+\citet{Athy1930} obtained a decreasing exponential relation between both quantities by studying shale samples. And, in the following years, other density functions have been proposed for different rock types \citep[e.g.][]{Maxant1980, Rao1986, Rao1993, Rao1994}.
 
+Furthermore, the density variation with depth has been taken into account in forward and inversion gravity models, mostly applied to grabens and basins \citep{Cordell1973, Rao1986, Cowie1990, Rao1993, Rao1994, Welford2010}.
+
+The previous forward gravity models have been developed for two or three dimensional bodies in cartesian coordinates that properly fit local scales applications.
+Now days, satellite missions have provided us gravity measurements with global coverage, which allows geologists and geophysics to perform modelling and interpretation in regional scales.
+In order to build forward models that reassemble the gravity anomalies for such scales, the curvature of the Earth must be taken into account, thus we must formulate them in spherical coordinates.
+A common approach, specially applied in the last years, is to discretize the Earth in spherical prisms, also known as tesseroids\todo{Insertar figura de tesseroides de leo}. 
+
+The calculation of the gravity potential, gradients and tensor components for an arbitrary tesseroid on any point outside of it involves the resolution of elliptical integrals, so they must be approximated by numerical computations. \todo{Write Taylor and GLQ}
+
+\citet{Uieda2016} developed a forward gravity model based on tesseroids with constant densities and using a modified version of the adaptative discretization of \citet{Li2011}. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Acknowledgments}
@@ -54,6 +65,6 @@ software without which this work would not have been possible.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \bibliographystyle{gji}
-\bibliography{references}
+\bibliography{bibtex/references}
 
 \end{document}
