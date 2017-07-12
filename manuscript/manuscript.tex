@@ -1,10 +1,9 @@
 \documentclass[extra]{gji}
-%\documentclass[extra, referee]{gji}
+%~ %\documentclass[extra, referee]{gji}
 
 \usepackage[utf8]{inputenc}
 \usepackage{timet}
 \usepackage{amsmath}
-\usepackage{amssymb}
 \usepackage{graphicx}
 \usepackage{todonotes} % to make annotations on margins
 
@@ -17,12 +16,11 @@
 
 \begin{document}
 
-\title[
-    Variable Density Tesseroids]
-    {Variable Density Tesseroids: Gravity fields calculation in spherical coordinates using variable densities in depth
+\title[Variable Density Tesseroids]{
+    Variable Density Tesseroids: Gravity fields calculation in spherical coordinates using variable densities in depth
 }
-\author[S.R. Soler, L. Uieda and M.E. Gimenez]
-    {Santiado R. Soler$^{1,2}$, Leonardo Uieda$^3$ and Mario E. Gimenez$^{1,2}$ \\
+\author[S.R. Soler, L. Uieda and M.E. Gimenez]{
+    Santiado R. Soler$^{1,2}$, Leonardo Uieda$^3$ and Mario E. Gimenez$^{1,2}$ \\
     $^1$CONICET, Argentina. e-mail: santiago.r.soler@gmail.com\\
     $^2$Instituto Geofísico Sismológico Volponi, Universidad Nacional de San Juan, Argentina\\
     $^3$Universidade do Estado do Rio de Janeiro, Rio de Janeiro, Brazil
@@ -45,7 +43,7 @@ up to six keywords from the list
 
 Lithosphere density variation with depth has been studied for almost a century. 
 \citet{Athy1930} obtained a decreasing exponential relation between both quantities by studying shale samples.
-In the following years, other density functions have been proposed for different rock types \citep[e.g.][]{Maxant1980, Rao1986, Rao1993, Rao1994}.
+In the following years, other density functions have been proposed for different rock types \citep[e.g.,][]{Maxant1980, Rao1986, Rao1993, Rao1994}.
 Furthermore, the density variation with depth has been taken into account in forward and inversion gravity models, mostly applied to grabens and basins \citep{Cordell1973, Rao1986, Cowie1990, Rao1993, Rao1994, Zhang2001, Welford2010}.
 
 These forward gravity models have been developed for two or three dimensional bodies in cartesian coordinates that properly fit local scales applications.
@@ -94,7 +92,7 @@ In our case, we will suppose that the tesseroid has an arbitrary variable densit
     \int\limits_{\phi_1}^{\phi_2}
     \int\limits_{r_1}^{r_2}
     \frac{\rho(r')}{\ell} \kappa \,  dr' d\phi' d\lambda',
-\label{eq:tesspot}
+\label{eq:tesseroid-pot}
 \end{equation}
 \begin{equation}
     g_{\alpha}(r,\phi,\lambda) = G
@@ -103,7 +101,7 @@ In our case, we will suppose that the tesseroid has an arbitrary variable densit
     \int\limits_{r_1}^{r_2}
     \rho(r') \frac{\Delta_\alpha}{\ell^3}
     \kappa \, dr' d\phi' d\lambda',
-\label{eq:tessgrav}
+\label{eq:tesseroid-grav}
 \end{equation}
 \begin{equation}
     g_{\alpha\beta}(r,\phi,\lambda) = G
@@ -111,7 +109,7 @@ In our case, we will suppose that the tesseroid has an arbitrary variable densit
     \int\limits_{\phi_1}^{\phi_2}
     \int\limits_{r_1}^{r_2}
     \rho(r') I_{\alpha\beta} \, \kappa \, dr' d\phi' d\lambda' ,
-    \label{eq:tesstensor}
+    \label{eq:tesseroid-tensor}
 \end{equation}
 \noindent where
 \begin{equation}
@@ -120,7 +118,7 @@ In our case, we will suppose that the tesseroid has an arbitrary variable densit
         \frac{3\Delta_{\alpha} \Delta_{\beta}}{\ell^5} -
         \frac{\delta_{\alpha\beta}}{\ell^3}
     \right) ,
-    \label{eq:tesstensorkernel}
+    \label{eq:tesseroid-tensor-kernel}
 \end{equation}
 
 \noindent $\alpha, \beta \in \{x, y, z\}$,
@@ -149,13 +147,13 @@ $G = 6.674\times10^{-11}\, \text{m$^3$kg$^{-1}$s$^{-1}$}$ is the gravitational c
 \end{equation}
 
 
-According to \citet[p.390]{Hildebrand1987}, we can approximate any integral in the interval $[-1, 1]$ using a $N$th order GLQ, i.e. by a weighted sum of the integration kernel evaluated on the roots of the $N$th Legendre polynomial.
+According to \citet[p.~390]{Hildebrand1987}, we can approximate any integral in the interval $[-1, 1]$ using a $N$th order GLQ, i.e. by a weighted sum of the integration kernel evaluated on the roots of the $N$th Legendre polynomial:
 
 \begin{equation}
     \int\limits_{-1}^1 f(x) dx \approx \frac{b-a}{2} \sum_{i=1}^N W_i f(x_i),
 \end{equation}
 
-\noindent where $x_i$ are the roots of the $N$th Legendre polynomial $P_N(x)$ and $W_i$ are the weights of each term.
+\noindent where $x_i$ are the roots of the $N$th Legendre polynomial $P_N(x)$ and $W_i$ are the weights of each term:
 
 \begin{equation}
     W_i = \frac{2}{(1-x_i^2)[P_N^\prime(x_i)]^2},
@@ -165,7 +163,7 @@ According to \citet[p.390]{Hildebrand1987}, we can approximate any integral in t
     P_N(x_i) = 0, \quad \forall i = {1,\dots,N}.
 \end{equation}
 
-In case our integration is defined on a different interval, e.g. $[a,b]$, we can scale the nodes and perform a similar approximation.
+In case of an integration defined on a arbitrary interval, e.g. $[a,b]$, we can scale the nodes and perform a similar approximation:
 
 \begin{equation}
     \int\limits_a^b f(x) dx \approx \frac{b-a}{2} \sum_{i=1}^N W_i f(x_i^s),
@@ -177,17 +175,41 @@ In case our integration is defined on a different interval, e.g. $[a,b]$, we can
     x_i^s = \frac{b-a}{2} x_i + \frac{b+a}{2}.
 \end{equation}
 
-We are going to use only a second order GLQ, so the roots of the $P_2(x)$ Legendre polynomial are $x_i = \pm 0.577350269$ and the weights are $W_i = 1$.
+For example, if we use a second order GLQ, the roots of the $P_2(x)$ Legendre polynomial and its corresponding weights are $x_i = \pm 0.577350269$ and $W_i = 1$, respectivetly.
 
-Our intention is to use GLQ to approximate the gravity fields volume integrals from equations \ref{eq:tesspot}-\ref{eq:tesstensor}. Applying the GLQ definition for every integral corresponding to each spherical coordinate we obtain the following expression \citep{Asgharzadeh2007, Uieda2016}:
+Our intention is to use GLQ to approximate the volume integrals from equations \ref{eq:tesseroid-pot}-\ref{eq:tesseroid-tensor}. 
+When tesseroids have variable densities, we can write the integral kernels as the product of a certain function $g$ and the density function:
 
 \begin{equation}
-    \iiint\limits_\Omega f(r', \phi', \lambda') d\Omega \approx A 
+    f(r', \phi', \lambda') = \rho(r') g(r', \phi', \lambda'),
+\end{equation}
+
+\noindent and then apply the quadrature to every integral corresponding to each spherical coordinate, obtaining a similar expression to the one shown by \citet{Asgharzadeh2007} and \citet{Uieda2016}:
+
+\iftwocol{
+\begin{equation}
+\begin{split}
+    \iiint\limits_\Omega \rho(r') g(r', \phi', \lambda') d\Omega \approx& \\
+    A 
     \sum\limits_{i=1}^{N^r}
     \sum\limits_{j=1}^{N^\phi}
     \sum\limits_{k=1}^{N^\lambda}
-    W_i^r W_j^\phi W_k^\lambda f(r_i, \phi_j, \lambda_k),
+    & W_i^r W_j^\phi W_k^\lambda \rho(r_i) g(r_i, \phi_j, \lambda_k),
+\end{split}
+\label{eq:glq-var-dens}
 \end{equation}
+}
+{
+\begin{equation}
+    \iiint\limits_\Omega \rho(r') g(r', \phi', \lambda') d\Omega \approx
+    A 
+    \sum\limits_{i=1}^{N^r}
+    \sum\limits_{j=1}^{N^\phi}
+    \sum\limits_{k=1}^{N^\lambda}
+    W_i^r W_j^\phi W_k^\lambda \rho(r_i) g(r_i, \phi_j, \lambda_k),
+\label{eq:glq-var-dens}
+\end{equation}
+}
 
 \noindent where
 
@@ -196,11 +218,11 @@ Our intention is to use GLQ to approximate the gravity fields volume integrals f
     \frac{(\lambda_2 - \lambda_1)(\phi_2 - \phi_1)(r_2 - r_1)}{8}.
 \end{equation}
 
-In our case with variable density, we can write the integral kernel as:
+From equation \ref{eq:glq-var-dens} we can observe that the GLQ approximates the gravity fields of a tesseroid with variable density as the ones generated by point masses located at the nodes of the Legendre polynomials.
+Furthermore, the information of the density function is summarised as the values it assumes in those nodes.
+Although this may sound discouraging, we intent to prove otherwise and show that this method, along with a well fitted discretization algorithm, approximates the gravity fields with good accuracy and precision.\todo{no se si poner esta ultima oracion}
 
-\begin{equation}
-    f(r', \phi', \lambda') = \rho(r') g(r', \phi', \lambda')
-\end{equation}
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
