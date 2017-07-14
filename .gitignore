@@ -41,6 +41,9 @@ manuscript/*-blx.bib
 manuscript/*.brf
 manuscript/*.run.xml
 
+## JabRef
+*.bib.bak
+
 ## Build tool auxiliary files:
 manuscript/*.fdb_latexmk
 manuscript/*.synctex
