@@ -370,7 +370,7 @@ So, this potential can be read as the combination of a spherical shell with the 
 If, on the other hand, the spherical shell has an exponential density in the radius coordinate,
 
 \begin{equation}
-    \rho(r') = Ae^\frac{r'-\Delta h}{b},
+    \rho(r') = Ae^\frac{\Delta h - r'}{b},
 \end{equation}
 
 \noindent the potential can be written as follows:
@@ -379,18 +379,22 @@ If, on the other hand, the spherical shell has an exponential density in the rad
 \begin{equation}
     \begin{split}
         V_\text{sh}^\text{exp}(r) = \frac{4\pi G}{r} 
-        Ab \, e^{-\frac{\Delta h}{b}} \Big[ 
-        & (R_2^2 - 2R_2 b + 2b^2)e^\frac{R_2}{b} - \\
-        & (R_1^2 - 2R_1 b + 2b^2)e^\frac{R_1}{b} \Big].
+        Ab \, e^\frac{\Delta h}{b}
+        \Big[
+        & (R_1^2 + 2R_1 b + 2b^2)e^{-\frac{R_1}{b}} - \\
+        & (R_2^2 + 2R_2 b + 2b^2)e^{-\frac{R_2}{b}}
+        \Big].
     \end{split}
 \label{eq:shell-pot-exp}
 \end{equation}
 }{
 \begin{equation}
     V_\text{sh}^\text{exp}(r) = \frac{4\pi G}{r} 
-    Ab \, e^{-\frac{\Delta h}{b}} \left[ 
-    (R_2^2 - 2R_2 b + 2b^2)e^\frac{R_2}{b} - 
-    (R_1^2 - 2R_1 b + 2b^2)e^\frac{R_1}{b} \right].
+    Ab \, e^\frac{\Delta h}{b}
+    \Big[
+    & (R_1^2 + 2R_1 b + 2b^2)e^{-\frac{R_1}{b}} - \\
+    & (R_2^2 + 2R_2 b + 2b^2)e^{-\frac{R_2}{b}}
+    \Big].
 \label{eq:shell-pot-exp}
 \end{equation}
 }
