@@ -445,13 +445,13 @@ If the inequality \ref{eq:distance-size-ratio} is not held for any spherical coo
 A more complete description of the modified adaptive discretization algorithm can be found in \citet{Uieda2016}.
 
 In this way, the numerical approximation efficiently improves its accuracy and
-gives the user more control over the computation by allowing to stop the division of the tesseroids when their dimensions are lower than a certain value (e.g. less than 10cm).
+gives the user more control over the computation: it allows to stop the division of the tesseroids when their dimensions are lower than a certain value (e.g. less than 10cm), which does not modifies significantly the desired gravitational field.
 
 On the other hand, the accuracy is exclusively controlled by the value assigned to the distance-size ratio $D$, which cannot be easily related to the error of the approximation.
 In order to solve this, \citet{Uieda2016} compared the numerical computation with the analytical solution for a spherical shell with homogeneous density.
 
 We have performed similar tests, but now with variable density spherical shell. From the infinite density functions that can be proposed, we have chosen two characteristic ones: a linear and an exponential functions.
-The first one represents the simpler variation, while the second one symbolise the fastest varying function.
+The first one constitutes the simplest variation, while the second one represents the fastest varying function.
 The analytical solutions for these two types of functions were previously obtained and shown in equations \ref{eq:shell-pot-linear} and \ref{eq:shell-pot-exp}.
 
 
