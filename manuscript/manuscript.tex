@@ -465,8 +465,6 @@ This error estimations are also useful in the determination of the value for the
 We approximated the spherical shell by a mesh of $30^\circ \times 30^\circ$ tesseroids and calculated the gravity potential, the vertical component of the gradient ($g_z$) and the $g_{zz}$ component of the Marussi tensor on four different grids: (1) a grid located at the pole, (2) another one on the Equator, (3) one located at satellite height and (4) a big grid of $30^\circ \times 30^\circ$.
 More information about this grids can be found in the Table \ref{tab:grids}.
 
-\todo{explicar pq los otros campos no los testeamos}
-
 We computed the three gravity fields for different values of $D$, ranging from 0.5 to 10 with a step of 0.5 on every point of these four grids.
 Then, we calculated the maximum difference between these results and the value of the analytical solution at the same height.
 
@@ -475,9 +473,11 @@ That's why we choose for comparison the maximum difference between the results o
 
 Finally, we set the acceptable value of $D$ at which the error of the numerical approximation is lower than 10$^{-1}\%$.
 
+The tests were only performed on these three magnitudes because the other components of the gravity gradient and Marussi tensor are equal to zero due to the rotational symmetries of the spherical shell.
+
 \begin{table}
 \caption{
-    Description of the synthetic grids where the comparison of the numerical model against the analytical solutions for a spherical shell was done. This collection of grids tries to include every possible scenario on which the numerical model can present a different behaviour depending on the size of the grid, its location or its height.
+    Description of the synthetic grids where the comparison of the numerical model against the analytical solutions for a spherical shell was done. This collection of grids tries to include every possible scenario on which the numerical model can present a different behaviour depending on the size of the grid, its location or its height. Every grid consists in a set of 10$\times$10 points.
 }
 \label{tab:grids}
 \begin{tabular}{lcccc}
@@ -539,8 +539,14 @@ To test the model in case of an exponential density we proposed the following fu
 \end{equation}
 
 \noindent where $A$ = 1 kg/m$^3$ and $b$ = 10$^6$ m.
-We have also performed this test with a thin and a thick shell of 1 km and 35 km, respectively.
-The results can be seen in Figures \ref{fig:D-exp-thin} and \ref{fig:D-exp-thick}.
+We have also performed this test with a thin and a thick shell of 1 km and 35 km, respectively, and the results can be seen in Figures \ref{fig:D-exp-thin} and \ref{fig:D-exp-thick}.
+
+In the same way we analysed the linear density results, we can summarise that the thin spherical shell presents the more conservative values of the distance-size ratio: $D=1$ for the gravity potential, $D=2$ for its gradient components and $D=8$ for the Marussi tensor components.
+
+Surprisingly both the linear and the exponential density tesseroid models needs the same values of distance-size ratio $D$ in order to assure a good accuracy.
+Because the two functions are significantly different we can expect that these values of $D$ are good for a wide variety of density functions.
+
+
 
 \begin{figure}
 \centering
