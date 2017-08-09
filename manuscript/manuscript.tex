@@ -188,6 +188,7 @@ In case of an integration defined on a arbitrary interval, e.g. $[a,b]$, we can 
 
 \begin{equation}
     \int\limits_a^b f(x) dx \approx \frac{b-a}{2} \sum_{i=1}^N W_i f(x_i^s),
+\label{eq:glq-scaled}
 \end{equation}
 
 \noindent where $x_i^s$ is the scaled $x_i$ root in the $[a,b]$ interval, also called nodes of the quadrature:
@@ -349,7 +350,7 @@ Only the vertical gradient component ($g_z$) and the diagonal Marussi tensor com
     g_{zz} = \frac{2V_\text{sh}(r)}{r^2}.
 \end{equation}
 
-For practical purposes we are going to obtain the gravity potential for two very different functions in the perspective of their variation in $r'$: a linear density and an exponential density.
+For practical purposes we are going to obtain the gravity potential for two very different functions in the perspective of their variation in $r'$: a linear density and an exponential density. \todo{agregar discontinua}
 
 
 \subsubsection{Linear Density}
@@ -459,7 +460,7 @@ On the other hand, the accuracy of the method is exclusively controlled by the v
 In order to solve this, \citet{Uieda2016} compared the numerical computation with the analytical solution for a spherical shell with homogeneous density.
 
 We have performed similar tests, but now with variable density spherical shell.
-From the infinite density functions that can be proposed, we have chosen two characteristic ones: a linear and an exponential functions.
+From the infinite density functions that can be proposed, we have chosen two characteristic ones: a linear and an exponential functions. \todo{agregar discontinua}
 The first one constitutes the simplest variation, while the second one represents the fastest varying function.
 The analytical solutions for these two types of functions were previously obtained and shown in equations \ref{eq:shell-pot-linear} and \ref{eq:shell-pot-exp}.
 
@@ -468,7 +469,7 @@ The analytical solutions for these two types of functions were previously obtain
 
 \section{Determination of distance-size ratio}
 
-In order to test the new variable density tesseroid code and to estimate the error of the approximation we have compared the numerical model with the analytical solutions for a spherical shell with variable density for two special cases: a linear and an exponential density function.
+In order to test the new variable density tesseroid code and to estimate the error of the approximation we have compared the numerical model with the analytical solutions for a spherical shell with variable density for two special cases: a linear and an exponential density function. \todo{agregar discontinua}
 This error estimations are also useful in the determination of the minimum value for the distance-size ratio $D$ such the difference between the numerical model and the analytical solutions are below an acceptable threshold.
 
 We approximated the spherical shell by a mesh of $30^\circ \times 30^\circ$ tesseroids and calculated the gravity potential, the vertical component of the gradient ($g_z$) and the $g_{zz}$ component of the Marussi tensor on four different grids: (1) a grid located at the pole, (2) another one on the Equator, (3) one located at satellite height and (4) a big grid of $30^\circ \times 30^\circ$.
@@ -553,9 +554,7 @@ We have also performed this test with a thin and a thick shell of 1 km and 35 km
 In the same way we analysed the linear density results, we can summarise that the thin spherical shell presents the more conservative values of the distance-size ratio: $D=1$ for the gravity potential, $D=2$ for its gradient components and $D=8$ for the Marussi tensor components.
 
 Surprisingly both the linear and the exponential density tesseroid models needs the same values of distance-size ratio $D$ in order to assure a good accuracy.
-Because the two functions are significantly different we can expect that these values of $D$ are good for a wide variety of density functions.
-
-
+Because the two functions are significantly different we can expect that these values of $D$ are good for a wide variety of density functions.\todo{no se si da para poner esto}
 
 \begin{figure}
 \centering
@@ -576,6 +575,56 @@ Because the two functions are significantly different we can expect that these v
 \end{figure}
 
 
+\subsection{Discontinuous Density}
+
+As a final case, we propose to perform the same test with a discontinuous density function:
+
+\begin{equation}
+    \rho(r') = 
+    \begin{cases}
+        \rho_1 & \text{if} \, R_1 \leq r' < R_c \\
+        \rho_2 & \text{if} \, R_c \leq r' \leq R_2 \\
+    \end{cases}
+\label{eq:density-discontinuous}
+\end{equation}
+
+\noindent where $\rho_1$ and $\rho_2$ are constant densities, $R_1$ and $R_2$ are the inner and outer radii of the shell, respectively, and $R_c$ is the the radii on which the 
+density changes.
+
+\todo{poner solucion analitica}
+
+First we assume a symmetric density function, i.e. $R_c=(R_1 + R_2)/2$ is the centre radius of the shell, and perform the test for a thin shell of 1km of thickness.
+The results can be seen in Figure \ref{fig:D-discont-sym}.
+Again, we obtain good accuracy for values of $D=$1,2 and 8 for the computation of the potential, the gradient components and the Marussi tensor components, respectively.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.9\linewidth]{figures/Ddiscontinuous-symmetric-differences.pdf}
+\caption{
+    Differences between the gravity fields generated by the numerical model and the analytical solution for a thin spherical shell of 1km of thickness and the discontinuous density defined on equation \ref{eq:density-discontinuous}, with $R_c$ as the centre radius of the shell. The computations were performed on the four grids described in Table \ref{tab:grids} and for different values of the distance-size ratio $D$. If the difference is less than 10$^{-1}\%$, we consider that the model has achieved an acceptable accuracy for the corresponding value of $D$.
+}
+\label{fig:D-discont-sym}
+\end{figure}
+
+Secondly, lets assume the same density function from equation \ref{eq:density-discontinuous}, but now with an asymmetrical distribution such as $R_c = (R_1 + R_2)/3$, and perform the same test.
+We can see its results in Figure \ref{fig:D-discont-asym}: up to $D=10$ the difference between the numerical model and the analytical solution is greater than 10\%, what
+lead us to conclude that the code does not reassembles the gravity fields for this case with good accuracy.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.9\linewidth]{figures/Ddiscontinuous-asymmetric-differences.pdf}
+\caption{
+    Differences between the gravity fields generated by the numerical model and the analytical solution for a thin spherical shell of 1km of thickness and the discontinuous density defined on equation \ref{eq:density-discontinuous}, with $R_c=(R_1 + R_2)/3$ is not the centre radius of the shell. The computations were performed on the four grids described in Table \ref{tab:grids} and for different values of the distance-size ratio $D$. If the difference is less than 10$^{-1}\%$, we consider that the model has achieved an acceptable accuracy for the corresponding value of $D$.
+}
+\label{fig:D-discont-asym}
+\end{figure}
+
+From equation \ref{eq:glq-var-dens} we have seen that the information of the density function is summarised as the values its assumes on the nodes of the GLQ.
+We can attribute the low performance of the code to this simplification.
+
+On the other hand, we can explain the good performance in the symmetrical density case due to the fact that the GLQ nodes are always symmetrical with respect to the centre of the $[a,b]$ integration interval (see equation \ref{eq:glq-scaled}).
+
+In the light of these results we do not recommend using discontinuous densities functions. Instead, divide the tesseroid into several ones with specific homogeneous density or densityfunction for each one.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
