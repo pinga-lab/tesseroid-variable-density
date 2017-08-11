@@ -19,4 +19,4 @@ dependencies:
     - mayavi
     - seaborn
     - pip:
-        - fatiando==0.4
+        - fatiando==0.5
