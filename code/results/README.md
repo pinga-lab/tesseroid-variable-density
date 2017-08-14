@@ -1,8 +1,11 @@
-# Data sets used in the paper
+# Results of accuracy tests
 
-This folder contains the raw and processed data files used in the paper.
+This folder contains the results of the accuracy tests performed by the notebooks.
 
-List all data files and their descriptions (include citations and links to
-where you downloaded them from).
+By saving the results in these files, there's no need to rerun the tests in order to plot them.
 
-* `example-data.txt`: This is data file in such and such format bla bla bla...
+* `Dlinear`, `D-vs-height`: These folders contain the results of the    [03-linear-density-test.ipynb](https://github.com/pinga-lab/tesseroid-variable-density/blob/master/code/03-linear-density-test.ipynb) notebook.
+
+* `Dexp`, `Dexp-shifted`, `Dexp-vs-power`: These folders contain the results of the [04-exponential-density-test.ipynb](https://github.com/pinga-lab/tesseroid-variable-density/blob/master/code/04-exponential-density-test.ipynb) notebook.
+
+* `Ddiscontinuous`: This folder contains the results of the [05-discontinuous-density-test.ipynb](https://github.com/pinga-lab/tesseroid-variable-density/blob/master/code/05-discontinuous-density-test.ipynb) notebook.
