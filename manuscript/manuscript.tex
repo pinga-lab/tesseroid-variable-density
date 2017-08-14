@@ -37,7 +37,6 @@ Summary of this paper
 Satellite gravity??, Numerical modelling, Structure of the Earth, Gravity anomalies and Earth structure, Numerical approximations and analysis, spatial analysis??
 \end{keywords}
 
-\todo{aclarar coordenadas esfericas -> longitud latitud angulos}
 
 \section{Introduction}
 
@@ -350,7 +349,7 @@ Only the vertical gradient component ($g_z$) and the diagonal Marussi tensor com
     g_{zz} = \frac{2V_\text{sh}(r)}{r^2}.
 \end{equation}
 
-For practical purposes we are going to obtain the gravity potential for two very different functions in the perspective of their variation in $r'$: a linear density and an exponential density. \todo{agregar discontinua}
+For practical purposes we are going to obtain the gravity potential for two very different functions in the perspective of their variation in $r'$: a linear, an exponential and a discontinuous density function.
 
 
 \subsubsection{Linear Density}
@@ -433,12 +432,11 @@ Due to difficulties when passing a Python function as argument of precompiled Nu
 \todo{speed comparison between homogeneous and variable density}
 
 From equation \ref{eq:glq-var-dens} we saw that the GLQ approximates the volume integrals as the gravitational effect of $N_\lambda N_\phi N_r$ point masses, where $N_i$ are the orders of the quadrature for the integral on each coordinate, with $i \in \{ \lambda, \phi, r \}$.
-
 If we set the GLQ orders to fixed values, it's easy to conclude that the nearer the computation point is to the tesseroid, the accuracy of the approximation is reduced and the point masses effect becomes more noticeable than the tesseroid we want to approximate.
 A more complete analysis of this conclusion can be found in \citet{Ku1977, Li2011, Uieda2016}.
 
 Instead of increasing the GLQ orders to improve the accuracy, what leads to a more time consuming computation, adaptive discretization algorithms have been applied in previous works \citep{Li2011, Uieda2016}.
-They basically consist in dividing the tesseroid based on a ratio between its size and the distance between its geometric centre and the computation point.
+They essentially consist in dividing the tesseroid based on a ratio between its size and the distance between its geometric centre and the computation point.
 
 In order to make the computation more efficient, we use only second order GLQ for each integration, and we ensure the accuracy of the method through the application of the modified adaptive discretization algorithm developed by \citet{Uieda2016}.
 Given an arbitrary tesseroid, \citet{Uieda2016} redefined its dimensions: $L_\lambda$, $L_\phi$ and $L_r$, where the former ones are the arc-distances measured along its top surface and $L_r$ is the difference between the radii of the top and bottom surfaces.
@@ -449,27 +447,27 @@ We must check that the following inequality is satisfied:
 \label{eq:distance-size-ratio}
 \end{equation}
 
-\noindent where $i \in \{\lambda, \phi, r\}$, $d$ is the distance between the geometric centre of the tesseroid and the computation point and $D$ is a predefined value called distance-size ratio.
+\noindent where $i \in \{\lambda, \phi, r\}$, $d$ is the distance between the geometric centre of the tesseroid and the computation point, and $D$ is a predefined value called distance-size ratio.
 If the inequality \ref{eq:distance-size-ratio} is not held for any spherical coordinate, then the tesseroid must be divided by half in that direction.
 A more complete description of the modified adaptive discretization algorithm can be found in \citet{Uieda2016}.
 
 In summary, the distance-size ratio $D$ determines indirectly how many times the tesseroids will be divided and therefore both the accuracy of the algorithm and its computation time.
-In this way, the modified version of the adaptive discretization algorithm efficiently improves its accuracy and gives the user more control over the computation: it allows to stop the division of the tesseroids when their dimensions are lower than a certain value (e.g. less than 10 cm), which does not modifies significantly the desired gravitational field.
+In this way, the modified version of the adaptive discretization algorithm efficiently improves its accuracy and gives the user more control over the computation: it allows to stop the division of the tesseroids when their dimensions are lower than a certain value (e.g. less than 10 cm), in which case it does not modifies significantly the desired gravitational field.
 
 On the other hand, the accuracy of the method is exclusively controlled by the value assigned to the distance-size ratio $D$, which cannot be easily related to the error of the approximation.
 In order to solve this, \citet{Uieda2016} compared the numerical computation with the analytical solution for a spherical shell with homogeneous density.
 
 We have performed similar tests, but now with variable density spherical shell.
-From the infinite density functions that can be proposed, we have chosen two characteristic ones: a linear and an exponential functions. \todo{agregar discontinua}
-The first one constitutes the simplest variation, while the second one represents the fastest varying function.
-The analytical solutions for these two types of functions were previously obtained and shown in equations \ref{eq:shell-pot-linear} and \ref{eq:shell-pot-exp}.
+From the infinite density functions that can be proposed, we have chosen three characteristic ones: a linear, an exponential and a discontinuous function.
+The first one constitutes the simplest variation, while the second one represents the fastest varying function. The later one tries to emulate a contact between two different media (e.g. crust and mantle interface).
+The analytical solutions for the first two types of functions were previously obtained and shown in equations \ref{eq:shell-pot-linear} and \ref{eq:shell-pot-exp}.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Determination of distance-size ratio}
 
-In order to test the new variable density tesseroid code and to estimate the error of the approximation we have compared the numerical model with the analytical solutions for a spherical shell with variable density for two special cases: a linear and an exponential density function. \todo{agregar discontinua}
+In order to test the new variable density tesseroid code and estimate the error of the approximation we have compared the numerical model with the analytical solutions for a spherical shell with variable density for three special cases: a linear, an exponential and a discontinuous density function.
 This error estimations are also useful in the determination of the minimum value for the distance-size ratio $D$ such the difference between the numerical model and the analytical solutions are below an acceptable threshold.
 
 We approximated the spherical shell by a mesh of $30^\circ \times 30^\circ$ tesseroids and calculated the gravity potential, the vertical component of the gradient ($g_z$) and the $g_{zz}$ component of the Marussi tensor on four different grids: (1) a grid located at the pole, (2) another one on the Equator, (3) one located at satellite height and (4) a big grid of $30^\circ \times 30^\circ$.
@@ -524,7 +522,7 @@ We will keep the more conservative result of $D=8$ in case of computing the $g_{
 \centering
 \includegraphics[width=0.9\linewidth]{figures/Dlinear-thin-differences.pdf}
 \caption{
-    Differences between the gravity fields generated by the numerical model and the analytical solution for a thin spherical shell of 1km of thickness and the linear density defined on equation \ref{eq:density-linear}. The computations were performed on the four grids described in Table \ref{tab:grids} and for different values of the distance-size ratio $D$. If the difference is less than 10$^{-1}\%$, we consider that the model has achieved an acceptable accuracy for the corresponding value of $D$.
+    Differences between the gravity fields generated by the numerical model and the analytical solution for a thin spherical shell of 1km of thickness with the linear density defined on equation \ref{eq:density-linear}. The computations were performed on the four grids described in Table \ref{tab:grids} and for different values of the distance-size ratio $D$. If the difference is less than 10$^{-1}\%$, we consider that the model has achieved an acceptable accuracy for the corresponding value of $D$.
 }
 \label{fig:D-linear-thin}
 \end{figure}
@@ -533,7 +531,7 @@ We will keep the more conservative result of $D=8$ in case of computing the $g_{
 \centering
 \includegraphics[width=0.9\linewidth]{figures/Dlinear-thick-differences.pdf}
 \caption{
-    Differences between the gravity fields generated by the numerical model and the analytical solution for a thick spherical shell of 35km of thickness and the linear density defined on equation \ref{eq:density-linear}. The computations were performed on the four grids described in Table \ref{tab:grids} and for different values of the distance-size ratio $D$. If the difference is less than 10$^{-1}\%$, we consider that the model has achieved an acceptable accuracy for the corresponding value of $D$.
+    Differences between the gravity fields generated by the numerical model and the analytical solution for a thick spherical shell of 35km of thickness with the linear density defined on equation \ref{eq:density-linear}. The computations were performed on the four grids described in Table \ref{tab:grids} and for different values of the distance-size ratio $D$. If the difference is less than 10$^{-1}\%$, we consider that the model has achieved an acceptable accuracy for the corresponding value of $D$.
 }
 \label{fig:D-linear-thick}
 \end{figure}
@@ -548,7 +546,7 @@ To test the model in case of an exponential density we proposed the following fu
 \label{eq:density-exp}
 \end{equation}
 
-\noindent where $A$ = 1 kg/m$^3$ and $b$ = 10$^6$ m.
+\noindent where $A$ = 1kg/m$^3$ and $b$ = 1000km.
 We have also performed this test with a thin and a thick shell of 1 km and 35 km, respectively, and the results can be seen in Figures \ref{fig:D-exp-thin} and \ref{fig:D-exp-thick}.
 
 In the same way we analysed the linear density results, we can summarise that the thin spherical shell presents the more conservative values of the distance-size ratio: $D=1$ for the gravity potential, $D=2$ for its gradient components and $D=8$ for the Marussi tensor components.
@@ -559,7 +557,7 @@ Surprisingly both the linear and the exponential density tesseroid models needs 
 \centering
 \includegraphics[width=0.9\linewidth]{figures/Dexp-shifted-thin-differences.pdf}
 \caption{
-    Differences between the gravity fields generated by the numerical model and the analytical solution for a thin spherical shell of 1km of thickness and the exponential density defined on equation \ref{eq:density-exp}. The computations were performed on the four grids described in Table \ref{tab:grids} and for different values of the distance-size ratio $D$. If the difference is less than 10$^{-1}\%$, we consider that the model has achieved an acceptable accuracy for the corresponding value of $D$.
+    Differences between the gravity fields generated by the numerical model and the analytical solution for a thin spherical shell of 1km of thickness with the exponential density defined on equation \ref{eq:density-exp}. The computations were performed on the four grids described in Table \ref{tab:grids} and for different values of the distance-size ratio $D$. If the difference is less than 10$^{-1}\%$, we consider that the model has achieved an acceptable accuracy for the corresponding value of $D$.
 }
 \label{fig:D-exp-thin}
 \end{figure}
@@ -568,7 +566,7 @@ Surprisingly both the linear and the exponential density tesseroid models needs 
 \centering
 \includegraphics[width=0.9\linewidth]{figures/Dexp-shifted-thick-differences.pdf}
 \caption{
-    Differences between the gravity fields generated by the numerical model and the analytical solution for a thick spherical shell of 35km of thickness and the exponential density defined on equation \ref{eq:density-exp}. The computations were performed on the four grids described in Table \ref{tab:grids} and for different values of the distance-size ratio $D$. If the difference is less than 10$^{-1}\%$, we consider that the model has achieved an acceptable accuracy for the corresponding value of $D$.
+    Differences between the gravity fields generated by the numerical model and the analytical solution for a thick spherical shell of 35km of thickness with the exponential density defined on equation \ref{eq:density-exp}. The computations were performed on the four grids described in Table \ref{tab:grids} and for different values of the distance-size ratio $D$. If the difference is less than 10$^{-1}\%$, we consider that the model has achieved an acceptable accuracy for the corresponding value of $D$.
 }
 \label{fig:D-exp-thick}
 \end{figure}
@@ -588,7 +586,7 @@ For example, if we take into account a tesseroid with 35km of thickness, a densi
 \centering
 \includegraphics[width=0.9\linewidth]{figures/Dexp-power-differences.pdf}
 \caption{
-    Differences between the Marussi tensor component $g_{zz}$ generated by the numerical model and the analytical solution for (a) a thin spherical shell of 1km of thickness and (b) a thick sphericall shell of 35km of thickness, both with the exponential density defined on equation \ref{eq:density-exp}. Each computation was performed on the big grid described in Table \ref{tab:grids}, for different values of the distance-size ratio $D$ and $b$. If the difference is less than 10$^{-1}\%$, we consider that the model has achieved an acceptable accuracy for the corresponding value of $D$.
+    Differences between the Marussi tensor component $g_{zz}$ generated by the numerical model and the analytical solution for (a) a thin spherical shell of 1km of thickness and (b) a thick sphericall shell of 35km of thickness, both with the exponential density defined on equation \ref{eq:density-exp} with different values of $b$. Each computation was performed on the big grid described in Table \ref{tab:grids}, for different values of the distance-size ratio $D$. Each curve corresponds to a value of $b$. If the difference is less than 10$^{-1}\%$, we consider that the model has achieved an acceptable accuracy for the corresponding value of $D$.
 }
 \label{fig:D-exp-power}
 \end{figure}
@@ -620,13 +618,13 @@ The analytical solution for this kind of density is the linear combination of tw
 
 Firstly, lets assume a symmetric density function, i.e. $R_c=(R_1 + R_2)/2$ is the centre radius of the shell, and perform the test for a thin shell of 1km of thickness.
 The results can be seen in Figure \ref{fig:D-discont-sym}.
-Again, we obtain good accuracy for values of $D=$1,2 and 8 for the computation of the potential, the gradient components and the Marussi tensor components, respectively.
+Again, we obtain good accuracy for values of $D$ equal to 1, 2 and 8 for the computation of the potential, the gradient components and the Marussi tensor components, respectively.
 
 \begin{figure}
 \centering
 \includegraphics[width=0.9\linewidth]{figures/Ddiscontinuous-symmetric-differences.pdf}
 \caption{
-    Differences between the gravity fields generated by the numerical model and the analytical solution for a thin spherical shell of 1km of thickness and the discontinuous density defined on equation \ref{eq:density-discontinuous}, with $R_c$ as the centre radius of the shell. The computations were performed on the four grids described in Table \ref{tab:grids} and for different values of the distance-size ratio $D$. If the difference is less than 10$^{-1}\%$, we consider that the model has achieved an acceptable accuracy for the corresponding value of $D$.
+    Differences between the gravity fields generated by the numerical model and the analytical solution for a thin spherical shell of 1km of thickness with the discontinuous density defined on equation \ref{eq:density-discontinuous} and $R_c$ as the centre radius of the shell. The computations were performed on the four grids described in Table \ref{tab:grids} and for different values of the distance-size ratio $D$. If the difference is less than 10$^{-1}\%$, we consider that the model has achieved an acceptable accuracy for the corresponding value of $D$.
 }
 \label{fig:D-discont-sym}
 \end{figure}
@@ -639,7 +637,7 @@ leads us to conclude that the code does not reassembles the gravity fields for t
 \centering
 \includegraphics[width=0.9\linewidth]{figures/Ddiscontinuous-asymmetric-differences.pdf}
 \caption{
-    Differences between the gravity fields generated by the numerical model and the analytical solution for a thin spherical shell of 1km of thickness and the discontinuous density defined on equation \ref{eq:density-discontinuous}, with $R_c=(R_1 + R_2)/3$ is not the centre radius of the shell. The computations were performed on the four grids described in Table \ref{tab:grids} and for different values of the distance-size ratio $D$. If the difference is less than 10$^{-1}\%$, we consider that the model has achieved an acceptable accuracy for the corresponding value of $D$.
+    Differences between the gravity fields generated by the numerical model and the analytical solution for a thin spherical shell of 1km of thickness with the discontinuous density defined on equation \ref{eq:density-discontinuous} and $R_c=(R_1 + R_2)/3$. The computations were performed on the four grids described in Table \ref{tab:grids} and for different values of the distance-size ratio $D$. If the difference is less than 10$^{-1}\%$, we consider that the model has achieved an acceptable accuracy for the corresponding value of $D$.
 }
 \label{fig:D-discont-asym}
 \end{figure}
