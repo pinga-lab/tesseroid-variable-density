@@ -472,7 +472,7 @@ The analytical solutions for the first two types of functions were previously ob
 In order to test the new variable density tesseroid code and estimate the error of the approximation we have compared the numerical model with the analytical solutions for a spherical shell with variable density for three special cases: a linear, an exponential and a discontinuous density function.
 This error estimations are also useful in the determination of the minimum value for the distance-size ratio $D$ such the difference between the numerical model and the analytical solutions are below an acceptable threshold.
 
-We approximated the spherical shell by a mesh of $30^\circ \times 30^\circ$ tesseroids and calculated the gravity potential, the vertical component of the gradient ($g_z$) and the $g_{zz}$ component of the Marussi tensor on four different grids: (1) a grid located at the pole, (2) another one on the Equator, (3) one located at satellite height and (4) a big grid of $30^\circ \times 30^\circ$.
+We approximated the spherical shell by a mesh of $30^\circ \times 30^\circ$ tesseroids and calculated the gravity potential, the vertical component of the gradient ($g_z$) and the diagonal components of the Marussi tensor ($g_{xx}$, $g_{yy}$, $g_{zz}$) on four different grids: (1) a grid located at the pole, (2) another one on the Equator, (3) one located at satellite height and (4) a big grid of $30^\circ \times 30^\circ$.
 More information about this grids can be found in the Table \ref{tab:grids}.
 
 We computed the three gravity fields for different values of $D$, ranging from 0.5 to 10 with a step of 0.5, on every point of these four grids.
@@ -483,7 +483,7 @@ That's why we choose for comparison the maximum difference between the results o
 
 Finally, we set the acceptable value of $D$ at which the error of the numerical approximation is lower than 0.1\%.
 
-The tests were only performed on these three magnitudes because the other components of the gravity gradient and Marussi tensor are equal to zero due to the rotational symmetries of the spherical shell. \todo{corregir esto, los elementos diagonales del tensor fueron testeados, pero no lo mostramos pq son muy similares al gzz}
+The tests were only performed on these magnitudes because the other components of the gravity gradient and Marussi tensor are equal to zero due to the rotational symmetries of the spherical shell.
 
 \begin{table}
 \caption{
@@ -514,11 +514,13 @@ As a simple case, we proposed a linear density function in such a way that the s
 \noindent where $R$ = 6378.137 km is the mean Earth radius.
 
 The tests were performed on a thin and a thick spherical shell of 1 km and 35 km of thickness, respectively.
-The results for both cases can be seen in Figures \ref{fig:D-linear-thin} and \ref{fig:D-linear-thick}.
+In Figures \ref{fig:D-linear-thin} and \ref{fig:D-linear-thick} we can see the results for the potential, the vertical component of the gradient and the $g_{zz}$ component of the Marussi tensor.
+Because the other two diagonal components of the tensor show similar results as the ones obtained for the $g_{zz}$, we exclude them from the figure.
+Although they can be found in the repository. \todo{chequear}
 
 For the linear density case, we can observe that the calculation of the potential and the $g_z$ component of its gradient needs a value of $D=1$ and $D=2$, respectively, in order to ensure an accuracy of 0.1\%.
 On the other hand, the $g_{zz}$ computations show a noticeable difference between the thin and the thick shell: the first one needs a value of $D=8$ while the later only a $D=3.5$.
-We will keep the more conservative result of $D=8$ in case of computing the $g_{zz}$ tensor component in case of a linear density tesseroid.
+We will keep the more conservative result of $D=8$ in case of computing the Marussi tensor components in case of a linear density tesseroid.
 
 \begin{figure}
 \centering
@@ -550,6 +552,7 @@ To test the model in case of an exponential density we proposed the following fu
 
 \noindent where $A$ = 1kg/m$^3$ and $b$ = 1000km.
 We have also performed this test with a thin and a thick shell of 1 km and 35 km, respectively, and the results can be seen in Figures \ref{fig:D-exp-thin} and \ref{fig:D-exp-thick}.
+Once again, the results for $g_{xx}$ and $g_{yy}$ are very similar to the ones obtained for $g_{zz}$, so we exclude them. Although, they can be found in the repository.
 
 In the same way we analysed the linear density results, we can summarise that the thin spherical shell presents the more conservative values of the distance-size ratio: $D=1$ for the gravity potential, $D=2$ for its gradient components and $D=8$ for the Marussi tensor components.
 
@@ -575,7 +578,7 @@ Surprisingly both the linear and the exponential density tesseroid models needs 
 
 Because the constant $b$ controls the variation of the density function we wanted to test how does the accuracy of the method behaves at different values of $b$.
 We computed the difference between the Marussi tensor component $g_{zz}$ generated by the numerical model and the analytical solution on the big grid of 30$^\circ\times$30$^\circ$ (see Table \ref{tab:grids}).
-For each value of $b$ we computed these difference for the same set of values of $D$ we've been using on the previous tests, obtaining one curve for each kind of variation.
+For each value of $b$ we calculated these difference for the same set of values of $D$ we've been using on the previous tests, obtaining one curve for each kind of variation.
 
 This tests were performed using both the thin and the thick spherical shell, and the results can be seen in Figure \ref{fig:D-exp-power}.
 Taking into account that lower values of $b$ implies a more varying function, we can see that for extremely varying functions the numerical model does not perform well: for $b$=100m the difference is almost 100\% in the thin shell case, and the same happens with $b$=10km in the thick shell case.
