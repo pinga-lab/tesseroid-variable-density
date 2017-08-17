@@ -670,10 +670,11 @@ In the light of these results we do not recommend using discontinuous densities 
 We have developed a Python library that allows us to perform forward gravity computations using tesseroids with variable density in depth.
 The code numerically approximates the integral that defines the gravity potential, its gradient and the Marussi tensor through the Gauss-Legendre Quadrature (GLQ).
 It essentially consists in approximating the gravity fields of the tesseroids with the effect of point masses located on the scaled nodes of the Legendre polynomials.
-We state that this method it's well suited to approximate the effect of tesseroids with arbitrary densities, in contrast with the ones that involves Taylor series expansion.
+We state that this method it's well suited to approximate the effect of tesseroids with arbitrary densities, in contrast with the ones that involve Taylor series expansion.
 
-Although this new code uses only second order GLQ on each integration, we've enhanced its accuracy through a modified adaptive discretization method. It divides the tesseroid by half if the ratio of the distance to the computation point and its size is lower than a predefined distance-size ratio $D$.
-We can summarise that $D$ controls the accuracy of the method: a higher value of $D$ generates more divisions of the tesseroids, thou more point masses, what leads to a more precise approximation.
+Instead of enhancing the accuracy of the method by increasing the order of the GLQ on each integration, we make use of the modified adaptive discretization algorithm.
+It divides the tesseroid by half if the ratio of the distance to the computation point and its size is lower than a predefined distance-size ratio $D$.
+We can summarise that $D$ controls the accuracy of the method: a higher value of $D$ generates more divisions of the tesseroids, thus more point masses, what leads to a more precise approximation.
 
 On the other hand, there's no direct relation between the value of $D$ and the error of the computation, that's why we had to determine the minimum value of $D$ for each gravity magnitude that produces an acceptable accuracy.
 These distance-size ratio determinations have been made through the comparison of the numerical approximation with the analytical solutions for the exceptional case of a spherical shell.
