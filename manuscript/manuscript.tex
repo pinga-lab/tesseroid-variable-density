@@ -532,13 +532,12 @@ As a simple case, we proposed a linear density function in such a way that the s
 \noindent where $R$ = 6378.137 km is the mean Earth radius.
 
 The tests were performed on a thin and a thick spherical shell of 1 km and 35 km of thickness, respectively.
-In Figures \ref{fig:D-linear-thin} and \ref{fig:D-linear-thick} we can see the results for the potential, the vertical component of the gradient and the $g_{zz}$ component of the Marussi tensor.
-Because the other two diagonal components of the tensor show similar results as the ones obtained for the $g_{zz}$, we exclude them from the figure.
-Although they can be found in the repository. \todo{chequear}
+In Figures \ref{fig:D-linear-thin} and \ref{fig:D-linear-thick} we can see the results for the potential, the vertical component of the gradient $g_z$ and the $g_{zz}$ component of the Marussi tensor.
+Because the other two diagonal components of the tensor show similar results as the ones obtained for the $g_{zz}$, we exclude them from the figure, although they can be found in the repository. \todo{chequear}
 
 For the linear density case, we can observe that the calculation of the potential and the $g_z$ component of its gradient needs a value of $D=1$ and $D=2$, respectively, in order to ensure an accuracy of 0.1\%.
-On the other hand, the $g_{zz}$ computations show a noticeable difference between the thin and the thick shell: the first one needs a value of $D=8$ while the later only a $D=3.5$.
-We will keep the more conservative result of $D=8$ in case of computing the Marussi tensor components in case of a linear density tesseroid.
+On the other hand, the $g_{zz}$ computations show a noticeable difference between the thin and the thick shell: the first one needs a value of $D$ equal to 8 while the later only a $D$ of 3.5.
+We will keep the more conservative result of $D$ equal to 8 in case of computing the Marussi tensor components in case of a linear density tesseroid.
 
 \begin{figure}
 \centering
@@ -570,7 +569,7 @@ To test the model in case of an exponential density we proposed the following fu
 
 \noindent where $A$ = 1kg/m$^3$ and $b$ = 1000km.
 We have also performed this test with a thin and a thick shell of 1 km and 35 km, respectively, and the results can be seen in Figures \ref{fig:D-exp-thin} and \ref{fig:D-exp-thick}.
-Once again, the results for $g_{xx}$ and $g_{yy}$ are very similar to the ones obtained for $g_{zz}$, so we exclude them. Although, they can be found in the repository.
+Once again, the results for $g_{xx}$ and $g_{yy}$ are very similar to the ones obtained for $g_{zz}$, so we exclude them, although, they can be found in the repository.
 
 In the same way we analysed the linear density results, we can summarise that the thin spherical shell presents the more conservative values of the distance-size ratio: $D=1$ for the gravity potential, $D=2$ for its gradient components and $D=8$ for the Marussi tensor components.
 
