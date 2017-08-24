@@ -102,7 +102,7 @@ due.cite(Doi("10.1190/geo2015-0204.1"),
          description='Gravity forward modeling with tesseroids',
          path="fatiando.gravmag.tesseroid")
 RATIO_V = 1
-RATIO_G = 1.6
+RATIO_G = 2
 RATIO_GG = 8
 STACK_SIZE = 100
 
