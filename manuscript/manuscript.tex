@@ -277,7 +277,7 @@ The computation point $Q$ is located at latitude $\phi=90^\circ$, so $\ell$ and 
 
 \begin{equation}
     \cos\psi = \sin\phi', \quad
-    \ell = \sqrt{r'^2 + 2 r r' \sin\phi' + r^2}.
+    \ell = \sqrt{r'^2 - 2 r r' \sin\phi' + r^2}.
 \end{equation}
 
 Due to the rotational symmetry along the $z$ axe, the integration in $\lambda'$ is straightforward:
@@ -286,7 +286,7 @@ Due to the rotational symmetry along the $z$ axe, the integration in $\lambda'$ 
     V_\text{sh}(r) = 2\pi G 
     \int\limits_{-\frac{\pi}{2}}^\frac{\pi}{2}
     \int\limits_{R_1}^{R_2}
-    \frac{\rho(r') {r'}^2 \cos\phi'}{\sqrt{r'^2 + 2 r r' \sin\phi' + r^2}}
+    \frac{\rho(r') {r'}^2 \cos\phi'}{\sqrt{r'^2 - 2 r r' \sin\phi' + r^2}}
     \, dr' d\phi',
 \end{equation}
 
