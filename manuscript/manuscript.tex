@@ -20,8 +20,8 @@
 \title[Variable Density Tesseroids]{
     Variable Density Tesseroids: Gravity fields calculation in spherical coordinates using variable densities in depth
 }
-\author[S.R. Soler, L. Uieda and M.E. Gimenez]{
-    Santiado R. Soler$^{1,2}$, Leonardo Uieda$^3$ and Mario E. Gimenez$^{1,2}$ \\
+\author[S.R. Soler, A. Pesce, L. Uieda and M.E. Gimenez]{
+    Santiado R. Soler$^{1,2}$, Agustina Pesce$^{1,2}$, Leonardo Uieda$^3$ and Mario E. Gimenez$^{1,2}$ \\
     $^1$CONICET, Argentina. e-mail: santiago.r.soler@gmail.com\\
     $^2$Instituto Geofísico Sismológico Volponi, Universidad Nacional de San Juan, Argentina\\
     $^3$Universidade do Estado do Rio de Janeiro, Rio de Janeiro, Brazil
@@ -700,6 +700,24 @@ From these results we can conclude that the homogeneous density code is up to tw
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\section{Example with real data}
+
+Besides all the tests we have carried out on the new code, we intend to show a forward modelling example with real data.
+In order to do that we have chosen the Neuquen Basin: a sedimentary basin located to the east of the Andes, between 32$^\circ$S and 40$^\circ$S latitude (see Figure \ref{fig:neuquen-basin}a), that includes continental and marine siliciclastics, carbonates and evaporites accumulated over the Jurassic and the Cretaceous constituting a stratigraphic record up to 5000m of depth \citep{Howell2005}.
+
+\begin{figure*}
+\centering
+\includegraphics[width=\linewidth]{figures/neuquen-basin.pdf}
+\caption{(a) Topography of Neuquen Basin (in km),
+         (b) Thickness of the sedimentary basin (in meters),
+         (c)-(h) Computed gravity fields: potential $V$ (in J/kg), gradient components $g_x$, $g_y$ and $g_z$ (in mGal) and Marussi tensor components $g_{xy}$ and $g_{zz}$ (in Eötvös), calculated at 50km of height over the ellipsoid.}
+\label{fig:neuquen-basin}
+\end{figure*}
+
+The thickness of the sediment pack was obtained from \citet{Heine2007}, which can be seen in Figure \ref{fig:neuquen-basin}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \section{Conclusions}
 
 We have developed a Python library that allows us to perform forward gravity computations using tesseroids with variable density in depth.
@@ -721,6 +739,7 @@ However, those extremely variations cannot be found inside the Earth, so this li
 
 On the other hand, the tests over the discontinuous function were not satisfactory.
 In such cases we recommend to divide the model in several tesseroids, each one with a specific homogeneous density or a continuous density function, instead of using a single variable density tesseroid.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
