@@ -14,6 +14,7 @@ code/tesseroid_density/_tesseroid.so
 
 ## Main PDF file
 manuscript/manuscript.pdf
+jovenes-investigadores/jovenes-investigadores.pdf
 
 ## Core latex/pdflatex auxiliary files:
 manuscript/*.aux
@@ -23,6 +24,13 @@ manuscript/*.lot
 manuscript/*.fls
 manuscript/*.out
 manuscript/*.toc
+jovenes-investigadores/*.aux
+jovenes-investigadores/*.lof
+jovenes-investigadores/*.log
+jovenes-investigadores/*.lot
+jovenes-investigadores/*.fls
+jovenes-investigadores/*.out
+jovenes-investigadores/*.toc
 
 ## Intermediate documents:
 manuscript/*.dvi
@@ -40,6 +48,13 @@ manuscript/*-blx.aux
 manuscript/*-blx.bib
 manuscript/*.brf
 manuscript/*.run.xml
+jovenes-investigadores/*.bbl
+jovenes-investigadores/*.bcf
+jovenes-investigadores/*.blg
+jovenes-investigadores/*-blx.aux
+jovenes-investigadores/*-blx.bib
+jovenes-investigadores/*.brf
+jovenes-investigadores/*.run.xml
 
 ## JabRef
 *.bib.bak
@@ -51,15 +66,23 @@ manuscript/*.synctex
 manuscript/*.synctex.gz
 manuscript/*.synctex.gz(busy)
 manuscript/*.pdfsync
+jovenes-investigadores/*.fdb_latexmk
+jovenes-investigadores/*.synctex
+jovenes-investigadores/*.synctex.gz
+jovenes-investigadores/*.synctex.gz(busy)
+jovenes-investigadores/*.pdfsync
 
 ## Auxiliary and intermediate files from other packages:
 
 # algorithms
 manuscript/*.alg
 manuscript/*.loa
+jovenes-investigadores/*.alg
+jovenes-investigadores/*.loa
 
 # achemso
 manuscript/acs-*.bib
+jovenes-investigadores/acs-*.bib
 
 # amsthm
 manuscript/*.thm
@@ -70,9 +93,15 @@ manuscript*.acr
 manuscript*.glg
 manuscript*.glo
 manuscript*.gls
+jovenes-investigadores*.acn
+jovenes-investigadores*.acr
+jovenes-investigadores*.glg
+jovenes-investigadores*.glo
+jovenes-investigadores*.gls
 
 # hyperref
 manuscript/*.brf
+jovenes-investigadores/*.brf
 
 # todonotes
 #*.tdo
