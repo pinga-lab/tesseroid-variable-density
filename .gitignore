@@ -43,6 +43,7 @@ manuscript/*.run.xml
 
 ## JabRef
 *.bib.bak
+*.bib.sav
 
 ## Build tool auxiliary files:
 manuscript/*.fdb_latexmk
