@@ -4,6 +4,7 @@
 \usepackage[hmargin=2.5cm, vmargin=2.5cm]{geometry}
 \usepackage{amsmath}
 \usepackage{graphicx}
+\usepackage{subcaption} % enables subfigure
 \usepackage{natbib}
 \usepackage{url}
 \usepackage[pdftex,colorlinks=true]{hyperref}
@@ -31,6 +32,8 @@
 
 \begin{document}
 
+\renewcommand{\tablename}{Tabla}
+
 \maketitle
 
 \vspace{-2.5em}
@@ -52,13 +55,26 @@ Las variaciones de la densidad en la corteza con la profundidad han sido estudia
 Estos modelos directos fueron desarrollados para cuerpos bidimensionales o tridimensionales en coordenadas cartesianas, los cuales se ajustan adecuadamente para aplicaciones de escalas locales.
 Sin embargo, la disponibilidad de datos gravimétricos satelitales permite llevar a cabo estudios e interpretaciones a escalas regionales, en las cuales es necesario tomar en cuenta la curvatura de la Tierra a la hora de realizar modelados directos. 
 
+
 \begin{figure}
-\centering
-\includegraphics[width=0.4\linewidth]{../manuscript/figures/tesseroid-uieda.pdf}
-\caption{
-Prisma esférico, también conocido como Tesseroid, en un sistema geocéntrico de coordenadas esféricas, junto a un punto de cómputo $P$ y su respectivo sistema de coordenadas Cartesiano local orientado hacia el Norte. Imágen producida por \citet{Uieda2015}.
-}
-\label{fig:tesseroid-uieda}
+    \begin{subfigure}[t]{0.5\textwidth}
+    \centering
+    \includegraphics[height=15em]{../manuscript/figures/tesseroid-uieda.pdf}
+    \caption{
+        Prisma esférico, también conocido como Tesseroid, en un sistema geocéntrico de coordenadas esféricas, junto a un punto de cómputo $P$ y su respectivo sistema de coordenadas Cartesiano local orientado hacia el Norte. Imágen producida por \citet{Uieda2015}.
+    }
+    \label{fig:tesseroid-uieda}
+    \end{subfigure}
+    \quad
+    \begin{subfigure}[t]{0.5\textwidth}
+    \centering
+    \includegraphics[height=15em]{../manuscript/figures/spherical-shell.pdf}
+    \caption{
+        Cascarón esférico con radios interior y exteior $R_1$ y $R_2$, respectivamente. El punto de cómputo $Q$ está localizado en el eje $z$ a una distancia $r$ al centro del cascarón. Vamos a suponer que $Q$ se encuentra por fuera del radio exterior $R_2$, es decir $r > R_2$.
+    }
+    \label{fig:spherical-shell}
+    \end{subfigure}
+    \caption{}
 \end{figure}
 
 Un método muy común para hacerlo es discretizar la Tierra en prismas esféricos conocidos como Tesseroids (ver Figura \ref{fig:tesseroid-uieda}).
@@ -109,23 +125,93 @@ El mismo consiste en aproximar las integrales por una suma ponderada de los efec
 \citet{Uieda2016} desarrolló un modelo directo que permite calcular los campos gravitatorios generados por tesseroides con densidad homogenea utilzando las GLQ, implementado en Python e incluido en la librería de código abierto Fatiando a Terra \citep{Uieda2013} para el modelado e inversión geofísica.
 
 \citet{Ku1977} advirtió que la aproximación GLQ se vuelve menos precisa a medida que el punto de cómputo se acerca al tesseroide o bien para órdenes menores de GLQ.
-En vez de aumentar los órdenes de la aproximación, \citet{Uieda2016} lo fija a segundo orden y aumenta la precisión a través de una versión modificada del algoritmo de discretización adaptativa de \citet{Li2011}.
+En vez de aumentar los órdenes de la aproximación, \citet{Uieda2016} lo fijan a segundo orden y aumentan la precisión a través de una versión modificada del algoritmo de discretización adaptativa de \citet{Li2011}.
 Este consiste en dividir al tesseroide en otros más pequeños en caso de que el cociente entre $d$ y $L_i$ es menor a un valor predefinido $D$ llamado relación distancia-tamaño, donde $d$ es la distancia entre el punto de cómputo y el centro del tesseroide, mientras $L_i$ son las dimensiones del mismo ($i \in \{ r, \phi, \lambda\}$).
 
-\begin{equation}
-    \frac{d}{L_i} \geq D,
-\label{eq:distance-size-ratio}
-\end{equation}
-
-De esta manera, el valor asignado a $D$ controla la precisión de la aproximación.
-Sin embargo, no existe una relación directa entre $D$ y el error de la misma.
+De esta manera, el valor asignado a $D$ controla la precisión de la aproximación: para mayores valores de $D$, el error de la aproximación se reduce.
+Sin embargo, no existe una relación directa entre $D$ y dicho error.
 Es por ello que \citet{Uieda2016} obtuvo valores estándar de $D$ comparando los campos gravitatorios generados por un cascarón esférico con densidad constante, un caso especial de las integrales volumétricas que posee solución analítica \citep{LaFehr1991, Mikuska2006, Grombein2013}.
 
 En este trabajo hemos implementado un modelo directo como el de \citet{Uieda2016} que además permite calcular los campos gravitatorios generados por tesseroides con densidades variables arbitrarias en profundidad.
 Al igual que el anterior, hace uso de la aproximación GLQ, de la versión modificada del algoritmo de discretización adaptativa y su implementación está escrita en lenguajes Python y Cython.
 
-Con el objetivo de garantizar la precisión de la aproximación numérica, hemos llevado a cabo pruebas similares a las que realizó \citet{Uieda2016} comparando los resultados del modelo numérico con las soluciones analíticas de un cascarón esférico, en nuestro caso con densidades lineales, exponenciales y discontinuas.
+Para garantizar la precisión de la aproximación numérica, hemos llevado a cabo pruebas similares a las que realizaron \citet{Uieda2016} comparando los resultados del modelo numérico con las soluciones analíticas de un cascarón esférico, en nuestro caso con densidades lineales, exponenciales y discontinuas.
 Para lo cual fue necesario obtener las soluciones analíticas correspondientes a cada función de densidad.
+
+
+\section{Determinación de Relación Distancia-Tamaño}
+
+Con el objetivo de evaluar el nuevo modelo directo con tesseroides de densidad variable y estimar el error de la aproximación hemos comparado el modelo numérico con las soluciones analíticas de un cascarón esférico para tres casos especiales: una densidad linear, una exponencial y una discontinua.
+
+La estimación del error nos es útil para la determinación del mínimo valor de relación distancia-tamaño $D$ de manera tal que la diferencia entre el modelo numérico y las soluciones analíticas estén debajo de un umbral aceptable.
+
+El cascarón esférico ha sido aproximado a través de una malla de tesseroides de $30^\circ \times 30^\circ$ y hemos calculado el potencial gravitatorio, la componente vertical del gradiente $g_z$ y la componente diagonal del tensor de Marussi $g_{zz}$ que la malla genera sobre cuatro grillas: (1) una localizada en el polo, (2) otra en el Ecuador, (3) una localizada a altura satelital y (4) una gran grilla de $30^\circ \times 30^\circ$.
+En la Tabla \ref{tab:grids} podemos obtener más información acerca de estas grillas.
+
+El cómputo de estos 
+
+We computed the three gravity fields  on every point of these four grids for different values of $D$, ranging from 0.5 to 10 with a step of 0.5.
+Then we calculated the maximum difference between these results and the value of the analytical solution at the same height.
+
+Because the gravity fields generated by a tesseroid are approximated by the effect of point masses, the numerical results may vary between computation points at same height but at different latitude or longitude.
+That's why we choose for comparison the maximum difference between the results on every point of the grid and the analytical solution.
+
+Finally, we set the acceptable value of $D$ if the corresponding error of the numerical approximation is lower than 0.1\%.
+
+\begin{table}
+\centering
+\caption{
+    Descripciones de las grillas sintéticas en las cuales la comparación entre el modelo numérico y las soluciones analíticas se lleva a cabo. Esta colección de grilla intenta incluir todo posible escenario en el cual el modelo numérico pueda presentar diferentes comportamientos, dependiendo del tamaño de la grilla, su ubicación o su altura sobre la superficie de la Tierra. Cada grilla consiste en un conjunto de 10$\times$10 puntos.
+}
+\label{tab:grids}
+\begin{tabular}{lcccc}
+    Grid & Size & Lat. extension & Lon. extension & Height \\ \hline
+    Pole & $1^\circ \times 1^\circ$ & $89^\circ - 90^\circ$ & $0^\circ - 1^\circ$ & 2km \\
+    Equator & $1^\circ \times 1^\circ$ & $0^\circ - 1^\circ$ & $0^\circ - 1^\circ$ & 2km \\
+    Satellite & $1^\circ \times 1^\circ$ & $89^\circ - 90^\circ$ & $0^\circ - 1^\circ$ & 260km \\
+    Big Grid & $30^\circ \times 30^\circ$ & $60^\circ - 90^\circ$ & $0^\circ - 30^\circ$ & 2km \\
+\end{tabular}
+\end{table}
+
+
+
+\begin{figure}
+    \begin{subfigure}[t]{0.5\textwidth}
+    \centering
+    \includegraphics[height=30em]{../manuscript/figures/Dlinear-thin-differences.pdf}
+    \caption{}
+    \label{fig:D-linear-thin}
+    \end{subfigure}
+    \quad
+    \begin{subfigure}[t]{0.5\textwidth}
+    \centering
+    \includegraphics[height=30em]{../manuscript/figures/Dexp-shifted-thin-differences.pdf}
+    \caption{}
+    \label{fig:D-exp-thin}
+    \end{subfigure}
+    \caption{
+        Diferencias entre los campos gravitatorios generados por el modelo numérico y la solución analítica para un cascarón esférico de 1km de grosor con (a) densidad lineal definida en la ecuación \ref{eq:density-linear} y (b) densidad exponencial definida en la ecuación \ref{eq:density-exp}. Los computos fueron realizados en las cuatro grillas descriptas en la Tabla \ref{tab:grids} y para diferentes valores de la relación distancia-tamaño $D$. Si la diferencia es menor a 0.1\% consideraremos que el modelo ha alcanzado una precisión aceptable para el valor correspondiente de $D$.
+    }
+\end{figure}
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Ejemplo con datos reales}
+
+
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{../manuscript/figures/neuquen-basin.pdf}
+\caption{(a) Topography of Neuqu\'en Basin (in km),
+         (b) Thickness of the sedimentary basin (in meters),
+         (c)-(h) Computed gravity fields: potential $V$ (in J/kg), gradient components $g_x$, $g_y$ and $g_z$ (in mGal) and Marussi tensor components $g_{xy}$ and $g_{zz}$ (in Eötvös), calculated at 50km of height over the ellipsoid.}
+\label{fig:neuquen-basin}
+\end{figure}
 
 
 
