@@ -6,6 +6,7 @@
 \usepackage{graphicx}
 \usepackage{subcaption} % enables subfigure
 \usepackage{natbib}
+\setlength{\bibsep}{0.0pt}      % shrink spaces in references
 \usepackage{url}
 \usepackage[pdftex,colorlinks=true]{hyperref}
 \hypersetup{
@@ -61,7 +62,7 @@ Sin embargo, la disponibilidad de datos gravimétricos satelitales permite lleva
     \centering
     \includegraphics[height=15em]{../manuscript/figures/tesseroid-uieda.pdf}
     \caption{
-        Prisma esférico, también conocido como Tesseroid, en un sistema geocéntrico de coordenadas esféricas, junto a un punto de cómputo $P$ y su respectivo sistema de coordenadas Cartesiano local orientado hacia el Norte. Imágen producida por \citet{Uieda2015}.
+        Prisma esférico, también conocido como Tesseroide, en un sistema geocéntrico de coordenadas esféricas, junto a un punto de cómputo $P$ y su respectivo sistema de coordenadas Cartesiano local orientado hacia el Norte. Imágen producida por \citet{Uieda2015}.
     }
     \label{fig:tesseroid-uieda}
     \end{subfigure}
@@ -77,9 +78,9 @@ Sin embargo, la disponibilidad de datos gravimétricos satelitales permite lleva
     \caption{}
 \end{figure}
 
-Un método muy común para hacerlo es discretizar la Tierra en prismas esféricos conocidos como Tesseroids (ver Figura \ref{fig:tesseroid-uieda}).
-El cómputo de campos gravitatorios generados por un tesseroid arbitrario en un punto externo al mismo involucra la resolución de integrales volumétricas.
-En caso de que el tesseroid posea una densidad variable, las ecuaciones obtenidas por \citet{Grombein2013} \citep[ver también][]{Uieda2016} para el cómputo de los campos gravitatorios se ven ligeramente modificadas. Por ejemplo, el potencial generado por un tesseroid arbitrario con densidad $\rho(r')$ sobre un punto de cómputo $P(r, \phi, \lambda)$ se puede obtener como:
+Un método muy común para hacerlo es discretizar la Tierra en prismas esféricos conocidos como Tesseroides (ver Figura \ref{fig:tesseroid-uieda}).
+El cómputo de campos gravitatorios generados por un tesseroide arbitrario en un punto externo al mismo involucra la resolución de integrales volumétricas.
+En caso de que el tesseroide posea una densidad variable, las ecuaciones obtenidas por \citet{Grombein2013} \citep[ver también][]{Uieda2016} para el cómputo de los campos gravitatorios se ven ligeramente modificadas. Por ejemplo, el potencial generado por un tesseroide arbitrario con densidad $\rho(r')$ sobre un punto de cómputo $P(r, \phi, \lambda)$ se puede obtener como:
 
 \begin{equation}
     V(r,\phi,\lambda) = G 
@@ -135,21 +136,20 @@ Es por ello que \citet{Uieda2016} obtuvo valores estándar de $D$ comparando los
 En este trabajo hemos implementado un modelo directo como el de \citet{Uieda2016} que además permite calcular los campos gravitatorios generados por tesseroides con densidades variables arbitrarias en profundidad.
 Al igual que el anterior, hace uso de la aproximación GLQ, de la versión modificada del algoritmo de discretización adaptativa y su implementación está escrita en lenguajes Python y Cython.
 
-Para garantizar la precisión de la aproximación numérica, hemos llevado a cabo pruebas similares a las que realizaron \citet{Uieda2016} comparando los resultados del modelo numérico con las soluciones analíticas de un cascarón esférico, en nuestro caso con densidades lineales, exponenciales y discontinuas.
+Para garantizar la precisión de la aproximación numérica, hemos llevado a cabo pruebas similares a las que realizaron \citet{Uieda2016} comparando los resultados del modelo numérico con las soluciones analíticas de un cascarón esférico, en nuestro caso con densidades lineales y exponenciales.
 Para lo cual fue necesario obtener las soluciones analíticas correspondientes a cada función de densidad.
 
 
 \section{Determinación de Relación Distancia-Tamaño}
 
-Con el objetivo de evaluar el nuevo modelo directo con tesseroides de densidad variable y estimar el error de la aproximación hemos comparado el modelo numérico con las soluciones analíticas de un cascarón esférico para tres casos especiales: una densidad linear, una exponencial y una discontinua.
+Con el objetivo de evaluar el nuevo modelo directo con tesseroides de densidad variable y estimar el error de la aproximación hemos comparado el modelo numérico con las soluciones analíticas de un cascarón esférico para dos casos especiales: una densidad linear y una exponencial
 
 La estimación del error nos es útil para la determinación del mínimo valor de relación distancia-tamaño $D$ de manera tal que la diferencia entre el modelo numérico y las soluciones analíticas estén debajo de un umbral aceptable.
 
-El cascarón esférico ha sido aproximado a través de una malla de tesseroides de $30^\circ \times 30^\circ$ y hemos calculado el potencial gravitatorio, la componente vertical del gradiente $g_z$ y la componente diagonal del tensor de Marussi $g_{zz}$ que la malla genera sobre cuatro grillas: (1) una localizada en el polo, (2) otra en el Ecuador, (3) una localizada a altura satelital y (4) una gran grilla de $30^\circ \times 30^\circ$.
+Hemos aproximado el cascarón esférico a través de una malla de tesseroides de $30^\circ \times 30^\circ$ para luego calcular el potencial gravitatorio, la componente vertical del gradiente $g_z$ y la componente diagonal del tensor de Marussi $g_{zz}$ que la malla genera sobre cuatro grillas: (1) una localizada en el polo, (2) otra en el Ecuador, (3) una localizada a altura satelital y (4) una gran grilla de $30^\circ \times 30^\circ$.
 En la Tabla \ref{tab:grids} podemos obtener más información acerca de estas grillas.
 
-Además, el cómputo de estos campos gravitatorios en cada punto de estas grillas fue realizado para diferentes valores de $D$: desde 0.5 a 10 con un paso de 0.5.
-Y luego calculamos la máxima diferencia entre estos resultados y el valor de la solución analítica a la misma altura.
+Además, el cómputo de estos campos gravitatorios en cada punto de estas grillas fue realizado para diferentes valores de $D$: desde 0.5 a 10 con un paso de 0.5, para luego calcular la máxima diferencia entre estos resultados y el valor de la solución analítica a la misma altura.
 Finalmente obtenemos como valor aceptable de $D$ si el error de la correspondiente aproximación numérica es menor a 0.1\%.
 
 \begin{table}
@@ -167,20 +167,7 @@ Finalmente obtenemos como valor aceptable de $D$ si el error de la correspondien
 \end{tabular}
 \end{table}
 
-La determinación de $D$ fue realizada para una función lineal (ecuación \ref{eq:density-linear}) y una exponencial (ecuación \ref{eq:density-exp}), cuyos resultados puede observarse en las Figuras \ref{fig:D-linear-thin} y \ref{fig:D-exp-thin}, respectivamente.
-
-\begin{equation}
-    \rho(r') = ar' + c,
-    \label{eq:density-linear}
-\end{equation}
-
-\begin{equation}
-    \rho(r') = A e^{-(r' - R)/b}
-\label{eq:density-exp}
-\end{equation}
-
-
-\begin{figure}
+\begin{figure}[t!]
     \begin{subfigure}[t]{0.5\textwidth}
     \centering
     \includegraphics[height=30em]{../manuscript/figures/Dlinear-thin-differences.pdf}
@@ -199,6 +186,19 @@ La determinación de $D$ fue realizada para una función lineal (ecuación \ref{
     }
 \end{figure}
 
+La determinación de $D$ fue realizada para una función lineal (ecuación \ref{eq:density-linear}) y una exponencial (ecuación \ref{eq:density-exp}), cuyos resultados puede observarse en las Figuras \ref{fig:D-linear-thin} y \ref{fig:D-exp-thin}, respectivamente.
+
+\begin{equation}
+    \rho(r') = ar' + c,
+    \label{eq:density-linear}
+\end{equation}
+
+\begin{equation}
+    \rho(r') = A e^{-(r' - R)/b}
+\label{eq:density-exp}
+\end{equation}
+
+
 A partir de las mismas podemos concluir que para ambos casos es necesario un $D$ igual a 1, 2 y 8 para el cálculo del potencial gravitatorio, de las componentes del gradiente ($g_i$) y las componentes del tensor de Marussi ($g_ij$), $i \in \{ x, y, z\}$, respectivamente.
 
 
@@ -210,9 +210,9 @@ A partir de las mismas podemos concluir que para ambos casos es necesario un $D$
 Con el objetivo de exponer el comportamiento del nuevo modelo directo hemos decidido aplicarlo sobre datos reales, para lo cual hemos escogido la cuenca Neuquina: una cuenca sedimentaria que se encuentra al Este de los Andes, entre los 32$^\circ$S y los 40$^\circ$S de latitud (ver Figura \ref{fig:neuquen-basin}a) e incluye siliciclastos, carbonatos y evaporitas continentales y marinos acumulados a lo largo del Jurasico y el Cretaceo, constituyendo un registro estratigráfico hasta los 5000m de profundidad \citep{Howell2005}.
 
 
-\begin{figure}
+\begin{figure}[b!]
 \centering
-\includegraphics[width=\linewidth]{../manuscript/figures/neuquen-basin.pdf}
+\includegraphics[width=0.975\linewidth]{../manuscript/figures/neuquen-basin.pdf}
 \caption{(a) Topography of Neuqu\'en Basin (in km),
          (b) Thickness of the sedimentary basin (in meters),
          (c)-(h) Computed gravity fields: potential $V$ (in J/kg), gradient components $g_x$, $g_y$ and $g_z$ (in mGal) and Marussi tensor components $g_{xy}$ and $g_{zz}$ (in Eötvös), calculated at 50km of height over the ellipsoid.}
@@ -228,13 +228,7 @@ Además, debimos definir una función densidad para el modelo completo.
 Para este ejemplo específico hemos escogido una densidad lineal que asume el mínimo en la superficie y el máximo a los 5858m, es decir en la profundidad máxima de la cuenca.
 
 Finalmente hemos realizado el cómputo del potencial gravitatorio, todas las componentes del gradiente ($g_x$, $g_y$, $g_z$) y las componentes $g_{xy}$ y $g_{zz}$ del tensor de Marussi sobre una grilla de cómputo de 159$\times$163 nodos con una separación de 0.05$^\circ$ en ambas direcciones latitudinal y longitudinal, ubicada a 50km de altura sobre el ellipsoide de referencia.
-Los campos gravitatorios resultantes pueden observarse en las Figuras \ref{fig:neuquen-basin}c-h.
-
-
-We have finally computed the gravity potential $V$, the gradient components $g_x$, $g_y$ and $g_z$, and the Marussi tensor components $g_{xy}$ and $g_{zz}$ on a computation grid of 159$\times$163 nodes with a 0.05$^\circ$ spacing on both longitude and latitude directions at a 50km height over the reference ellipsoid.
-The resulting gravity fields can be seen in Figures \ref{fig:neuquen-basin}c-h.
-We have excluded the other components of the Marussi tensor from the Figure, although they have also been computed and can be found in the repository.
-
+Los campos gravitatorios resultantes pueden observarse en las Figuras \ref{fig:neuquen-basin}c-h..
 
 
 \bibliographystyle{apalike-es}
