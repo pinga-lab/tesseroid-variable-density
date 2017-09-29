@@ -5,6 +5,7 @@
 \usepackage{amsmath}
 \usepackage{graphicx}
 \usepackage{subcaption} % enables subfigure
+\usepackage{multicol}
 \usepackage{natbib}
 \setlength{\bibsep}{0.0pt}      % shrink spaces in references
 \usepackage{url}
@@ -24,9 +25,9 @@
 }
 \author{
     Santiago R. Soler$^{1,2}$ \vspace{0.5em} \\ 
-    \textit{$^1$ Instituto Geofísico Sismológico Volponi, Universidad Nacional de San Juan} \\
-    \textit{$^2$ Consejo Nacional de Investigaciones Científicas y Técnicas (CONICET)} \vspace{0.4em} \\
-    email: santiago.r.soler@gmail.com
+    \normalsize{\textit{$^1$ Instituto Geofísico Sismológico Volponi, Universidad Nacional de San Juan}} \\
+    \normalsize{\textit{$^2$ Consejo Nacional de Investigaciones Científicas y Técnicas (CONICET)}} \vspace{0.4em} \\
+    \normalsize{email: santiago.r.soler@gmail.com}
 }
 \date{}
 
@@ -39,12 +40,15 @@
 
 \vspace{-2.5em}
 \begin{center}
-\textbf{Palabras Clave:} poner algo
+\textbf{Palabras Clave:} gravimetría, tesseroid, densidad variable
 \end{center}
 \vspace{0.5em}
 
 \begin{abstract}
-El cálculo directo de campos gravitatorios para grandes extensiones requiere tomar en cuenta la curvatura de la Tierra, lo cual suele resolverse a través del uso de prismas esféricos llamados Tesseroides. Además, estructuras como cuencas sedimentarias presentan variaciones de densidad con la profundidad.
+El cálculo directo de campos gravitatorios para grandes extensiones requiere tomar en cuenta la curvatura de la Tierra, lo cual suele resolverse a través del uso de prismas esféricos llamados Tesseroides.
+Además, muchas estructuras geológicas presentan variaciones de la densidad con la profundidad.
+En este trabajo hemos sido capaces de implementar un modelo directo que reproduce los campos gravitatorios generados por Tesseroides con densidad variable en profundidad, para lo cual hemos utilizado como aproximación la Cuadratura de Gauss-Legendre y un algoritmo de discretización adaptativa con el objetivo de garantizar la precisión de la misma.
+El código fue escrito en Python y Cython y será liberado como Software Libre.
 
 \end{abstract}
 
@@ -60,7 +64,7 @@ Sin embargo, la disponibilidad de datos gravimétricos satelitales permite lleva
 \begin{figure}
     \begin{subfigure}[t]{0.5\textwidth}
     \centering
-    \includegraphics[height=15em]{../manuscript/figures/tesseroid-uieda.pdf}
+    \includegraphics[height=18em]{../manuscript/figures/tesseroid-uieda.pdf}
     \caption{
         Prisma esférico, también conocido como Tesseroide, en un sistema geocéntrico de coordenadas esféricas, junto a un punto de cómputo $P$ y su respectivo sistema de coordenadas Cartesiano local orientado hacia el Norte. Imágen producida por \citet{Uieda2015}.
     }
@@ -69,7 +73,7 @@ Sin embargo, la disponibilidad de datos gravimétricos satelitales permite lleva
     \quad
     \begin{subfigure}[t]{0.5\textwidth}
     \centering
-    \includegraphics[height=15em]{../manuscript/figures/spherical-shell.pdf}
+    \includegraphics[height=18em]{../manuscript/figures/spherical-shell.pdf}
     \caption{
         Cascarón esférico con radios interior y exteior $R_1$ y $R_2$, respectivamente. El punto de cómputo $Q$ está localizado en el eje $z$ a una distancia $r$ al centro del cascarón. Vamos a suponer que $Q$ se encuentra por fuera del radio exterior $R_2$, es decir $r > R_2$.
     }
@@ -100,7 +104,7 @@ En caso de que el tesseroide posea una densidad variable, las ecuaciones obtenid
 
 Este tipos de integrales son generalmente aproximadas por cálculos numéricos.
 Para el caso de densidades variables hemos concluido que uno de los métodos que mejor se adecúa para hacerlo es el que involucra la utilización de la Cuadratura de Gauss Legendre (GLQ) \citep{Asgharzadeh2007, Uieda2016, Uieda2017}.
-El mismo consiste en aproximar las integrales por una suma ponderada de los efectos de masas puntuales localizadas en los ceros (previamente rescaldados) de los polinomios de Legendre.
+El mismo consiste en aproximar las integrales por una suma ponderada de los efectos de masas puntuales localizadas en los ceros (previamente rescaldados) de los polinomios de Legendre:
 
 \begin{equation}
     \iiint\limits_\Omega \rho(r') g(r', \phi', \lambda') d\Omega \approx
@@ -123,7 +127,7 @@ El mismo consiste en aproximar las integrales por una suma ponderada de los efec
 
 \noindent $P_N$ es el polinomio de Legendre de orden $N$, $x_i$ sus ceros y $N^i$ con $i \in \{ r, \phi, \lambda\}$ los órdenes de las aproximaciones GLQ.
 
-\citet{Uieda2016} desarrolló un modelo directo que permite calcular los campos gravitatorios generados por tesseroides con densidad homogenea utilzando las GLQ, implementado en Python e incluido en la librería de código abierto Fatiando a Terra \citep{Uieda2013} para el modelado e inversión geofísica.
+\citet{Uieda2016} desarrollaron un modelo directo que permite calcular los campos gravitatorios generados por tesseroides con densidad homogenea utilzando las GLQ, implementado en Python e incluido en la librería de código abierto Fatiando a Terra \citep{Uieda2013} para el modelado e inversión geofísica.
 
 \citet{Ku1977} advirtió que la aproximación GLQ se vuelve menos precisa a medida que el punto de cómputo se acerca al tesseroide o bien para órdenes menores de GLQ.
 En vez de aumentar los órdenes de la aproximación, \citet{Uieda2016} lo fijan a segundo orden y aumentan la precisión a través de una versión modificada del algoritmo de discretización adaptativa de \citet{Li2011}.
@@ -131,7 +135,7 @@ Este consiste en dividir al tesseroide en otros más pequeños en caso de que el
 
 De esta manera, el valor asignado a $D$ controla la precisión de la aproximación: para mayores valores de $D$, el error de la aproximación se reduce.
 Sin embargo, no existe una relación directa entre $D$ y dicho error.
-Es por ello que \citet{Uieda2016} obtuvo valores estándar de $D$ comparando los campos gravitatorios generados por un cascarón esférico con densidad constante, un caso especial de las integrales volumétricas que posee solución analítica \citep{LaFehr1991, Mikuska2006, Grombein2013}.
+Es por ello que \citet{Uieda2016} obtuvieron valores estándar de $D$ comparando los campos gravitatorios generados por un cascarón esférico con densidad constante, un caso especial de las integrales volumétricas que posee solución analítica \citep{LaFehr1991, Mikuska2006, Grombein2013}.
 
 En este trabajo hemos implementado un modelo directo como el de \citet{Uieda2016} que además permite calcular los campos gravitatorios generados por tesseroides con densidades variables arbitrarias en profundidad.
 Al igual que el anterior, hace uso de la aproximación GLQ, de la versión modificada del algoritmo de discretización adaptativa y su implementación está escrita en lenguajes Python y Cython.
@@ -150,24 +154,9 @@ Hemos aproximado el cascarón esférico a través de una malla de tesseroides de
 En la Tabla \ref{tab:grids} podemos obtener más información acerca de estas grillas.
 
 Además, el cómputo de estos campos gravitatorios en cada punto de estas grillas fue realizado para diferentes valores de $D$: desde 0.5 a 10 con un paso de 0.5, para luego calcular la máxima diferencia entre estos resultados y el valor de la solución analítica a la misma altura.
-Finalmente obtenemos como valor aceptable de $D$ si el error de la correspondiente aproximación numérica es menor a 0.1\%.
+Finalmente obtenemos como valor aceptable de $D$ el que presente un error de la correspondiente aproximación numérica menor a 0.1\%.
 
-\begin{table}
-\centering
-\caption{
-    Descripciones de las grillas sintéticas en las cuales la comparación entre el modelo numérico y las soluciones analíticas se lleva a cabo. Esta colección de grilla intenta incluir todo posible escenario en el cual el modelo numérico pueda presentar diferentes comportamientos, dependiendo del tamaño de la grilla, su ubicación o su altura sobre la superficie de la Tierra. Cada grilla consiste en un conjunto de 10$\times$10 puntos.
-}
-\label{tab:grids}
-\begin{tabular}{lcccc}
-    Grilla & Tamaño & Extensión Lat. & Extensión Lon. & Altura \\ \hline
-    Pole & $1^\circ \times 1^\circ$ & $89^\circ - 90^\circ$ & $0^\circ - 1^\circ$ & 2km \\
-    Equator & $1^\circ \times 1^\circ$ & $0^\circ - 1^\circ$ & $0^\circ - 1^\circ$ & 2km \\
-    Satellite & $1^\circ \times 1^\circ$ & $89^\circ - 90^\circ$ & $0^\circ - 1^\circ$ & 260km \\
-    Big Grid & $30^\circ \times 30^\circ$ & $60^\circ - 90^\circ$ & $0^\circ - 30^\circ$ & 2km \\
-\end{tabular}
-\end{table}
-
-\begin{figure}[t!]
+\begin{figure}[b!]
     \begin{subfigure}[t]{0.5\textwidth}
     \centering
     \includegraphics[height=30em]{../manuscript/figures/Dlinear-thin-differences.pdf}
@@ -186,18 +175,38 @@ Finalmente obtenemos como valor aceptable de $D$ si el error de la correspondien
     }
 \end{figure}
 
-La determinación de $D$ fue realizada para una función lineal (ecuación \ref{eq:density-linear}) y una exponencial (ecuación \ref{eq:density-exp}), cuyos resultados puede observarse en las Figuras \ref{fig:D-linear-thin} y \ref{fig:D-exp-thin}, respectivamente.
 
-\begin{equation}
-    \rho(r') = ar' + c,
-    \label{eq:density-linear}
-\end{equation}
+\begin{table}
+\centering
+\caption{
+    Descripciones de las grillas sintéticas en las cuales la comparación entre el modelo numérico y las soluciones analíticas se lleva a cabo. Esta colección de grilla intenta incluir todo posible escenario en el cual el modelo numérico pueda presentar diferentes comportamientos, dependiendo del tamaño de la grilla, su ubicación o su altura sobre la superficie de la Tierra. Cada grilla consiste en un conjunto de 10$\times$10 puntos.
+}
+\label{tab:grids}
+\begin{tabular}{lcccc}
+    Grilla & Tamaño & Extensión Lat. & Extensión Lon. & Altura \\ \hline
+    Pole & $1^\circ \times 1^\circ$ & $89^\circ - 90^\circ$ & $0^\circ - 1^\circ$ & 2km \\
+    Equator & $1^\circ \times 1^\circ$ & $0^\circ - 1^\circ$ & $0^\circ - 1^\circ$ & 2km \\
+    Satellite & $1^\circ \times 1^\circ$ & $89^\circ - 90^\circ$ & $0^\circ - 1^\circ$ & 260km \\
+    Big Grid & $30^\circ \times 30^\circ$ & $60^\circ - 90^\circ$ & $0^\circ - 30^\circ$ & 2km \\
+\end{tabular}
+\end{table}
 
-\begin{equation}
-    \rho(r') = A e^{-(r' - R)/b}
-\label{eq:density-exp}
-\end{equation}
+Este proceso de determinación de $D$ fue realizado para una función lineal (ecuación \ref{eq:density-linear}) y una exponencial (ecuación \ref{eq:density-exp}), cuyos resultados pueden observarse en las Figuras \ref{fig:D-linear-thin} y \ref{fig:D-exp-thin}, respectivamente.
 
+\vspace{-2.5em}
+\begin{multicols}{2}
+    \centering
+    \begin{equation}
+        \rho(r') = ar' + c,
+        \label{eq:density-linear}
+    \end{equation}
+    \break
+    \centering
+    \begin{equation}
+        \rho(r') = A e^{-(r' - R)/b}
+    \label{eq:density-exp}
+    \end{equation}
+\end{multicols}
 
 A partir de las mismas podemos concluir que para ambos casos es necesario un $D$ igual a 1, 2 y 8 para el cálculo del potencial gravitatorio, de las componentes del gradiente ($g_i$) y las componentes del tensor de Marussi ($g_ij$), $i \in \{ x, y, z\}$, respectivamente.
 
@@ -221,14 +230,14 @@ Con el objetivo de exponer el comportamiento del nuevo modelo directo hemos deci
 
 El espesor del paquete sedimentario fue obtenido de \citet{Heine2007}, a partir del cual construimos una grilla regular con una resolución de 0.05$^\circ$ en ambas direcciones latitudinal y longitudinal con un valor de espesor por cada nodo de la grilla (ver Figura \ref{fig:neuquen-basin}b).
 
-Con el objetivo de calcular los campos gravitatorios generados por esta cuenca, hemos creado una malla de tesseroides, cada uno localizado sobre uno de los nodos de la grilla, con dimensiones de 0.05$^\circ$ $\times$ 0.05$^\circ$ y profundidad igual espesor de la cuenca en el nodo correspondiente.
+Con el objetivo de calcular los campos gravitatorios generados por esta cuenca, hemos creado una malla de tesseroides, cada uno localizado sobre uno de los nodos de la grilla, con dimensiones de 0.05$^\circ$ $\times$ 0.05$^\circ$ y profundidad igual al  espesor de la cuenca en el nodo correspondiente.
 
-Además, debimos definir una función densidad para el modelo completo.
+Además, tuvimos que definir una función densidad para el modelo completo.
 \citet{Sigismondi2012} propuso una densidad mínima y un máxima para la cuenca Nequina de 2755kg/m$^3$ y 412kg/m$^3$, respectivamente.
 Para este ejemplo específico hemos escogido una densidad lineal que asume el mínimo en la superficie y el máximo a los 5858m, es decir en la profundidad máxima de la cuenca.
 
 Finalmente hemos realizado el cómputo del potencial gravitatorio, todas las componentes del gradiente ($g_x$, $g_y$, $g_z$) y las componentes $g_{xy}$ y $g_{zz}$ del tensor de Marussi sobre una grilla de cómputo de 159$\times$163 nodos con una separación de 0.05$^\circ$ en ambas direcciones latitudinal y longitudinal, ubicada a 50km de altura sobre el ellipsoide de referencia.
-Los campos gravitatorios resultantes pueden observarse en las Figuras \ref{fig:neuquen-basin}c-h..
+Los campos gravitatorios resultantes pueden observarse en las Figuras \ref{fig:neuquen-basin}c-h.
 
 
 \bibliographystyle{apalike-es}
