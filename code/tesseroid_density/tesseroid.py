@@ -227,12 +227,48 @@ def _forward_model(args):
         density = _check_tesseroid(tesseroid, dens)
         if density is None:
             continue
-        bounds = np.array(tesseroid.get_bounds())
-        error = func(bounds, density, ratio, STACK_SIZE, lon, sinlat, coslat,
-                     radius, result)
+        if callable(density):
+            subset = _divide_by_density(tesseroid)
+            for tess in subset:
+                bounds = np.array(tess.get_bounds())
+                error = func(bounds, density, ratio, STACK_SIZE, lon, sinlat,
+                             coslat, radius, result)
+        else:
+            bounds = np.array(tesseroid.get_bounds())
+            error = func(bounds, density, ratio, STACK_SIZE, lon, sinlat,
+                         coslat, radius, result)
         if error != 0:
             warnings.warn(warning_msg, RuntimeWarning)
     return result
+
+
+def _divide_by_density(tesseroid):
+    subset = []
+    divider = _divider_calculation(tesseroid)
+    if divider is None:
+        subset.append(tesseroid)
+    else:
+        tess1, tess2 = tesseroid.copy(), tesseroid.copy()
+        tess1.top, tess2.bottom = divider, divider
+        subset.append(tess1)
+        subset.append(tess2)
+    return subset
+
+
+def _divider_calculation(tesseroid):
+    top, bottom = tesseroid.top, tesseroid.bottom
+    density_fun = tesseroid.props['density']
+    density_top, density_bottom = density_fun(top), density_fun(bottom)
+    heights = np.linspace(bottom, top, 101)
+    line = (density_top - density_bottom)/(top - bottom) * heights - \
+        (density_top - density_bottom)/(top - bottom) * bottom + \
+        density_bottom
+    densities = np.array([density_fun(height) for height in heights])
+    diff = densities - line
+    if np.allclose(diff, diff[0]):
+        return None
+    else:
+        return heights[np.argmax(np.abs(diff))]
 
 
 def _split_arrays(arrays, extra_args, nparts):
