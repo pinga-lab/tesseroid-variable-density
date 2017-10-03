@@ -105,6 +105,7 @@ RATIO_V = 1
 RATIO_G = 2
 RATIO_GG = 8
 STACK_SIZE = 100
+DENSITY_DIVISIONS = 1
 
 
 def _check_input(lon, lat, height, model, ratio, njobs, pool):
@@ -185,6 +186,7 @@ def _dispatcher(field, lon, lat, height, model, **kwargs):
     pool = kwargs.get('pool', None)
     dens = kwargs['dens']
     ratio = kwargs['ratio']
+    density_divisions = kwargs['density_divisions']
     result = _check_input(lon, lat, height, model, ratio, njobs, pool)
     if njobs > 1 and pool is None:
         pool = multiprocessing.Pool(njobs)
@@ -193,10 +195,11 @@ def _dispatcher(field, lon, lat, height, model, **kwargs):
         created_pool = False
     if pool is None:
         _forward_model([lon, lat, height, result, model, dens, ratio,
-                        field])
+                        field, density_divisions])
     else:
         chunks = _split_arrays(arrays=[lon, lat, height, result],
-                               extra_args=[model, dens, ratio, field],
+                               extra_args=[model, dens, ratio, field,
+                                           density_divisions],
                                nparts=njobs)
         result = np.hstack(pool.map(_forward_model, chunks))
     if created_pool:
@@ -215,7 +218,7 @@ def _forward_model(args):
 
     lon, lat, height, result, model, dens, ratio, field
     """
-    lon, lat, height, result, model, dens, ratio, field = args
+    lon, lat, height, result, model, dens, ratio, field, divisions = args
     lon, sinlat, coslat, radius = _convert_coords(lon, lat, height)
     func = getattr(_tesseroid, field)
     warning_msg = (
@@ -227,8 +230,8 @@ def _forward_model(args):
         density = _check_tesseroid(tesseroid, dens)
         if density is None:
             continue
-        if callable(density):
-            subset = _divide_by_density(tesseroid)
+        if callable(density) and divisions > 0:
+            subset = _divide_by_density(tesseroid, divisions)
             for tess in subset:
                 bounds = np.array(tess.get_bounds())
                 error = func(bounds, density, ratio, STACK_SIZE, lon, sinlat,
@@ -242,16 +245,21 @@ def _forward_model(args):
     return result
 
 
-def _divide_by_density(tesseroid):
-    subset = []
-    divider = _divider_calculation(tesseroid)
-    if divider is None:
-        subset.append(tesseroid)
-    else:
-        tess1, tess2 = tesseroid.copy(), tesseroid.copy()
-        tess1.top, tess2.bottom = divider, divider
-        subset.append(tess1)
-        subset.append(tess2)
+def _divide_by_density(tesseroid, divisions):
+    divisions = int(divisions)
+    subset = [tesseroid]
+    N_iter = (2**np.arange(0, divisions - 1)).sum()
+    for i in range(N_iter):
+        tess = subset[0]
+        divider = _divider_calculation(tess)
+        if divider is None:
+            subset.append(tess)
+        else:
+            tess1, tess2 = tess.copy(), tess.copy()
+            tess1.top, tess2.bottom = divider, divider
+            subset.append(tess1)
+            subset.append(tess2)
+        subset.pop(0)
     return subset
 
 
@@ -296,7 +304,7 @@ def _split_arrays(arrays, extra_args, nparts):
 
 
 def potential(lon, lat, height, model, dens=None, ratio=RATIO_V,
-              njobs=1, pool=None):
+              njobs=1, pool=None, density_divisions=DENSITY_DIVISIONS):
     """
     Calculate the gravitational potential due to a tesseroid model.
 
@@ -345,13 +353,14 @@ def potential(lon, lat, height, model, dens=None, ratio=RATIO_V,
     """
     field = 'potential'
     result = _dispatcher(field, lon, lat, height, model, dens=dens,
-                         ratio=ratio, njobs=njobs, pool=pool)
+                         ratio=ratio, njobs=njobs, pool=pool,
+                         density_divisions=density_divisions)
     result *= G
     return result
 
 
 def gx(lon, lat, height, model, dens=None, ratio=RATIO_G,
-       njobs=1, pool=None):
+       njobs=1, pool=None, density_divisions=DENSITY_DIVISIONS):
     """
     Calculate the North component of the gravitational attraction.
 
@@ -400,13 +409,14 @@ def gx(lon, lat, height, model, dens=None, ratio=RATIO_G,
     """
     field = 'gx'
     result = _dispatcher(field, lon, lat, height, model, dens=dens,
-                         ratio=ratio, njobs=njobs, pool=pool)
+                         ratio=ratio, njobs=njobs, pool=pool,
+                         density_divisions=density_divisions)
     result *= SI2MGAL*G
     return result
 
 
 def gy(lon, lat, height, model, dens=None, ratio=RATIO_G,
-       njobs=1, pool=None):
+       njobs=1, pool=None, density_divisions=DENSITY_DIVISIONS):
     """
     Calculate the East component of the gravitational attraction.
 
@@ -455,13 +465,14 @@ def gy(lon, lat, height, model, dens=None, ratio=RATIO_G,
     """
     field = 'gy'
     result = _dispatcher(field, lon, lat, height, model, dens=dens,
-                         ratio=ratio, njobs=njobs, pool=pool)
+                         ratio=ratio, njobs=njobs, pool=pool,
+                         density_divisions=density_divisions)
     result *= SI2MGAL*G
     return result
 
 
 def gz(lon, lat, height, model, dens=None, ratio=RATIO_G,
-       njobs=1, pool=None):
+       njobs=1, pool=None, density_divisions=DENSITY_DIVISIONS):
     """
     Calculate the radial component of the gravitational attraction.
 
@@ -515,13 +526,14 @@ def gz(lon, lat, height, model, dens=None, ratio=RATIO_G,
     """
     field = 'gz'
     result = _dispatcher(field, lon, lat, height, model, dens=dens,
-                         ratio=ratio, njobs=njobs, pool=pool)
+                         ratio=ratio, njobs=njobs, pool=pool,
+                         density_divisions=density_divisions)
     result *= SI2MGAL*G
     return result
 
 
 def gxx(lon, lat, height, model, dens=None, ratio=RATIO_GG,
-        njobs=1, pool=None):
+        njobs=1, pool=None, density_divisions=DENSITY_DIVISIONS):
     """
     Calculate the xx component of the gravity gradient tensor.
 
@@ -570,13 +582,14 @@ def gxx(lon, lat, height, model, dens=None, ratio=RATIO_GG,
     """
     field = 'gxx'
     result = _dispatcher(field, lon, lat, height, model, dens=dens,
-                         ratio=ratio, njobs=njobs, pool=pool)
+                         ratio=ratio, njobs=njobs, pool=pool,
+                         density_divisions=density_divisions)
     result *= SI2EOTVOS*G
     return result
 
 
 def gxy(lon, lat, height, model, dens=None, ratio=RATIO_GG,
-        njobs=1, pool=None):
+        njobs=1, pool=None, density_divisions=DENSITY_DIVISIONS):
     """
     Calculate the xy component of the gravity gradient tensor.
 
@@ -625,13 +638,14 @@ def gxy(lon, lat, height, model, dens=None, ratio=RATIO_GG,
     """
     field = 'gxy'
     result = _dispatcher(field, lon, lat, height, model, dens=dens,
-                         ratio=ratio, njobs=njobs, pool=pool)
+                         ratio=ratio, njobs=njobs, pool=pool,
+                         density_divisions=density_divisions)
     result *= SI2EOTVOS*G
     return result
 
 
 def gxz(lon, lat, height, model, dens=None, ratio=RATIO_GG,
-        njobs=1, pool=None):
+        njobs=1, pool=None, density_divisions=DENSITY_DIVISIONS):
     """
     Calculate the xz component of the gravity gradient tensor.
 
@@ -680,13 +694,14 @@ def gxz(lon, lat, height, model, dens=None, ratio=RATIO_GG,
     """
     field = 'gxz'
     result = _dispatcher(field, lon, lat, height, model, dens=dens,
-                         ratio=ratio, njobs=njobs, pool=pool)
+                         ratio=ratio, njobs=njobs, pool=pool,
+                         density_divisions=density_divisions)
     result *= SI2EOTVOS*G
     return result
 
 
 def gyy(lon, lat, height, model, dens=None, ratio=RATIO_GG,
-        njobs=1, pool=None):
+        njobs=1, pool=None, density_divisions=DENSITY_DIVISIONS):
     """
     Calculate the yy component of the gravity gradient tensor.
 
@@ -735,13 +750,14 @@ def gyy(lon, lat, height, model, dens=None, ratio=RATIO_GG,
     """
     field = 'gyy'
     result = _dispatcher(field, lon, lat, height, model, dens=dens,
-                         ratio=ratio, njobs=njobs, pool=pool)
+                         ratio=ratio, njobs=njobs, pool=pool,
+                         density_divisions=density_divisions)
     result *= SI2EOTVOS*G
     return result
 
 
 def gyz(lon, lat, height, model, dens=None, ratio=RATIO_GG,
-        njobs=1, pool=None):
+        njobs=1, pool=None, density_divisions=DENSITY_DIVISIONS):
     """
     Calculate the yz component of the gravity gradient tensor.
 
@@ -790,13 +806,14 @@ def gyz(lon, lat, height, model, dens=None, ratio=RATIO_GG,
     """
     field = 'gyz'
     result = _dispatcher(field, lon, lat, height, model, dens=dens,
-                         ratio=ratio, njobs=njobs, pool=pool)
+                         ratio=ratio, njobs=njobs, pool=pool,
+                         density_divisions=density_divisions)
     result *= SI2EOTVOS*G
     return result
 
 
 def gzz(lon, lat, height, model, dens=None, ratio=RATIO_GG,
-        njobs=1, pool=None):
+        njobs=1, pool=None, density_divisions=DENSITY_DIVISIONS):
     """
     Calculate the zz component of the gravity gradient tensor.
 
@@ -845,6 +862,7 @@ def gzz(lon, lat, height, model, dens=None, ratio=RATIO_GG,
     """
     field = 'gzz'
     result = _dispatcher(field, lon, lat, height, model, dens=dens,
-                         ratio=ratio, njobs=njobs, pool=pool)
+                         ratio=ratio, njobs=njobs, pool=pool,
+                         density_divisions=density_divisions)
     result *= SI2EOTVOS*G
     return result
