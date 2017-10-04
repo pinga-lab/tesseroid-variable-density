@@ -338,6 +338,16 @@ def potential(lon, lat, height, model, dens=None, ratio=RATIO_V,
         instead of creating a new one. You must still specify *njobs* as the
         number of processes in the pool. Use this to avoid spawning processes
         on each call to this functions, which can have significant overhead.
+    * density_divisions : int
+        If any tesseroid of the model has variable density, it will be
+        subdivided on the radius coordinate based on the maximum variation
+        of its density.
+        This specify the order of these subdivisions (e.g. if
+        density_divisions == 2, then the tesseroid will be subdivided in two
+        smaller ones, and then each one of these two will be subdivided in
+        another two).
+        It's ignored in case of homogeneous density.
+        Default to 1.
 
     Returns:
 
@@ -394,6 +404,16 @@ def gx(lon, lat, height, model, dens=None, ratio=RATIO_G,
         instead of creating a new one. You must still specify *njobs* as the
         number of processes in the pool. Use this to avoid spawning processes
         on each call to this functions, which can have significant overhead.
+    * density_divisions : int
+        If any tesseroid of the model has variable density, it will be
+        subdivided on the radius coordinate based on the maximum variation
+        of its density.
+        This specify the order of these subdivisions (e.g. if
+        density_divisions == 2, then the tesseroid will be subdivided in two
+        smaller ones, and then each one of these two will be subdivided in
+        another two).
+        It's ignored in case of homogeneous density.
+        Default to 1.
 
     Returns:
 
@@ -450,6 +470,16 @@ def gy(lon, lat, height, model, dens=None, ratio=RATIO_G,
         instead of creating a new one. You must still specify *njobs* as the
         number of processes in the pool. Use this to avoid spawning processes
         on each call to this functions, which can have significant overhead.
+    * density_divisions : int
+        If any tesseroid of the model has variable density, it will be
+        subdivided on the radius coordinate based on the maximum variation
+        of its density.
+        This specify the order of these subdivisions (e.g. if
+        density_divisions == 2, then the tesseroid will be subdivided in two
+        smaller ones, and then each one of these two will be subdivided in
+        another two).
+        It's ignored in case of homogeneous density.
+        Default to 1.
 
     Returns:
 
@@ -511,6 +541,16 @@ def gz(lon, lat, height, model, dens=None, ratio=RATIO_G,
         instead of creating a new one. You must still specify *njobs* as the
         number of processes in the pool. Use this to avoid spawning processes
         on each call to this functions, which can have significant overhead.
+    * density_divisions : int
+        If any tesseroid of the model has variable density, it will be
+        subdivided on the radius coordinate based on the maximum variation
+        of its density.
+        This specify the order of these subdivisions (e.g. if
+        density_divisions == 2, then the tesseroid will be subdivided in two
+        smaller ones, and then each one of these two will be subdivided in
+        another two).
+        It's ignored in case of homogeneous density.
+        Default to 1.
 
     Returns:
 
@@ -567,6 +607,16 @@ def gxx(lon, lat, height, model, dens=None, ratio=RATIO_GG,
         instead of creating a new one. You must still specify *njobs* as the
         number of processes in the pool. Use this to avoid spawning processes
         on each call to this functions, which can have significant overhead.
+    * density_divisions : int
+        If any tesseroid of the model has variable density, it will be
+        subdivided on the radius coordinate based on the maximum variation
+        of its density.
+        This specify the order of these subdivisions (e.g. if
+        density_divisions == 2, then the tesseroid will be subdivided in two
+        smaller ones, and then each one of these two will be subdivided in
+        another two).
+        It's ignored in case of homogeneous density.
+        Default to 1.
 
     Returns:
 
@@ -623,6 +673,16 @@ def gxy(lon, lat, height, model, dens=None, ratio=RATIO_GG,
         instead of creating a new one. You must still specify *njobs* as the
         number of processes in the pool. Use this to avoid spawning processes
         on each call to this functions, which can have significant overhead.
+    * density_divisions : int
+        If any tesseroid of the model has variable density, it will be
+        subdivided on the radius coordinate based on the maximum variation
+        of its density.
+        This specify the order of these subdivisions (e.g. if
+        density_divisions == 2, then the tesseroid will be subdivided in two
+        smaller ones, and then each one of these two will be subdivided in
+        another two).
+        It's ignored in case of homogeneous density.
+        Default to 1.
 
     Returns:
 
@@ -679,6 +739,16 @@ def gxz(lon, lat, height, model, dens=None, ratio=RATIO_GG,
         instead of creating a new one. You must still specify *njobs* as the
         number of processes in the pool. Use this to avoid spawning processes
         on each call to this functions, which can have significant overhead.
+    * density_divisions : int
+        If any tesseroid of the model has variable density, it will be
+        subdivided on the radius coordinate based on the maximum variation
+        of its density.
+        This specify the order of these subdivisions (e.g. if
+        density_divisions == 2, then the tesseroid will be subdivided in two
+        smaller ones, and then each one of these two will be subdivided in
+        another two).
+        It's ignored in case of homogeneous density.
+        Default to 1.
 
     Returns:
 
@@ -735,6 +805,16 @@ def gyy(lon, lat, height, model, dens=None, ratio=RATIO_GG,
         instead of creating a new one. You must still specify *njobs* as the
         number of processes in the pool. Use this to avoid spawning processes
         on each call to this functions, which can have significant overhead.
+    * density_divisions : int
+        If any tesseroid of the model has variable density, it will be
+        subdivided on the radius coordinate based on the maximum variation
+        of its density.
+        This specify the order of these subdivisions (e.g. if
+        density_divisions == 2, then the tesseroid will be subdivided in two
+        smaller ones, and then each one of these two will be subdivided in
+        another two).
+        It's ignored in case of homogeneous density.
+        Default to 1.
 
     Returns:
 
@@ -791,6 +871,16 @@ def gyz(lon, lat, height, model, dens=None, ratio=RATIO_GG,
         instead of creating a new one. You must still specify *njobs* as the
         number of processes in the pool. Use this to avoid spawning processes
         on each call to this functions, which can have significant overhead.
+    * density_divisions : int
+        If any tesseroid of the model has variable density, it will be
+        subdivided on the radius coordinate based on the maximum variation
+        of its density.
+        This specify the order of these subdivisions (e.g. if
+        density_divisions == 2, then the tesseroid will be subdivided in two
+        smaller ones, and then each one of these two will be subdivided in
+        another two).
+        It's ignored in case of homogeneous density.
+        Default to 1.
 
     Returns:
 
@@ -847,6 +937,16 @@ def gzz(lon, lat, height, model, dens=None, ratio=RATIO_GG,
         instead of creating a new one. You must still specify *njobs* as the
         number of processes in the pool. Use this to avoid spawning processes
         on each call to this functions, which can have significant overhead.
+    * density_divisions : int
+        If any tesseroid of the model has variable density, it will be
+        subdivided on the radius coordinate based on the maximum variation
+        of its density.
+        This specify the order of these subdivisions (e.g. if
+        density_divisions == 2, then the tesseroid will be subdivided in two
+        smaller ones, and then each one of these two will be subdivided in
+        another two).
+        It's ignored in case of homogeneous density.
+        Default to 1.
 
     Returns:
 
