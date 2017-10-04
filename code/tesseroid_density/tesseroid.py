@@ -248,7 +248,7 @@ def _forward_model(args):
 def _divide_by_density(tesseroid, divisions):
     divisions = int(divisions)
     subset = [tesseroid]
-    N_iter = (2**np.arange(0, divisions - 1)).sum()
+    N_iter = (2**np.arange(0, divisions)).sum()
     for i in range(N_iter):
         tess = subset[0]
         divider = _divider_calculation(tess)
