@@ -216,7 +216,7 @@ def _forward_model(args):
 
     Arguments should be, in order:
 
-    lon, lat, height, result, model, dens, ratio, field
+    lon, lat, height, result, model, dens, ratio, field, density_divisions
     """
     lon, lat, height, result, model, dens, ratio, field, divisions = args
     lon, sinlat, coslat, radius = _convert_coords(lon, lat, height)
