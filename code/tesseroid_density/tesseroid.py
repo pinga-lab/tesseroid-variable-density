@@ -268,9 +268,8 @@ def _divider_calculation(tesseroid):
     density_fun = tesseroid.props['density']
     density_top, density_bottom = density_fun(top), density_fun(bottom)
     heights = np.linspace(bottom, top, 101)
-    line = (density_top - density_bottom)/(top - bottom) * heights - \
-        (density_top - density_bottom)/(top - bottom) * bottom + \
-        density_bottom
+    line = (density_top - density_bottom)/(top - bottom) * \
+           (heights - bottom) + density_bottom
     densities = np.array([density_fun(height) for height in heights])
     diff = densities - line
     if np.allclose(diff, diff[0]):
