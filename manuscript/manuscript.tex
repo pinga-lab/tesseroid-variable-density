@@ -472,10 +472,10 @@ From the infinite density functions that can be proposed, we have chosen three c
 \subsection{Density-based Discretization Algorithm}
 
 High variations in the density function of an arbitrary tesseroid introduces a new type of error into the numerical approximation: only a few point masses would not reproduce the effect of this kind of variations.
-The modified version of the adaptive discretization algorithm may help in reducing this kind of error, but as it takes into account only the dimensions of the tesseroid and the distance to the computation point, it's not completely well suited to perform this task.
+The modified version of the adaptive discretization algorithm may help in reducing this kind of error, but as it takes into account only the dimensions of the tesseroid and the distance to the computation point, it's not well suited to fully perform this task.
 
 In order to overcome this, we developed a complementary discretization algorithm (it works together with the previous one) that takes into account the variation of the density inside the tesseroid.
-Basically, we will subdivide any tesseroid on the radius coordinate on the depth at which the ``maximum density variation'' takes place, creating two new tesseroids which we use to compute the desired gravity field by applying the previous adaptive discretization algorithm and the GLQ approximation.
+Basically, we will subdivide any tesseroid on the radius coordinate on the depth at which the \emph{maximum density variation} takes place, creating two new tesseroids which we use to compute the desired gravity field by applying the previous adaptive discretization algorithm and the GLQ approximation.
 
 First we need to define a simple density that approximates the one of the tesseroid: a linear function that assumes the same values of the original density on the tesseroid's top and bottom:
 
@@ -484,7 +484,7 @@ First we need to define a simple density that approximates the one of the tesser
     \frac{\rho(R_2) - \rho(R_1)}{R_2 - R_1} (r' - R_1) + \rho(R_1).
 \end{equation}
 
-Then we will define the ``maximum density variation'' as the maximum difference between this density $\rho_0(r')$ and the original density $\rho(r')$ and obtain the radius coordinate $R_\text{max}$ at which this maximum takes place:
+Then we will define the \emph{maximum density variation} as the maximum difference between this density $\rho_0(r')$ and the original density $\rho(r')$ and obtain the radius coordinate $R_\text{max}$ at which this \emph{maximum} takes place:
 
 \begin{equation}
     \text{max}\{ | \rho(r') - \rho_0(r') | \} = 
@@ -492,9 +492,8 @@ Then we will define the ``maximum density variation'' as the maximum difference 
 \end{equation}
 
 Finally, we subdivide the original tesseroid at $R_\text{max}$ creating two new tesseroids with the same latitude and longitude boundaries.
-We then apply the modified version of the adaptive discretization algorithm and the GLQ to approximate the gravity fields that it generates on the computation points.
 
-This density-based discretization can be applied several times, creating new pair of subdivisions each time and therefore increasing the accuracy of the resulting gravity field.
+This density-based discretization can be applied several times, creating a new pair of subdivisions on each iteration and therefore increasing the accuracy of the resulting gravity field.
 Because each tesseroid is subdivided in two every time we apply this discretization, the number of subdivisions increases exponentially in power of two:
 
 \begin{equation}
@@ -503,6 +502,10 @@ Because each tesseroid is subdivided in two every time we apply this discretizat
 \end{equation}
 
 \noindent where $M$ is the order of the discretization, i.e. how many times the density-based discretization algorithm is applied on one tesseroid.
+
+It's worth notice that for $M=0$ or for linear densities, the density-based discretization algorithm will not be applied.
+In the first case because no subdivisions will be made, and in the second one due to the fact that the absolute difference of densities is equal to zero on every depth, thus no having a meaningful maximum.
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
