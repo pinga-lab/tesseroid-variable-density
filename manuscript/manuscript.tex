@@ -583,6 +583,8 @@ For the linear density case, we can observe that the calculation of the potentia
 On the other hand, the $g_{zz}$ computations show a noticeable difference between the thin and the thick shell: the first one needs a value of $D$ equal to 8 while the later only a $D$ of 3.5.
 We will keep the more conservative result of $D$ equal to 8 in case of computing the Marussi tensor components in case of a linear density tesseroid.
 
+It's worth to remember that the density-based discretization algorithm is not applied for linear density function comparisons, thus the adaptive discretization algorithm is the only mechanism that controls the accuracy of the approximation.
+
 \begin{figure}
 \centering
 \includegraphics[width=0.9\linewidth]{figures/Dlinear-thin-differences.pdf}
