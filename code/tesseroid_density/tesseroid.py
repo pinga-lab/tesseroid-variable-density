@@ -231,7 +231,7 @@ def _forward_model(args):
         bounds = np.array(tesseroid.get_bounds())
         if density is None:
             continue
-        if callable(density):
+        if callable(density) and delta is not None:
             subset = _density_based_discretization(bounds, density, delta)
             for bounds in subset:
                 error = func(bounds, density, ratio, STACK_SIZE, lon, sinlat,
