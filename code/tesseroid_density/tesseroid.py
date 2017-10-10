@@ -291,7 +291,7 @@ def _divider_calculation(top, bottom, density):
 
     # Normalization of the density to [0, 1]
     rho_top, rho_bottom = density(top), density(bottom)
-    densities = [density(h) for h in heights]
+    densities = np.array([density(h) for h in heights])
     if not np.isclose(rho_top, rho_bottom):
         rho1, rho2 = min(rho_top, rho_bottom), max(rho_top, rho_bottom)
         norm_density = (densities - rho1)/(rho2 - rho1)
