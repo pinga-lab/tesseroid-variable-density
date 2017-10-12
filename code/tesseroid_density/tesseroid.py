@@ -270,6 +270,20 @@ def _density_based_discretization(bounds, density, delta):
         bounds = pending.pop(0)
         top, bottom = bounds[-2], bounds[-1]
         divider, max_diff = _divider_calculation(top, bottom, density)
+
+        if divider is None:
+            subset.append(np.array([w, e, s, n, top, bottom]))
+            continue
+
+        if abs(top - divider) < 1e-3 or abs(divider - bottom) < 1e-3:
+            subset.append(np.array([w, e, s, n, top, bottom]))
+            msg = ("Encountered tesseroid with dimensions smaller " +
+                   "than the numerical threshold (1e-3 m) on " +
+                   "density-based discretization. " +
+                   "Ignoring this tesseroid.")
+            warnings.warn(msg, RuntimeWarning)
+            continue
+
         if max_diff > delta:
             pending.append([w, e, s, n, top, divider])
             pending.append([w, e, s, n, divider, bottom])
@@ -292,6 +306,10 @@ def _divider_calculation(top, bottom, density):
     # Normalization of the density to [0, 1]
     rho_top, rho_bottom = density(top), density(bottom)
     densities = np.array([density(h) for h in heights])
+
+    if np.isclose(densities, densities[0]).all():
+        return None, None
+
     if not np.isclose(rho_top, rho_bottom):
         rho1, rho2 = min(rho_top, rho_bottom), max(rho_top, rho_bottom)
         norm_density = (densities - rho1)/(rho2 - rho1)
