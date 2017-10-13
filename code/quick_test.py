@@ -166,5 +166,5 @@ def discontinuous_test():
 
 
 linear_test()
-exponential_test(b=15e3, bottom=-35000)
 discontinuous_test()
+exponential_test(b=15e3, bottom=-35000)
