@@ -1,5 +1,13 @@
 # -*- coding: utf-8 -*-
 """
+Written by Leonardo Uieda (2016)
+https://github.com/pinga-lab/paper-moho-inversion-tesseroids
+
+Available under a BSD 3-clause license.
+You can freely use and modify the code, without warranty, so long as you
+provide attribution to the authors. See LICENSE.md for the full license text.
+
+
 Implements the proposed Moho inversion method.
 
 Defines the classes:
