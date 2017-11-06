@@ -18,7 +18,5 @@ dependencies:
     - numba
     - cython
     - jupyter
-    - mayavi
-    - seaborn
     - pip:
         - fatiando==0.5
