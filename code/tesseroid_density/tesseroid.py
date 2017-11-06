@@ -105,6 +105,7 @@ RATIO_V = 1
 RATIO_G = 2
 RATIO_GG = 8
 STACK_SIZE = 100
+DELTA = 0.2
 
 
 def _check_input(lon, lat, height, model, ratio, njobs, pool):
@@ -185,6 +186,7 @@ def _dispatcher(field, lon, lat, height, model, **kwargs):
     pool = kwargs.get('pool', None)
     dens = kwargs['dens']
     ratio = kwargs['ratio']
+    delta = kwargs['delta']
     result = _check_input(lon, lat, height, model, ratio, njobs, pool)
     if njobs > 1 and pool is None:
         pool = multiprocessing.Pool(njobs)
@@ -193,10 +195,11 @@ def _dispatcher(field, lon, lat, height, model, **kwargs):
         created_pool = False
     if pool is None:
         _forward_model([lon, lat, height, result, model, dens, ratio,
-                        field])
+                        field, delta])
     else:
         chunks = _split_arrays(arrays=[lon, lat, height, result],
-                               extra_args=[model, dens, ratio, field],
+                               extra_args=[model, dens, ratio, field,
+                                           delta],
                                nparts=njobs)
         result = np.hstack(pool.map(_forward_model, chunks))
     if created_pool:
@@ -213,9 +216,9 @@ def _forward_model(args):
 
     Arguments should be, in order:
 
-    lon, lat, height, result, model, dens, ratio, field
+    lon, lat, height, result, model, dens, ratio, field, delta
     """
-    lon, lat, height, result, model, dens, ratio, field = args
+    lon, lat, height, result, model, dens, ratio, field, delta = args
     lon, sinlat, coslat, radius = _convert_coords(lon, lat, height)
     func = getattr(_tesseroid, field)
     warning_msg = (
@@ -225,14 +228,103 @@ def _forward_model(args):
         "the solution.")
     for tesseroid in model:
         density = _check_tesseroid(tesseroid, dens)
+        bounds = np.array(tesseroid.get_bounds())
         if density is None:
             continue
-        bounds = np.array(tesseroid.get_bounds())
-        error = func(bounds, density, ratio, STACK_SIZE, lon, sinlat, coslat,
-                     radius, result)
-        if error != 0:
-            warnings.warn(warning_msg, RuntimeWarning)
+        if callable(density) and delta is not None:
+            subset = _density_based_discretization(bounds, density, delta)
+            for bounds in subset:
+                error = func(bounds, density, ratio, STACK_SIZE, lon, sinlat,
+                             coslat, radius, result)
+                if error != 0:
+                    warnings.warn(warning_msg, RuntimeWarning)
+        else:
+            error = func(bounds, density, ratio, STACK_SIZE, lon, sinlat,
+                         coslat, radius, result)
+            if error != 0:
+                warnings.warn(warning_msg, RuntimeWarning)
     return result
+
+
+def _density_based_discretization(bounds, density, delta):
+    """
+    Applies the density-based discretization algorithm.
+
+    Parameters:
+        * bounds: list or 1d-array
+            List with w, e, s, n, top, bottom bounds of the tesseroid that will
+            be subdivided.
+        * density: function
+            Density function of the tesseroid that will be subdivided.
+        * delta: float
+            Adimensional density variation threshold.
+
+    Returns:
+        * subset: list
+            List of bounds corresponding to the subdivisions of the original
+            tesseroid.
+    """
+    w, e, s, n, top, bottom = bounds[:]
+    pending, subset = [bounds], []
+    while pending != []:
+        bounds = pending.pop(0)
+        top, bottom = bounds[-2], bounds[-1]
+        divider, max_diff = _divider_calculation(top, bottom, density)
+
+        if divider is None:
+            subset.append(np.array([w, e, s, n, top, bottom]))
+            continue
+
+        if abs(top - divider) < 1e-3 or abs(divider - bottom) < 1e-3:
+            subset.append(np.array([w, e, s, n, top, bottom]))
+            msg = ("Encountered tesseroid with dimensions smaller " +
+                   "than the numerical threshold (1e-3 m) on " +
+                   "density-based discretization. " +
+                   "Ignoring this tesseroid.")
+            warnings.warn(msg, RuntimeWarning)
+            continue
+
+        if max_diff > delta:
+            pending.append([w, e, s, n, top, divider])
+            pending.append([w, e, s, n, divider, bottom])
+        else:
+            subset.append(np.array([w, e, s, n, top, bottom]))
+    return subset
+
+
+def _divider_calculation(top, bottom, density):
+    """
+    Computes the height at which the tesseroid with top and bottom boundaries
+    should be divided according to the density-based discretization algorithm.
+    It also computes the maximum difference between the normalised density
+    and the straight reference line.
+    """
+    if top < bottom:
+        top, bottom = bottom, top
+    heights = np.linspace(bottom, top, 101)
+
+    # Normalization of the density to [0, 1]
+    rho_top, rho_bottom = density(top), density(bottom)
+    densities = np.array([density(h) for h in heights])
+
+    if np.isclose(densities, densities[0]).all():
+        return None, None
+
+    if not np.isclose(rho_top, rho_bottom):
+        rho1, rho2 = min(rho_top, rho_bottom), max(rho_top, rho_bottom)
+        norm_density = (densities - rho1)/(rho2 - rho1)
+    else:
+        rho_min, rho_max = np.min(densities), np.max(densities)
+        norm_density = (densities - rho_min)/(rho_max - rho_min)
+
+    # Difference with line
+    line = (norm_density[-1] - norm_density[0])/(top - bottom) * \
+           (heights - bottom) + norm_density[0]
+    diff = np.abs(norm_density - line)
+
+    max_diff = np.max(diff)
+    divider_height = heights[np.argmax(diff)]
+    return divider_height, max_diff
 
 
 def _split_arrays(arrays, extra_args, nparts):
@@ -260,7 +352,7 @@ def _split_arrays(arrays, extra_args, nparts):
 
 
 def potential(lon, lat, height, model, dens=None, ratio=RATIO_V,
-              njobs=1, pool=None):
+              njobs=1, pool=None, delta=DELTA):
     """
     Calculate the gravitational potential due to a tesseroid model.
 
@@ -294,6 +386,8 @@ def potential(lon, lat, height, model, dens=None, ratio=RATIO_V,
         instead of creating a new one. You must still specify *njobs* as the
         number of processes in the pool. Use this to avoid spawning processes
         on each call to this functions, which can have significant overhead.
+    * delta : float
+        Explain...
 
     Returns:
 
@@ -309,13 +403,14 @@ def potential(lon, lat, height, model, dens=None, ratio=RATIO_V,
     """
     field = 'potential'
     result = _dispatcher(field, lon, lat, height, model, dens=dens,
-                         ratio=ratio, njobs=njobs, pool=pool)
+                         ratio=ratio, njobs=njobs, pool=pool,
+                         delta=delta)
     result *= G
     return result
 
 
 def gx(lon, lat, height, model, dens=None, ratio=RATIO_G,
-       njobs=1, pool=None):
+       njobs=1, pool=None, delta=DELTA):
     """
     Calculate the North component of the gravitational attraction.
 
@@ -349,6 +444,8 @@ def gx(lon, lat, height, model, dens=None, ratio=RATIO_G,
         instead of creating a new one. You must still specify *njobs* as the
         number of processes in the pool. Use this to avoid spawning processes
         on each call to this functions, which can have significant overhead.
+    * delta : float
+        Explain...
 
     Returns:
 
@@ -364,13 +461,14 @@ def gx(lon, lat, height, model, dens=None, ratio=RATIO_G,
     """
     field = 'gx'
     result = _dispatcher(field, lon, lat, height, model, dens=dens,
-                         ratio=ratio, njobs=njobs, pool=pool)
+                         ratio=ratio, njobs=njobs, pool=pool,
+                         delta=delta)
     result *= SI2MGAL*G
     return result
 
 
 def gy(lon, lat, height, model, dens=None, ratio=RATIO_G,
-       njobs=1, pool=None):
+       njobs=1, pool=None, delta=DELTA):
     """
     Calculate the East component of the gravitational attraction.
 
@@ -404,6 +502,8 @@ def gy(lon, lat, height, model, dens=None, ratio=RATIO_G,
         instead of creating a new one. You must still specify *njobs* as the
         number of processes in the pool. Use this to avoid spawning processes
         on each call to this functions, which can have significant overhead.
+    * delta : float
+        Explain...
 
     Returns:
 
@@ -419,13 +519,14 @@ def gy(lon, lat, height, model, dens=None, ratio=RATIO_G,
     """
     field = 'gy'
     result = _dispatcher(field, lon, lat, height, model, dens=dens,
-                         ratio=ratio, njobs=njobs, pool=pool)
+                         ratio=ratio, njobs=njobs, pool=pool,
+                         delta=delta)
     result *= SI2MGAL*G
     return result
 
 
 def gz(lon, lat, height, model, dens=None, ratio=RATIO_G,
-       njobs=1, pool=None):
+       njobs=1, pool=None, delta=DELTA):
     """
     Calculate the radial component of the gravitational attraction.
 
@@ -464,6 +565,8 @@ def gz(lon, lat, height, model, dens=None, ratio=RATIO_G,
         instead of creating a new one. You must still specify *njobs* as the
         number of processes in the pool. Use this to avoid spawning processes
         on each call to this functions, which can have significant overhead.
+    * delta : float
+        Explain...
 
     Returns:
 
@@ -479,13 +582,14 @@ def gz(lon, lat, height, model, dens=None, ratio=RATIO_G,
     """
     field = 'gz'
     result = _dispatcher(field, lon, lat, height, model, dens=dens,
-                         ratio=ratio, njobs=njobs, pool=pool)
+                         ratio=ratio, njobs=njobs, pool=pool,
+                         delta=delta)
     result *= SI2MGAL*G
     return result
 
 
 def gxx(lon, lat, height, model, dens=None, ratio=RATIO_GG,
-        njobs=1, pool=None):
+        njobs=1, pool=None, delta=DELTA):
     """
     Calculate the xx component of the gravity gradient tensor.
 
@@ -519,6 +623,8 @@ def gxx(lon, lat, height, model, dens=None, ratio=RATIO_GG,
         instead of creating a new one. You must still specify *njobs* as the
         number of processes in the pool. Use this to avoid spawning processes
         on each call to this functions, which can have significant overhead.
+    * delta : float
+        Explain...
 
     Returns:
 
@@ -534,13 +640,14 @@ def gxx(lon, lat, height, model, dens=None, ratio=RATIO_GG,
     """
     field = 'gxx'
     result = _dispatcher(field, lon, lat, height, model, dens=dens,
-                         ratio=ratio, njobs=njobs, pool=pool)
+                         ratio=ratio, njobs=njobs, pool=pool,
+                         delta=delta)
     result *= SI2EOTVOS*G
     return result
 
 
 def gxy(lon, lat, height, model, dens=None, ratio=RATIO_GG,
-        njobs=1, pool=None):
+        njobs=1, pool=None, delta=DELTA):
     """
     Calculate the xy component of the gravity gradient tensor.
 
@@ -574,6 +681,8 @@ def gxy(lon, lat, height, model, dens=None, ratio=RATIO_GG,
         instead of creating a new one. You must still specify *njobs* as the
         number of processes in the pool. Use this to avoid spawning processes
         on each call to this functions, which can have significant overhead.
+    * delta : float
+        Explain...
 
     Returns:
 
@@ -589,13 +698,14 @@ def gxy(lon, lat, height, model, dens=None, ratio=RATIO_GG,
     """
     field = 'gxy'
     result = _dispatcher(field, lon, lat, height, model, dens=dens,
-                         ratio=ratio, njobs=njobs, pool=pool)
+                         ratio=ratio, njobs=njobs, pool=pool,
+                         delta=delta)
     result *= SI2EOTVOS*G
     return result
 
 
 def gxz(lon, lat, height, model, dens=None, ratio=RATIO_GG,
-        njobs=1, pool=None):
+        njobs=1, pool=None, delta=DELTA):
     """
     Calculate the xz component of the gravity gradient tensor.
 
@@ -629,7 +739,8 @@ def gxz(lon, lat, height, model, dens=None, ratio=RATIO_GG,
         instead of creating a new one. You must still specify *njobs* as the
         number of processes in the pool. Use this to avoid spawning processes
         on each call to this functions, which can have significant overhead.
-
+    * delta : float
+        Explain...
     Returns:
 
     * res : array
@@ -644,13 +755,14 @@ def gxz(lon, lat, height, model, dens=None, ratio=RATIO_GG,
     """
     field = 'gxz'
     result = _dispatcher(field, lon, lat, height, model, dens=dens,
-                         ratio=ratio, njobs=njobs, pool=pool)
+                         ratio=ratio, njobs=njobs, pool=pool,
+                         delta=delta)
     result *= SI2EOTVOS*G
     return result
 
 
 def gyy(lon, lat, height, model, dens=None, ratio=RATIO_GG,
-        njobs=1, pool=None):
+        njobs=1, pool=None, delta=DELTA):
     """
     Calculate the yy component of the gravity gradient tensor.
 
@@ -684,6 +796,8 @@ def gyy(lon, lat, height, model, dens=None, ratio=RATIO_GG,
         instead of creating a new one. You must still specify *njobs* as the
         number of processes in the pool. Use this to avoid spawning processes
         on each call to this functions, which can have significant overhead.
+    * delta : float
+        Explain...
 
     Returns:
 
@@ -699,13 +813,14 @@ def gyy(lon, lat, height, model, dens=None, ratio=RATIO_GG,
     """
     field = 'gyy'
     result = _dispatcher(field, lon, lat, height, model, dens=dens,
-                         ratio=ratio, njobs=njobs, pool=pool)
+                         ratio=ratio, njobs=njobs, pool=pool,
+                         delta=delta)
     result *= SI2EOTVOS*G
     return result
 
 
 def gyz(lon, lat, height, model, dens=None, ratio=RATIO_GG,
-        njobs=1, pool=None):
+        njobs=1, pool=None, delta=DELTA):
     """
     Calculate the yz component of the gravity gradient tensor.
 
@@ -739,6 +854,8 @@ def gyz(lon, lat, height, model, dens=None, ratio=RATIO_GG,
         instead of creating a new one. You must still specify *njobs* as the
         number of processes in the pool. Use this to avoid spawning processes
         on each call to this functions, which can have significant overhead.
+    * delta : float
+        Explain...
 
     Returns:
 
@@ -754,13 +871,14 @@ def gyz(lon, lat, height, model, dens=None, ratio=RATIO_GG,
     """
     field = 'gyz'
     result = _dispatcher(field, lon, lat, height, model, dens=dens,
-                         ratio=ratio, njobs=njobs, pool=pool)
+                         ratio=ratio, njobs=njobs, pool=pool,
+                         delta=delta)
     result *= SI2EOTVOS*G
     return result
 
 
 def gzz(lon, lat, height, model, dens=None, ratio=RATIO_GG,
-        njobs=1, pool=None):
+        njobs=1, pool=None, delta=DELTA):
     """
     Calculate the zz component of the gravity gradient tensor.
 
@@ -794,6 +912,8 @@ def gzz(lon, lat, height, model, dens=None, ratio=RATIO_GG,
         instead of creating a new one. You must still specify *njobs* as the
         number of processes in the pool. Use this to avoid spawning processes
         on each call to this functions, which can have significant overhead.
+    * delta : float
+        Explain...
 
     Returns:
 
@@ -809,6 +929,7 @@ def gzz(lon, lat, height, model, dens=None, ratio=RATIO_GG,
     """
     field = 'gzz'
     result = _dispatcher(field, lon, lat, height, model, dens=dens,
-                         ratio=ratio, njobs=njobs, pool=pool)
+                         ratio=ratio, njobs=njobs, pool=pool,
+                         delta=delta)
     result *= SI2EOTVOS*G
     return result

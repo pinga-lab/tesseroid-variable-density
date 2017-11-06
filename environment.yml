@@ -4,19 +4,19 @@
 # or "activate my-paper" on Windows.
 # List the packages you want here. You can specify particular versions with
 # "=". For pip installed packages, use "==".
-name: my-paper
+name: tesseroid-variable-density
 dependencies:
     - python=2.7
     - pip
     - future
     - numpy
     - scipy
+    - sympy
     - matplotlib
     - basemap
     - pillow
     - numba
+    - cython
     - jupyter
-    - mayavi
-    - seaborn
     - pip:
         - fatiando==0.5
