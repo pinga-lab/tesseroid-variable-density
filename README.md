@@ -1,9 +1,10 @@
 # Gravity fields calculation in spherical coordinates using Tesseroids with variable density
 
 by
-Santiago Soler,
-Author 2,
-etc
+Santiago R. Soler,
+Agustina Pesce,
+Leonardo Uieda,
+Mario E. Gimenez
 
 This paper has been submitted for publication in *Some Journal*.
 
@@ -74,7 +75,7 @@ Other dependencies needed to reproduce the results are:
 
 You can install it through the conda package manager (included in Anaconda):
     ```
-    $ conda install cython basemap sympy
+    conda install cython basemap sympy
     ```
 
 #### Installing through conda environment
@@ -84,11 +85,11 @@ installed using a conda environment.
 
 1. Change directory to the cloned git repository:
     ```
-    $ cd tesseroid-variable-density
+    cd tesseroid-variable-density
     ```
 1. Create a new conda environment from the environment.yml file:
     ```
-    $ conda env create -f environment.yml
+    conda env create -f environment.yml
     ```
 1. Activate the new enviroment:
     * Windows: `activate tesseroid-variable-density`
@@ -105,8 +106,8 @@ in Cython, you must compile it in order to call its functions. You can do it
 with make command:
 
 ```
-$ cd tesseroid-variable-density/code/tesseroid_density
-$ make
+cd tesseroid-variable-density/code/tesseroid_density
+make
 ```
 
 > **Windows users:** It is highly recommended that you install the bash shell
