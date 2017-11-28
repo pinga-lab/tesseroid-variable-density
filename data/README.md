@@ -1,1 +1,1 @@
-* topography.npy: Digital Elevation Map downloadede from http://www.marine-geo.org/tools/GMRTMapTool/
+* topography.npy: Digital Elevation Map downloaded from http://www.marine-geo.org/tools/GMRTMapTool/
