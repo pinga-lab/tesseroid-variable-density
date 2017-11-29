@@ -1,7 +1,5 @@
-# Generated sedoment-data.ipynb
-# Data: sedimentos-con0-grd.dat
 # Extracted from http://www.earthbyte.org/Resources/ICONS/ch4.html#x1-960004.3.4
-# longitude latitude sediment_thickness(meters)
+# latitude longitude sediment_thickness(meters)
 -40.15000 289.15000 nan
 -40.15000 289.20000 nan
 -40.15000 289.25000 nan
