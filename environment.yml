@@ -1,22 +1,17 @@
-# Setup a basic environment for running Fatiando code
-# Replace "my-paper" with a short name for this environment.
-# Activate the environmet to run your code using "source activate my-paper"
-# or "activate my-paper" on Windows.
-# List the packages you want here. You can specify particular versions with
-# "=". For pip installed packages, use "==".
+# Setup a basic environment for running the code
 name: tesseroid-variable-density
+channels:
+    - conda-forge
 dependencies:
     - python=2.7
-    - pip
-    - future
-    - numpy
-    - scipy
-    - sympy
-    - matplotlib
-    - basemap
-    - pillow
-    - numba
-    - cython
-    - jupyter
-    - pip:
-        - fatiando==0.5
+    - future=0.16.0
+    - numpy=1.13.3
+    - scipy=0.19.1
+    - sympy=1.1.1
+    - matplotlib=2.1.0
+    - basemap=1.0.7
+    - pillow=4.2.1
+    - numba=0.35.0
+    - cython=0.26.1
+    - jupyter=1.0.0
+    - fatiando=0.5
