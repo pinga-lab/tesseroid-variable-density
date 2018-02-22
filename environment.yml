@@ -4,14 +4,16 @@ channels:
     - conda-forge
 dependencies:
     - python=2.7
-    - future
-    - numpy
-    - scipy
-    - sympy
-    - matplotlib
-    - basemap
-    - pillow
-    - numba
-    - cython
-    - jupyter
+    - future=0.16.0
+    - numpy=1.13.3
+    - scipy=0.19.1
+    - sympy=1.1.1
+    - matplotlib=2.1.0
+    - basemap=1.0.7
+    - pillow=4.2.1
+    - numba=0.35.0
+    - cython=0.26.1
+    - jupyter=1.0.0
     - fatiando=0.5
+    - pip:
+        - proselint==0.8.0

@@ -447,7 +447,7 @@ Moreover, it is also compatible with the preexisting open-source library Fatiand
 
 From equation \ref{eq:glq-var-dens} we saw that the GLQ approximates the volume integrals as the gravitational effect of point masses located at the nodes of the quadrature.
 If we set the GLQ orders to fixed values, it's easy to conclude that the nearer the computation point is to the tesseroid, the accuracy of the approximation is reduced and the point masses effect becomes more noticeable than the tesseroid we want to approximate.
-A more complete analysis of this conclusion can be found in \citet{Ku1977, Li2011, Uieda2016}.
+A complete analysis of this conclusion can be found in \citet{Ku1977, Li2011, Uieda2016}.
 
 Instead of increasing the GLQ orders to improve the accuracy, what leads to a more time consuming computation, adaptive discretization algorithms have been applied in previous works \citep{Li2011, Uieda2016}.
 They essentially consist in dividing the tesseroid based on a ratio between the distance from its geometric centre to the computation point and its dimensions.
@@ -466,7 +466,7 @@ While keeping the GLQ fixed on second orders, the adaptive discretization algori
 
 \noindent where $i \in \{\lambda, \phi, r\}$, $d$ is the distance between the geometric centre of the tesseroid and the computation point, and $D$ is a predefined value called distance-size ratio.
 If the inequality \ref{eq:distance-size-ratio} is not held for at least one spherical coordinate, then the tesseroid must be divided by half in that direction.
-A more complete description of the modified adaptive discretization algorithm can be found in \citet{Uieda2016}.
+A complete description of the modified adaptive discretization algorithm can be found in \citet{Uieda2016}.
 On the contrary, if the inequality is satisfied for every spherical coordinate, the algorithm computes the desired gravity field using the GLQ approximation.
 
 In summary, the distance-size ratio $D$ determines indirectly how many times the tesseroids will be divided, and therefore efficiently regulates both the accuracy of the algorithm and its computation time.
