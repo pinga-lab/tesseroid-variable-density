@@ -265,11 +265,25 @@ def _density_based_discretization(bounds, density, delta):
             tesseroid.
     """
     w, e, s, n, top, bottom = bounds[:]
+    if top < bottom:
+        top, bottom = bottom, top
     pending, subset = [bounds], []
+
+    # Compute maximum and minimum density for future normalization
+    heights = np.linspace(bottom, top, 101)
+    densities = np.array([density(h) for h in heights])
+    rho_min, rho_max = np.min(densities), np.max(densities)
+
+    if np.isclose(rho_min, rho_max):
+        pending, subset = subset, pending
+        return subset
+
+    # Discretization of the tesseroid
     while pending != []:
         bounds = pending.pop(0)
         top, bottom = bounds[-2], bounds[-1]
-        divider, max_diff = _divider_calculation(top, bottom, density)
+        divider, max_diff = _divider_calculation(top, bottom, density,
+                                                 rho_min, rho_max)
 
         if divider is None:
             subset.append(np.array([w, e, s, n, top, bottom]))
@@ -292,36 +306,18 @@ def _density_based_discretization(bounds, density, delta):
     return subset
 
 
-def _divider_calculation(top, bottom, density):
+def _divider_calculation(top, bottom, density, rho_min, rho_max):
     """
     Computes the height at which the tesseroid with top and bottom boundaries
     should be divided according to the density-based discretization algorithm.
     It also computes the maximum difference between the normalised density
     and the straight reference line.
     """
-    if top < bottom:
-        top, bottom = bottom, top
     heights = np.linspace(bottom, top, 101)
-
-    # Normalization of the density to [0, 1]
-    rho_top, rho_bottom = density(top), density(bottom)
-    densities = np.array([density(h) for h in heights])
-
-    if np.isclose(densities, densities[0]).all():
-        return None, None
-
-    if not np.isclose(rho_top, rho_bottom):
-        rho1, rho2 = min(rho_top, rho_bottom), max(rho_top, rho_bottom)
-        norm_density = (densities - rho1)/(rho2 - rho1)
-    else:
-        rho_min, rho_max = np.min(densities), np.max(densities)
-        norm_density = (densities - rho_min)/(rho_max - rho_min)
-
-    # Difference with line
+    norm_density = (density(heights) - rho_min)/(rho_max - rho_min)
     line = (norm_density[-1] - norm_density[0])/(top - bottom) * \
            (heights - bottom) + norm_density[0]
     diff = np.abs(norm_density - line)
-
     max_diff = np.max(diff)
     divider_height = heights[np.argmax(diff)]
     return divider_height, max_diff
