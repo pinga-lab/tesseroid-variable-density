@@ -271,7 +271,7 @@ def _density_based_discretization(bounds, density, delta):
 
     # Compute maximum and minimum density for future normalization
     heights = np.linspace(bottom, top, 101)
-    densities = np.array([density(h) for h in heights])
+    densities = density(heights)
     rho_min, rho_max = np.min(densities), np.max(densities)
 
     if np.isclose(rho_min, rho_max):
