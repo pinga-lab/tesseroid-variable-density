@@ -304,18 +304,11 @@ def _divider_calculation(top, bottom, density):
     heights = np.linspace(bottom, top, 101)
 
     # Normalization of the density to [0, 1]
-    rho_top, rho_bottom = density(top), density(bottom)
     densities = np.array([density(h) for h in heights])
-
-    if np.isclose(densities, densities[0]).all():
+    rho_min, rho_max = np.min(densities), np.max(densities)
+    if np.isclose(rho_min, rho_max):
         return None, None
-
-    if not np.isclose(rho_top, rho_bottom):
-        rho1, rho2 = min(rho_top, rho_bottom), max(rho_top, rho_bottom)
-        norm_density = (densities - rho1)/(rho2 - rho1)
-    else:
-        rho_min, rho_max = np.min(densities), np.max(densities)
-        norm_density = (densities - rho_min)/(rho_max - rho_min)
+    norm_density = (densities - rho_min)/(rho_max - rho_min)
 
     # Difference with line
     line = (norm_density[-1] - norm_density[0])/(top - bottom) * \
