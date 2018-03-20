@@ -263,8 +263,6 @@ def _density_based_discretization(bounds, density, delta):
             tesseroid.
     """
     w, e, s, n, top, bottom = bounds[:]
-    if top < bottom:
-        top, bottom = bottom, top
     pending, subset = [bounds], []
 
     # Compute maximum and minimum density for future normalization
