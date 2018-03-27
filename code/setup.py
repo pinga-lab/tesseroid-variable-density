@@ -7,7 +7,7 @@ from Cython.Build import cythonize
 NAME = 'tesseroid_density'
 FULLNAME = NAME
 AUTHOR = "Santiago Soler"
-AUTHOR_EMAIL = 'some@email.com'
+AUTHOR_EMAIL = 'santiago.r.soler@gmail.com'
 LICENSE = "BSD License"
 URL = "https://github.com/pinga-lab/tesseroid-density"
 DESCRIPTION = ""
