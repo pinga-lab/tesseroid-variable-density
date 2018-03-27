@@ -228,9 +228,9 @@ def _forward_model(args):
         "the solution.")
     for tesseroid in model:
         density = _check_tesseroid(tesseroid, dens)
-        bounds = np.array(tesseroid.get_bounds())
         if density is None:
             continue
+        bounds = np.array(tesseroid.get_bounds())
         if callable(density) and delta is not None:
             subset = _density_based_discretization(bounds, density, delta)
             for bounds in subset:
