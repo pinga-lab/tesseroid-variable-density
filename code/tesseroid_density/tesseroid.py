@@ -263,6 +263,7 @@ def _density_based_discretization(bounds, density, delta):
             tesseroid.
     """
     w, e, s, n, top, bottom = bounds[:]
+    tesseroid_size = top - bottom
     pending, subset = [bounds], []
 
     # Compute maximum and minimum density for future normalization
@@ -294,7 +295,8 @@ def _density_based_discretization(bounds, density, delta):
             warnings.warn(msg, RuntimeWarning)
             continue
 
-        if max_diff > delta:
+        size_ratio = (top - bottom)/tesseroid_size
+        if max_diff*size_ratio > delta:
             pending.append([w, e, s, n, top, divider])
             pending.append([w, e, s, n, divider, bottom])
         else:
