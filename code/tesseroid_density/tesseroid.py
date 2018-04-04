@@ -105,7 +105,9 @@ RATIO_V = 1
 RATIO_G = 2
 RATIO_GG = 8
 STACK_SIZE = 100
-DELTA = 0.2
+DELTA_V = 0.2
+DELTA_G = 0.2
+DELTA_GG = 0.02
 
 
 def _check_input(lon, lat, height, model, ratio, njobs, pool):
@@ -346,7 +348,7 @@ def _split_arrays(arrays, extra_args, nparts):
 
 
 def potential(lon, lat, height, model, dens=None, ratio=RATIO_V,
-              njobs=1, pool=None, delta=DELTA):
+              njobs=1, pool=None, delta=DELTA_V):
     """
     Calculate the gravitational potential due to a tesseroid model.
 
@@ -404,7 +406,7 @@ def potential(lon, lat, height, model, dens=None, ratio=RATIO_V,
 
 
 def gx(lon, lat, height, model, dens=None, ratio=RATIO_G,
-       njobs=1, pool=None, delta=DELTA):
+       njobs=1, pool=None, delta=DELTA_G):
     """
     Calculate the North component of the gravitational attraction.
 
@@ -462,7 +464,7 @@ def gx(lon, lat, height, model, dens=None, ratio=RATIO_G,
 
 
 def gy(lon, lat, height, model, dens=None, ratio=RATIO_G,
-       njobs=1, pool=None, delta=DELTA):
+       njobs=1, pool=None, delta=DELTA_G):
     """
     Calculate the East component of the gravitational attraction.
 
@@ -520,7 +522,7 @@ def gy(lon, lat, height, model, dens=None, ratio=RATIO_G,
 
 
 def gz(lon, lat, height, model, dens=None, ratio=RATIO_G,
-       njobs=1, pool=None, delta=DELTA):
+       njobs=1, pool=None, delta=DELTA_G):
     """
     Calculate the radial component of the gravitational attraction.
 
@@ -583,7 +585,7 @@ def gz(lon, lat, height, model, dens=None, ratio=RATIO_G,
 
 
 def gxx(lon, lat, height, model, dens=None, ratio=RATIO_GG,
-        njobs=1, pool=None, delta=DELTA):
+        njobs=1, pool=None, delta=DELTA_GG):
     """
     Calculate the xx component of the gravity gradient tensor.
 
@@ -641,7 +643,7 @@ def gxx(lon, lat, height, model, dens=None, ratio=RATIO_GG,
 
 
 def gxy(lon, lat, height, model, dens=None, ratio=RATIO_GG,
-        njobs=1, pool=None, delta=DELTA):
+        njobs=1, pool=None, delta=DELTA_GG):
     """
     Calculate the xy component of the gravity gradient tensor.
 
@@ -699,7 +701,7 @@ def gxy(lon, lat, height, model, dens=None, ratio=RATIO_GG,
 
 
 def gxz(lon, lat, height, model, dens=None, ratio=RATIO_GG,
-        njobs=1, pool=None, delta=DELTA):
+        njobs=1, pool=None, delta=DELTA_GG):
     """
     Calculate the xz component of the gravity gradient tensor.
 
@@ -756,7 +758,7 @@ def gxz(lon, lat, height, model, dens=None, ratio=RATIO_GG,
 
 
 def gyy(lon, lat, height, model, dens=None, ratio=RATIO_GG,
-        njobs=1, pool=None, delta=DELTA):
+        njobs=1, pool=None, delta=DELTA_GG):
     """
     Calculate the yy component of the gravity gradient tensor.
 
@@ -814,7 +816,7 @@ def gyy(lon, lat, height, model, dens=None, ratio=RATIO_GG,
 
 
 def gyz(lon, lat, height, model, dens=None, ratio=RATIO_GG,
-        njobs=1, pool=None, delta=DELTA):
+        njobs=1, pool=None, delta=DELTA_GG):
     """
     Calculate the yz component of the gravity gradient tensor.
 
@@ -872,7 +874,7 @@ def gyz(lon, lat, height, model, dens=None, ratio=RATIO_GG,
 
 
 def gzz(lon, lat, height, model, dens=None, ratio=RATIO_GG,
-        njobs=1, pool=None, delta=DELTA):
+        njobs=1, pool=None, delta=DELTA_GG):
     """
     Calculate the zz component of the gravity gradient tensor.
 
