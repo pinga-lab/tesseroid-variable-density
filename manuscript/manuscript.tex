@@ -367,7 +367,275 @@ show that this method, along with well suited discretization
 algorithms, approximates the gravity fields with good accuracy.\todo{no 
 se si poner esta ultima oracion}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\section{Methodology}
+
+From equation \ref{eq:glq-var-dens} we can conclude that the error of 
+the numerical approximation is controlled by the order of the 
+quadrature, i.e. the number of point masses that are going to be used 
+to compute the gravitational field.
+This conclusion could lead to a naive methodology: find the order of 
+the quadrature that produces gravitational fields with an acceptable 
+accuracy.
+Although this simple proposal has a few problems: (a) it won't be 
+efficient and (b) it couldn't be applied to the general case (any
+tesseroid with arbitrary density function on any computational point) 
+without modifying the quadrature order taking into account 
+characteristics of the tesseroid and the computation point (tesseroid 
+size, distance to the computation point, variation of the density 
+function, etc).
+
+That's why we will keep the GLQ order fixed and make use of 
+discretization algorithms.
+Instead of uniformly increase the number of point masses that 
+approximates a certain tesseroid, the discretization algorithms are 
+intended to efficiently subdivide the tesseroid into smaller ones and 
+apply the GLQ to each one of them.
+These algorithms generally involve a discretization inequation that 
+controls if the tesseroid should be subdivided or not and a certain 
+predefined parameter that works as a threshold for the discretization 
+inequation.
+
+On the variable density tesseroid problem we found two main error 
+sources in the GLQ that should be addressed: (a) the relation between 
+the tesseroid size and its distance to the computation point, and (b) 
+the variation of the density function.
+
+The former one is also present in the homogeneous density tesseroid 
+models, such as the one developed by \citet{Uieda2016}, and could be 
+solved by applying a modified version of the adaptive discretization 
+algorithm proposed by \citet{Li2011}.
+Although for the latter we need to introduce a new density-based 
+discretization algorithm that subdivides the tesseroid taking into 
+account the variation of its density function.
+
+
+\subsection{Modified Adaptive Discretization Algorithm}
+
+From equation \ref{eq:glq-var-dens} we saw that the GLQ approximates 
+the volume integrals as the gravitational effect of point masses 
+located at the nodes of the quadrature. If we set the GLQ orders to 
+fixed values, it's easy to conclude that the nearer the computation 
+point is to the tesseroid, the accuracy of the approximation is reduced 
+and the point masses effect becomes more noticeable than the tesseroid 
+we want to approximate. A complete analysis of this conclusion can be 
+found in \citet{Ku1977, Li2011, Uieda2016}.
+
+Studying the homogeneous density tesseroid problem, \citet{Ku1977} 
+noticed that keeping the GLQ orders fixed, the approximation 
+becomes less accurate when the computation point is closer to the 
+tesseroid, making the point masses effect more noticeable than the 
+tesseroid we want to approximate.
+A complete analysis of this conclusion can be found in \citet{Ku1977, 
+Li2011, Uieda2016}.
+
+Instead of increasing the GLQ orders to improve the accuracy, what 
+leads to a more time consuming computation, \citet{Li2011} proposed an 
+adaptive discretization algorithm which essentially consists in 
+dividing the tesseroid based on a ratio between the distance to the 
+computation point and its dimensions.
+\citet{Uieda2016} proposed a modified version of the algorithm proposed 
+by \citet{Li2011}. These modifications can be summed up in:
+(1) a faster calculation of the distance from the computation point to 
+the tesseroid and 
+(2) the application of a stack based algorithm that speeds up the 
+computation and gives more control over the recursion step.
+More specifically, \citet{Uieda2016} redefined the dimensions of an 
+arbitrary tesseroid: $L_\lambda$, $L_\phi$ and $L_r$. The former ones 
+are the arc-distances measured along its top surface while $L_r$ is the 
+difference between the radii of the top and bottom surfaces.
+
+While keeping the GLQ fixed on second orders, the adaptive 
+discretization algorithm starts by checking that the following 
+inequality is satisfied:
+
+\begin{equation}
+    \frac{d}{L_i} \geq D,
+\label{eq:distance-size-ratio}
+\end{equation}
+
+\noindent where $i \in \{\lambda, \phi, r\}$, $d$ is the distance 
+between the geometric centre of the tesseroid and the computation 
+point, and $D$ is a predefined value called distance-size ratio.
+If the inequality \ref{eq:distance-size-ratio} is not held for at least 
+one spherical coordinate, then the tesseroid must be divided by half in 
+that direction.
+On the contrary, if the inequality is satisfied for every spherical 
+coordinate, the algorithm computes the desired gravity field using the 
+GLQ approximation.
+A complete description of the modified adaptive discretization 
+algorithm can be found in \citet{Uieda2016}.
+
+In summary, the distance-size ratio $D$ determines indirectly how many 
+times the tesseroids will be divided, and therefore efficiently 
+regulates both the accuracy of the algorithm and its computation time.
+Moreover, it limits the computation time by stopping the division of 
+the tesseroids when their dimensions are lower than a certain value 
+(1mm), assuming that such small tesseroids do not modifies 
+significantly the desired gravitational field.
+
+On the other hand, the value assigned to the distance-size ratio $D$ 
+cannot be easily related to the error of the approximation, thus the 
+choice of the value of $D$ to get an acceptable accuracy must be 
+empirically determined beforehand.
+In order to overcome this, \citet{Uieda2016} compared the numerical 
+computation with the analytical solution for a spherical shell with 
+homogeneous density.
+
+We will perform similar tests, but now with variable density spherical 
+shell.
+From the infinite density functions that can be proposed, we have 
+chosen three characteristic ones: a linear, an exponential and a 
+discontinuous function.
+\todo{sacaria todo este parrafo y lo introduciria mas adelante}
+
+
+\subsection{Density-based Discretization Algorithm}
+
+High variations in the density function of an arbitrary tesseroid 
+introduces a new type of error into the numerical approximation: only a 
+few point masses would not reproduce the effect of this kind of 
+variations.
+The modified version of the adaptive discretization algorithm may help 
+in reducing this kind of error, but as it only takes into account the 
+dimensions of the tesseroid and the distance to the computation point, 
+it's not well suited to fully perform this task.
+
+In order to overcome this, we developed a complementary discretization 
+algorithm that takes into account the variation of the density inside 
+the tesseroid. Basically, it subdivides any tesseroid on the radial 
+direction on the depth at which the \emph{maximum density variation} 
+takes place.
+
+In a general way, the algorithm can be summarised in the following steps:
+
+\begin{enumerate}
+\renewcommand{\theenumi}{(\arabic{enumi})}
+    \item Normalise the density function to the [0, 1] interval,
+    \item Compute the absolute difference between the normalised 
+          density and a linear function that assumes the same values on the 
+          top and bottom radii that this normalised density.
+    \item If product of the maximum of the absolute difference and a 
+          tesseroid size ratio is greater that a predefined delta ratio 
+          ($\delta$), then the tesseroid will be subdivided on the 
+          radius at which this maximum takes place. Otherwise, the 
+          tesseroid won't be split.
+    \item If it's discretized, then apply items (2), (3) and (4) for 
+          every subdividing tesseroid.
+\end{enumerate}
+
+Lets assume an arbitrary tesseroid with boundary radii $R_1$ and $R_2$ 
+and a density function $\rho(r')$ which we will call the 
+\emph{original tesseroid}, whose radial dimension can be written as
+$L_r = R_2 - R_1$.
+
+First we need to normalise the density function such as its minimum and 
+maximum will be 0 and 1, respectively.
+We call this normalised density $\rho_n(r')$ and we calculate it as 
+follows:
+
+\begin{equation}
+    \rho_n(r') = \frac{\rho(r') - \rho_1}{\rho_2 - \rho_1},
+\end{equation}
+\noindent where
+\begin{equation}
+    \rho_1 = \text{min}\{ \rho(r') \}, \quad
+    \rho_2 = \text{max}\{ \rho(r') \} \quad
+    \forall \, r' \in [R_1, R_2].
+\end{equation}
+
+\noindent Because this algorithm will be iteratively applied for every 
+subdividing tesseroid, we'd like to note that this normalised density 
+function will be the same for every subdividing tesseroid.
+In case that the density function is constant, both the maximum and 
+minimum densities are equal and the normalised function could not 
+be defined, so the density-based discretization algorithm won't be 
+applied.
+
+Secondly, we must define a linear function $\rho_l(r')$ that assumes 
+the same values as the normalised density $\rho_n(r')$ on the boundary 
+radii $R_1$ and $R_2$:
+
+\begin{equation}
+    \rho_l(r') =
+    \frac{ \rho_n(R_2) - \rho_n(R_1) }{ R_2 - R_1 } (r' - R_1) + \rho_n(R_1),
+    \label{eq:density-reference-line}
+\end{equation}
+
+\noindent and compute the absolute difference between this linear 
+function and the normalised density:
+
+\begin{equation}
+    \Delta \rho (r') = | \rho_n(r') - \rho_l(r') |.
+    \label{eq:density-abs-diff}
+\end{equation}
+
+Finally, if the product of the maximum of the absolute difference and a 
+tesseroid size ratio is greater than a predefined delta ratio $\delta$ 
+we will divide the tesseroid on the radius at which this maximum takes 
+place ($R_\text{max}$):
+
+\begin{equation}
+    \text{max}\{ \Delta \rho(r') \} \frac{L_r^\text{sm}}{L_r} > \delta,
+    \label{eq:delta-density}
+\end{equation}
+\begin{equation}
+    \text{max}\{ \Delta \rho(r') \} = \Delta \rho(R_\text{max}),
+\end{equation}
+
+\noindent obtaining a pair of smaller tesseroids with the same 
+longitude and latitude boundaries.
+
+The $L_r^\text{sm}$ is the radial dimension of the tesseroid that is 
+currently analysed. On the first iteration, this tesseroid is the 
+\emph{original} one, so $L_r^\text{sm} = L_r$, but for future 
+iterations this radial dimension will be computed as the difference of 
+the top and bottom radii of the subdividing tesseroid.
+
+This algorithm will be subsequently applied to every subdividing 
+tesseroid.
+We will start from equation \ref{eq:density-reference-line} defining a 
+new linear function $\rho_l(r')$, an absolute difference with equation 
+\ref{eq:density-abs-diff} and evaluate the discretization inequation 
+\ref{eq:delta-density}, taking into account that now $R_1$ and $R_2$ 
+are the radial boundaries of this smaller tesseroid.
+
+The tesseroid size ratio included in the inequation 
+\ref{eq:delta-density} is intended to reduce the number of probable 
+unneeded discretizations and focus on discretizations that will 
+significantly reduce the numerical error.
+A big subdiving tesseroid with small maximum absolute difference would 
+introduce more numerical error than a small subdividing tesseroid with 
+higher maximum absolute difference.
+
+If on the contrary the inequation \ref{eq:delta-density} is not held, 
+then the tesseroid will not be subdivided.
+The same happens if the tesseroid radial dimension is bellow the 
+threshold of 1mm. On the first case due to the fact that no more 
+discretizations are needed, and on the second one because smaller 
+tesseroids will not introduce meaningful increases in the accuracy of 
+the computation.
+This two conditions guarantee that the algorithm is finite.
+Once they are met, every subdividing tesseroid is subjected to the 
+modified adaptive discretization algorithm and the GLQ in order to 
+compute the gravity field generated by it.
+
+It's easy to see that the delta ratio indirectly controls how many 
+times the tesseroids will be subdivided based on the variation of the 
+density function.
+
+Therefore it determines the accuracy involving the numerical error that 
+the density variation introduces and also the computation time.
+This raises the need to determine a maximum value of $\delta$ that 
+ensures an acceptable accuracy while minimising the computation time. 
+We will perform this determination with the same methodology as the one 
+applied to the $D$ ratio: compare the numerical model with the 
+analytical solutions for a spherical shell.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Analytical Solutions for Spherical Shell}
 
 The integrals that define the gravity fields in equations \ref{eq:tesseroid-pot}-\ref{eq:tesseroid-tensor} have analytical solutions for the exceptional case of a spherical shell with homogeneous density \citep{Mikuska2006,Grombein2013}.
@@ -557,114 +825,6 @@ Moreover, it is also compatible with the preexisting open-source library Fatiand
 \end{enumerate}
 
 
-\subsection{Modified Adaptive Discretization Algorithm}
-
-From equation \ref{eq:glq-var-dens} we saw that the GLQ approximates the volume integrals as the gravitational effect of point masses located at the nodes of the quadrature.
-If we set the GLQ orders to fixed values, it's easy to conclude that the nearer the computation point is to the tesseroid, the accuracy of the approximation is reduced and the point masses effect becomes more noticeable than the tesseroid we want to approximate.
-A complete analysis of this conclusion can be found in \citet{Ku1977, Li2011, Uieda2016}.
-
-Instead of increasing the GLQ orders to improve the accuracy, what leads to a more time consuming computation, adaptive discretization algorithms have been applied in previous works \citep{Li2011, Uieda2016}.
-They essentially consist in dividing the tesseroid based on a ratio between the distance from its geometric centre to the computation point and its dimensions.
-
-The main differences between the modified version made by \citet{Uieda2016} and the original one developed by \citet{Li2011} can be summed up in:
-(1) a faster calculation of the distance from the computation point to the tesseroid and 
-(2) the application of a stack based algorithm that speeds up the computation and gives more control over the recursion step.
-More specifically, \citet{Uieda2016} redefined the dimensions of an arbitrary tesseroid: $L_\lambda$, $L_\phi$ and $L_r$. The former ones are the arc-distances measured along its top surface while $L_r$ is the difference between the radii of the top and bottom surfaces.
-
-While keeping the GLQ fixed on second orders, the adaptive discretization algorithm starts by checking that the following inequality is satisfied:
-
-\begin{equation}
-    \frac{d}{L_i} \geq D,
-\label{eq:distance-size-ratio}
-\end{equation}
-
-\noindent where $i \in \{\lambda, \phi, r\}$, $d$ is the distance between the geometric centre of the tesseroid and the computation point, and $D$ is a predefined value called distance-size ratio.
-If the inequality \ref{eq:distance-size-ratio} is not held for at least one spherical coordinate, then the tesseroid must be divided by half in that direction.
-A complete description of the modified adaptive discretization algorithm can be found in \citet{Uieda2016}.
-On the contrary, if the inequality is satisfied for every spherical coordinate, the algorithm computes the desired gravity field using the GLQ approximation.
-
-In summary, the distance-size ratio $D$ determines indirectly how many times the tesseroids will be divided, and therefore efficiently regulates both the accuracy of the algorithm and its computation time.
-Moreover, it limits the computation time by stopping the division of the tesseroids when their dimensions are lower than a certain value (1mm), assuming that such small tesseroids do not modifies significantly the desired gravitational field.
-
-On the other hand, the value assigned to the distance-size ratio $D$ cannot be easily related to the error of the approximation, thus the choice of the value of $D$ to get an acceptable accuracy must be empirically determined beforehand.
-In order to overcome this, \citet{Uieda2016} compared the numerical computation with the analytical solution for a spherical shell with homogeneous density.
-
-We will perform similar tests, but now with variable density spherical shell.
-From the infinite density functions that can be proposed, we have chosen three characteristic ones: a linear, an exponential and a discontinuous function.
-
-\subsection{Density-based Discretization Algorithm}
-
-High variations in the density function of an arbitrary tesseroid introduces a new type of error into the numerical approximation: only a few point masses would not reproduce the effect of this kind of variations.
-The modified version of the adaptive discretization algorithm may help in reducing this kind of error, but as it only takes into account the dimensions of the tesseroid and the distance to the computation point, it's not well suited to fully perform this task.
-
-In order to overcome this, we developed a complementary discretization algorithm that takes into account the variation of the density inside the tesseroid.
-Basically, it subdivides any tesseroid on the radial direction on the depth at which the \emph{maximum density variation} takes place.
-
-Specifically, the algorithm consists in the following steps:
-
-\begin{enumerate}
-\renewcommand{\theenumi}{(\arabic{enumi})}
-    \item Normalise the density function to the [0, 1] interval,
-    \item Compute the absolute difference between the normalised density and a linear function that assumes the same values on the top and bottom radii that this normalised density.
-    \item If the maximum of the absolute difference is greater that a predefined delta ratio ($\delta$), then the tesseroid will be subdivided on the radius at which this maximum takes place. Otherwise, the tesseroid won't be split.
-\end{enumerate}
-
-First we need to normalise the density function such as it assumes the values of 0 and 1 on the boundary radii ($R_1$, $R_2$), depending at which radius the original density function is maximum.
-We call this normalised density $\rho_n(r')$ and we calculate it as follows:
-
-\begin{equation}
-    \rho_n(r') = \frac{\rho(r') - \rho_1}{\rho_2 - \rho_1},
-\end{equation}
-\noindent where
-\begin{equation}
-    \rho_1 = \text{min}\{ \rho(R_1), \rho(R_2) \}, \quad
-    \rho_2 = \text{max}\{ \rho(R_1), \rho(R_2) \}.
-\end{equation}
-
-Secondly, we must define a linear function $\rho_l(r')$ that assumes the same values as the normalised density $\rho_n(r')$ on the boundary radii:
-
-\begin{equation}
-    \rho_l(r') =
-    \frac{ \rho_n(R_2) - \rho_n(R_1) }{ R_2 - R_1 } (r' - R_1) + \rho_n(R_1),
-\end{equation}
-
-\noindent and compute the absolute difference between this linear function and the normalised density:
-
-\begin{equation}
-    \Delta \rho (r') = | \rho_n(r') - \rho_l(r') |.
-\end{equation}
-
-Finally, if the maximum of the absolute difference if greater than a predefined delta ratio $\delta$ we will divide the tesseroid on the radius at which this maximum takes place ($R_\text{max}$):
-
-\begin{equation}
-    \text{max}\{ \Delta \rho(r') \} > \delta,
-    \label{eq:delta-density}
-\end{equation}
-\begin{equation}
-    \text{max}\{ \Delta \rho(r') \} = \Delta \rho(R_\text{max}),
-\end{equation}
-
-\noindent obtaining a pair of smaller tesseroids with the same longitude and latitude boundaries.
-
-In case that the original density function assumes the same value at both boundary radii, the procedure is the same except that the constants $\rho_1$ and $\rho_2$ are redefined as follows:
-
-\begin{equation}
-    \rho_1 = \text{min}\{ \rho(r') \}, \quad
-    \rho_2 = \text{max}\{ \rho(r') \}.
-\end{equation}
-
-If on the contrary the inequation \ref{eq:delta-density} is not held, then the tesseroid will not be subdivided.
-The same happens if the density function is constant or if the tesseroid radial dimension is bellow the threshold of 1mm.
-On the first case due to the fact that the density-based discretization algorithm is not needed, and on the second one because smaller tesseroids will not introduce meaningful increases in the accuracy of the computation.
-
-This algorithm can be subsequently applied to every subdividing tesseroid, until the inequation \ref{eq:delta-density} is not held or the subdivisions are smaller than 1mm.
-This two conditions guarantee that the algorithm is finite.
-Once this conditions are met, every subdividing tesseroid is subjected to the modified adaptive discretization algorithm and the GLQ in order to compute the gravity field generated by it.
-
-It's easy to see that the delta ratio indirectly controls how many times the tesseroids will be subdivided based on the variation of the density function.
-Therefore it determines the accuracy involving the numerical error that the density variation introduces and also the computation time.
-This raises the need to determine a maximum value of $\delta$ that ensures an acceptable accuracy while minimising the computation time.
-We will perform this determination with the same methodology as the one applied to the $D$ ratio: compare the numerical model with the analytical solutions for a spherical shell.
 
 
 \subsection{Algorithm summary}
