@@ -15,5 +15,6 @@ dependencies:
     - cython=0.26.1
     - jupyter=1.0.0
     - fatiando=0.5
+    - pytest
     - pip:
         - proselint==0.8.0

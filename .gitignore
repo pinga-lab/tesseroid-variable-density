@@ -5,9 +5,19 @@
 manuscript/output/*
 .env
 code/.ipynb_checkpoints/
+code/build
 code/tesseroid_density/build
 code/tesseroid_density/_tesseroid.c
 code/tesseroid_density/_tesseroid.so
+
+code/*.egg-info/
+code/.pytest_cache/
+code/.cache
+code/.coverage*
+code/notebooks/*.nbconvert.ipynb
+manuscript/figures/*-eps-converted-to.pdf
+manuscript/output/
+*/.ipynb_checkpoints/
 
 
 ## Latex ignore files
