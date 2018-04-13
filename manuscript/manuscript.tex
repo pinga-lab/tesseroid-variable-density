@@ -1080,6 +1080,24 @@ numerical error for every ($D$, $\delta$) points belonging to a grid on
 the $D$, $\delta$ space and specify the pair that combines an 
 acceptable numerical error with an efficient computation.
 
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]
+    {figures/D-delta-grid-search.pdf}
+\caption{
+    $D$, $\delta$ space divided in three regions (A, B and C) based on 
+    the definitions of $D_\text{linear}$ and $\delta_p$ (see text for more 
+    information).
+    Light grey points are the non-eligible ($D$, $\delta$) pairs 
+    belonging to the region A (with $D < D_\text{linear}$).
+    Green points have acceptable numerical error (lower than 0.1\%), 
+    while the red ones represent those whose error is greater than the 
+    threshold.
+    Dark grey points represent those from which we don't have a priori 
+    information about their numerical error.}
+\label{fig:D-delta-grid-search}
+\end{figure}
+
 Because the algorithm is intended to work with default $D$ and $\delta$ 
 values that ensures these two conditions for every density function, 
 the default value for $D$ cannot be lower than the one determined for 
