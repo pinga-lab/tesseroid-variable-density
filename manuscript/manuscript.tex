@@ -1106,8 +1106,9 @@ That's why we can only choose the ($D$, $\delta$) points on which
 $D \geq D_\text{linear}$.
 In this way we can divide the $D$, $\delta$ space in two subregions: 
 one with $D < D_\text{linear}$ and other with $D \ge D_\text{linear}$.
-We can ignore points belonging to the former one and focus on the 
-latter.
+We can ignore points belonging to the former one (region A on Figure 
+\ref{fig:D-delta-grid-search}) and focus on the latter (regions B and C 
+on Figure \ref{fig:D-delta-grid-search}).
 
 From the $D \ge D_\text{linear}$ subregion we can explore the numerical 
 error of points with $D = D_\text{linear}$ and different values of 
@@ -1120,8 +1121,9 @@ with high error, while lower $\delta$ values than $\delta_p$ will
 produce more discretizations leading to non-efficient computation.
 
 With this definition in mind we can subdivide the subregion in two: one 
-with points with $\delta > \delta_p$ and other with points with $\delta 
-\le \delta_p$.
+with points with $\delta \le \delta_p$ (region B on Figure 
+\ref{fig:D-delta-grid-search}) and other with points with $\delta > 
+\delta_p$ (region C on Figure \ref{fig:D-delta-grid-search}).
 
 It worth mention that a greater $D$ or a lower $\delta$ 
 increases the number of discretizations of the tesseroid.
@@ -1132,20 +1134,29 @@ This means that a decrease in $\delta$ will produce a more efficient
 computation than an increase in $D$.
 \todo[inline]{Should we keep this paragraph? The same is explained bellow.}
 
-Every point in the subregion with $\delta \le \delta_p$ will have a 
-numerical error lower than the 0.1\% threshold, but they will always 
-produce more discretizations than the ($D_\text{linear}$, $\delta_p$) 
-point leading to non-efficient computations.
+Every point in the subregion with $\delta \le \delta_p$ (region B on 
+Figure \ref{fig:D-delta-grid-search}) will have a numerical error lower 
+than the 0.1\% threshold, but they will always produce more 
+discretizations than the ($D_\text{linear}$, $\delta_p$) point leading 
+to non-efficient computations.
 
 On the other hand, we have no a priori information about the numerical 
-error of points with $\delta > \delta_p$.
+error of points with $\delta > \delta_p$ (region C on 
+Figure \ref{fig:D-delta-grid-search}).
 Although, if we find a point with acceptable numerical error in this 
 region, we know it will produce more discretizations than the 
-($D_\text{linear}$, $\delta_p$) point.
+($D_\text{linear}$, $\delta_p$) point, leading to a non-efficient 
+computation.
 This is due to the fact that even an increase in $\delta$ will produce 
 less density-based discretizations, the increase in $D$ will introduce 
 even more subdivisions not only in the radial direction, but 
-also in the latitude and logitude ones.
+also in the latitude and longitude ones.
+
+In conclusion, the ($D$, $\delta$) point that minimises the number of 
+discretizations while keeping an acceptable numerical error under the 
+0.1\% threshold is the one on which the ratio $D$ is equal to 
+$D_\text{linear}$ and the delta ratio is $\delta_p$.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
