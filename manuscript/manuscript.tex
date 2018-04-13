@@ -1088,11 +1088,12 @@ That's why we can only choose the ($D$, $\delta$) points on which
 $D \geq D_\text{linear}$.
 In this way we can divide the $D$, $\delta$ space in two subregions: 
 one with $D < D_\text{linear}$ and other with $D \ge D_\text{linear}$.
-The former contains points not eligible, while the latter one will 
-contain the one that we want to find.
+We can ignore points belonging to the former one and focus on the 
+latter.
 
-From the latter subregion we can explore the numerical error of points 
-with $D = D_\text{linear}$ and different values of $\delta$.
+From the $D \ge D_\text{linear}$ subregion we can explore the numerical 
+error of points with $D = D_\text{linear}$ and different values of 
+$\delta$.
 We will call $\delta_p$ as the maximum $\delta$ at which the numerical 
 error is lower than the 0.1\% threshold while keeping
 $D = D_ \text{linear}$.
@@ -1106,22 +1107,27 @@ with points with $\delta > \delta_p$ and other with points with $\delta
 
 It worth mention that a greater $D$ or a lower $\delta$ 
 increases the number of discretizations of the tesseroid.
-Although a greater $D$ may subdivide it in the latitude, longitude 
+Although a greater $D$ may divide it in the latitude, longitude 
 and/or radial direction; a lower $\delta$ will only discretize the 
 original tesseroid in the radial direction.
-From this analysis we can conclude that a decrease in $\delta$ will 
-produce a more efficient computation than an increase in $D$.
+This means that a decrease in $\delta$ will produce a more efficient 
+computation than an increase in $D$.
+\todo{Should we keep this paragraph? The same is explained bellow.}
 
 Every point in the subregion with $\delta \le \delta_p$ will have a 
 numerical error lower than the 0.1\% threshold, but they will always 
 produce more discretizations than the ($D_\text{linear}$, $\delta_p$) 
 point leading to non-efficient computations.
 
-On the other hand, the numerical error of points with $\delta > 
-\delta_p$ can either be lower or greater than 0.1\%.
-Any point in this subregion with acceptable numerical error will 
-produce more discretizations than the ($D_\text{linear}$, $\delta_p$) 
-point, due to $D$ value is increased.
+On the other hand, we have no a priori information about the numerical 
+error of points with $\delta > \delta_p$.
+Although, if we find a point with acceptable numerical error in this 
+region, we know it will produce more discretizations than the 
+($D_\text{linear}$, $\delta_p$) point.
+This is due to the fact that even an increase in $\delta$ will produce 
+less density-based discretizations, the increase in $D$ will introduce 
+even more subdivisions not only in the radial direction, but 
+also in the latitude and logitude ones.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
