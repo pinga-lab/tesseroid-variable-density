@@ -493,10 +493,9 @@ discontinuous function.
 
 \subsection{Density-based Discretization Algorithm}
 
-High variations in the density function of an arbitrary tesseroid 
-introduces a new type of error into the numerical approximation: only a 
-few point masses would not reproduce the effect of this kind of 
-variations.
+Variations in the density function of an arbitrary tesseroid introduces 
+a new type of error into the numerical approximation: only a few point 
+masses would not reproduce the effect of the density variations.
 The modified version of the adaptive discretization algorithm may help 
 in reducing this kind of error, but as it only takes into account the 
 dimensions of the tesseroid and the distance to the computation point, 
@@ -506,7 +505,7 @@ In order to overcome this, we developed a complementary discretization
 algorithm that takes into account the variation of the density inside 
 the tesseroid. Basically, it subdivides any tesseroid on the radial 
 direction on the depth at which the \emph{maximum density variation} 
-takes place.
+takes place, only if a certain discretization inequation holds.
 
 \begin{figure*}
 \centering
@@ -556,6 +555,7 @@ follows:
 Because the algorithm will be iteratively applied for every 
 subdividing tesseroid, we'd like to note that this normalised density 
 function will be the same for every subdividing tesseroid.
+
 In case that the density function is constant, both the maximum and 
 minimum densities are equal and the normalised function could not 
 be defined, so the density-based discretization algorithm won't be 
@@ -579,40 +579,40 @@ function and the normalised density:
     \label{eq:density-abs-diff}
 \end{equation}
 
-Finally, if the product of the maximum of the absolute difference and a 
-tesseroid size ratio is greater than a predefined delta ratio $\delta$ 
-we will divide the tesseroid on the radius at which this maximum takes 
-place ($R_\text{max}$):
+Finally, if the following inequation holds, the tesseroid will be divided on 
+the radius $R_\text{max}$ at which the maximum absolute difference takes 
+place:
 
 \begin{equation}
     \text{max}\{ \Delta \rho(r') \} \frac{L_r^\text{sm}}{L_r} > \delta,
     \label{eq:delta-density}
 \end{equation}
 
-\noindent obtaining a pair of smaller tesseroids with the same 
-longitude and latitude boundaries.
-
-The $L_r^\text{sm}$ is the radial dimension of the tesseroid that is 
-currently analysed. On the first iteration, this tesseroid is the 
+\noindent where the delta ratio $\delta$ is a predefined constant value 
+and $L_r^\text{sm}/L_r$ is a tesseroid size ratio, where 
+$L_r^\text{sm}$ and $L_r$ are the radial dimensions of the tesseroid 
+that is currently analysed and of the \emph{original} one, 
+respectively.
+On the first iteration, the former tesseroid corresponds to the 
 \emph{original} one, so $L_r^\text{sm} = L_r$, but for future 
 iterations this radial dimension will be computed as the difference of 
 the top and bottom radii of the subdividing tesseroid.
-
-This algorithm will be subsequently applied to every subdividing 
-tesseroid.
-We will start from equation \ref{eq:density-reference-line} defining a 
-new linear function $\rho_l(r')$, an absolute difference with equation 
-\ref{eq:density-abs-diff} and evaluate the discretization inequation 
-\ref{eq:delta-density}, taking into account that now $R_1$ and $R_2$ 
-are the radial boundaries of this smaller tesseroid.
-
-The tesseroid size ratio included in the inequation 
-\ref{eq:delta-density} is intended to reduce the number of probable 
+The tesseroid size ratio is intended to reduce the number of probable 
 unneeded discretizations and focus on discretizations that will 
 significantly reduce the numerical error.
 A big subdividing tesseroid with small maximum absolute difference would 
 introduce more numerical error than a small subdividing tesseroid with 
 higher maximum absolute difference.
+
+Once the \emph{original} tesseroid is divided, we proceed to 
+subsequently apply the same algorithm on every subdividing tesseroid.
+We will start from equation \ref{eq:density-reference-line} defining a 
+new linear function $\rho_l(r')$, an absolute difference with equation 
+\ref{eq:density-abs-diff} and evaluate the discretization inequation 
+\ref{eq:delta-density}, taking into account that now $R_1$ and $R_2$ 
+are the radial boundaries of this smaller tesseroid.
+If the inequation holds, the current tesseroid is discretized and the 
+algorithm is then applied to the resulting subdividing tesseroids.
 
 If on the contrary the inequation \ref{eq:delta-density} is not held, 
 then the tesseroid will not be subdivided.
@@ -622,26 +622,26 @@ discretizations are needed, and on the second one because smaller
 tesseroids will not introduce meaningful increases in the accuracy of 
 the computation.
 This two conditions guarantee that the algorithm is finite.
-Once they are met, every subdividing tesseroid is subjected to the 
-modified adaptive discretization algorithm and the GLQ in order to 
-compute the gravitational field generated by it.
+Once any of them is met and no more discretizations are carried out, 
+every subdividing tesseroid is subjected to the modified adaptive 
+discretization algorithm and then a second order GLQ must be applied in 
+order to compute the gravitational field generated by it.
 
 On Figure \ref{fig:density-discretization-algorithm}(a) we propose an 
 arbitrary normalised density function as an example of how this 
 algorithm works.
-And we plotted its corresponding linear function $\rho_l(r')$ and a 
-dashed line that represents the maximum absolute difference $\Delta 
-\rho (r')$.
+We plotted its corresponding linear function $\rho_l(r')$ and a 
+dashed line that represents the maximum absolute difference.
 We will assume that the discretization inequation 
 \ref{eq:delta-density} holds in this case, so we must divide the 
-tesseroid at the height at which the maximum difference occurs.
+tesseroid at the depth at which the maximum difference occurs.
 The dots on Figure \ref{fig:density-discretization-algorithm} 
-represent the discretization heights, i.e. the radial boundaries of the 
+represent the discretization points, i.e. the radial boundaries of the 
 subdividing tesseroids produced by the algorithm.
 
 On Figure \ref{fig:density-discretization-algorithm}(b) we apply the 
 algorithm on the shallower subdividing tesseroid.
-In the same way, we propose the linear function and compute the maximum 
+In the same way, we plot the linear function and compute the maximum 
 absolute difference $\Delta \rho (r')$.
 In this case, the tesseroid size-ratio $L_r^\text{sm}/L_r$ is lower 
 than one and will be taken into account in the discretization 
