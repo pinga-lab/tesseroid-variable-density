@@ -373,31 +373,25 @@ account the variation of its density function.
 
 \subsection{Modified Adaptive Discretization Algorithm}
 
-From equation \ref{eq:glq-var-dens} we saw that the GLQ approximates 
-the volume integrals as the gravitational effect of point masses 
-located at the nodes of the quadrature.
-If we set the GLQ orders to fixed values, it's easy to conclude that 
-the nearer the computation point is to the tesseroid, the accuracy of 
-the approximation is reduced and the point masses effect becomes more 
-noticeable than the tesseroid we want to approximate.
-A complete analysis of this conclusion can be found in \citet{Ku1977, 
-Li2011, Uieda2016}.
-
 Studying the homogeneous density tesseroid problem, \citet{Ku1977} 
 noticed that keeping the GLQ orders fixed, the approximation 
 becomes less accurate when the computation point is closer to the 
 tesseroid, making the point masses effect more noticeable than the 
 tesseroid we want to approximate.
-A complete analysis of this conclusion can be found in \citet{Ku1977, 
-Li2011, Uieda2016}.
+One way to prevent this could be increasing the GLQ order in case that 
+the computation point is near the tesseroid.
+This would uniformly increase the number of point masses inside the 
+tesseroid volume.
 
-Instead of increasing the GLQ orders to improve the accuracy, what 
-leads to a more time consuming computation, \citet{Li2011} proposed an 
-adaptive discretization algorithm which essentially consists in 
-dividing the tesseroid based on a ratio between the distance to the 
-computation point and its dimensions.
-\citet{Uieda2016} proposed a modified version of the algorithm proposed 
-by \citet{Li2011}. These modifications can be summed up in:
+Instead of doing this, \citet{Li2011} proposed an adaptive 
+discretization algorithm which essentially consists in dividing the 
+tesseroid based on a ratio between the distance to the computation 
+point and its dimensions.
+This algorithm produces a more efficient computation because the 
+increase of point masses is produced where are more needed.
+
+\citet{Uieda2016} proposed a modified version of this algorithm, whose
+modifications can be summed up in:
 (1) a faster calculation of the distance from the computation point to 
 the tesseroid and 
 (2) the application of a stack based algorithm that speeds up the 
@@ -443,13 +437,6 @@ empirically determined beforehand.
 In order to overcome this, \citet{Uieda2016} compared the numerical 
 computation with the analytical solution for a spherical shell with 
 homogeneous density.
-
-We will perform similar tests, but now with variable density spherical 
-shell.
-From the infinite density functions that can be proposed, we have 
-chosen three characteristic ones: a linear, an exponential and a 
-discontinuous function.
-\todo[inline]{sacaria todo este parrafo y lo introduciria mas adelante}
 
 
 \subsection{Density-based Discretization Algorithm}
