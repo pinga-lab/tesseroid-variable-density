@@ -267,59 +267,15 @@ is Kronecker's delta, $G = 6.674\times10^{-11}\,
 \label{eq:cospsi}
 \end{equation}
 
-
-According to \citet[p.~390]{Hildebrand1987}, we can approximate any 
-integral in the interval $[-1, 1]$ using a $N$th order GLQ, i.e. by a 
-weighted sum of the integration kernel evaluated on the roots of the 
-$N$th Legendre polynomial:
-
-\begin{equation}
-    \int\limits_{-1}^1 f(x) dx \approx \sum_{i=1}^N W_i f(x_i),
-\end{equation}
-
-\noindent where $x_i$ are the roots of the $N$th Legendre polynomial 
-$P_N(x)$ and $W_i$ are the weights of each term:
-
-\begin{equation}
-    W_i = \frac{2}{(1-x_i^2)[P_N^\prime(x_i)]^2},
-\end{equation}
-
-\begin{equation}
-    P_N(x_i) = 0, \quad \forall i = {1,\dots,N}.
-\end{equation}
-
-In case of an integration defined on a arbitrary interval, e.g. 
-$[a,b]$, we can scale the nodes and perform a similar approximation:
-
-\begin{equation}
-    \int\limits_a^b f(x) dx \approx \frac{b-a}{2} \sum_{i=1}^N W_i f(x_i^s),
-\label{eq:glq-scaled}
-\end{equation}
-
-\noindent where $x_i^s$ is the scaled $x_i$ root into the $[a,b]$ 
-interval, also called nodes of the quadrature:
-
-\begin{equation}
-    x_i^s = \frac{b-a}{2} x_i + \frac{b+a}{2}.
-\end{equation}
-
-\noindent For example, if we use a second order GLQ, the roots of the 
-$P_2(x)$ Legendre polynomial and its corresponding weights are $x_i = 
-\pm 0.577350269$ and $W_i = 1$.
-
-Our intention is to use GLQ to approximate the volume integrals from 
-equations \ref{eq:tesseroid-pot}-\ref{eq:tesseroid-tensor}.
-When tesseroids have variable densities, we can write the integral 
-kernels as the product of a certain function $g$ and the density 
-function:
-
-\begin{equation}
-    f(r', \phi', \lambda') = \rho(r') g(r', \phi', \lambda'),
-\end{equation}
-
-\noindent and then apply the quadrature to every integral corresponding 
-to each spherical coordinate, obtaining a similar expression to the one 
-shown by \citet{Asgharzadeh2007} and \citet{Uieda2016}:
+According to \citet[p.~390]{Hildebrand1987}, we can approximate each 
+integral on equations \ref{eq:tesseroid-pot}, \ref{eq:tesseroid-grav} 
+and \ref{eq:tesseroid-tensor} by applying a $N$th order GLQ, i.e. as 
+a weighted sum of the integration kernel evaluated on the roots of the 
+$N$th Legendre polynomial.
+In the variable density tesseroid case the GLQ is applied in a similar 
+way as \citet{Asgharzadeh2007} and \citet{Uieda2016} do, but in this 
+scenario the density function must be also evaluated on the quadrature 
+nodes:
 
 \iftwocol{
 \begin{equation}
@@ -350,8 +306,12 @@ shown by \citet{Asgharzadeh2007} and \citet{Uieda2016}:
 
 \begin{equation}
     A = 
-    \frac{(\lambda_2 - \lambda_1)(\phi_2 - \phi_1)(r_2 - r_1)}{8}.
+    \frac{(\lambda_2 - \lambda_1)(\phi_2 - \phi_1)(r_2 - r_1)}{8},
 \end{equation}
+
+\noindent $(r_i, \phi_j, \lambda_k)$ are the GLQ nodes and $W_i^r$ are 
+the quadrature weights \citep[see their definitions 
+on][]{Hildebrand1987}.
 
 From equation \ref{eq:glq-var-dens} we can observe that the GLQ 
 approximates the gravitational fields of a tesseroid as the ones 
