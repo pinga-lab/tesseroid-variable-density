@@ -331,20 +331,20 @@ algorithms, approximates the gravitational fields with good accuracy.
 
 \section{Methodology}
 
-From equation \ref{eq:glq-var-dens} we can conclude that the error of 
-the numerical approximation is controlled by the order of the 
-quadrature, i.e. the number of point masses that are going to be used 
-to compute the gravitational field.
-This conclusion could lead to a naive methodology: find the order of 
-the quadrature that produces gravitational fields with an acceptable 
-accuracy.
-Although this simple proposal has a few problems: (a) it won't be 
-efficient and (b) it couldn't be applied to the general case (any
-tesseroid with arbitrary density function on any computational point) 
-without modifying the quadrature order taking into account 
-characteristics of the tesseroid and the computation point (tesseroid 
-size, distance to the computation point, variation of the density 
-function, etc).
+In a general way, the numerical error of the GLQ is controlled by the 
+order of the quadrature: a higher GLQ order produces a more accurate 
+approximation \citep{Hildebrand1987}.
+This can also be understood in terms of the tesseroid problem: a higher 
+quadrature order increases the number of point masses used to compute 
+the gravitational fields and thus lowers the numerical error.
+
+This reasoning could lead to a naive methodology in order to ensure 
+accurate gravitational field computations: find the order of the 
+quadrature that produces an acceptable numerical error.
+Nevertheless, this simple proposal has a few problems: (a) it won't be 
+efficient \citep{Li2011, Uieda2016} and (b) it couldn't be applied to 
+the general case, i.e. the needed quadrature order probably won't be 
+the same for every tesseroid, computation point or density function.
 
 That's why we will keep the GLQ order fixed and make use of 
 discretization algorithms.
@@ -353,12 +353,12 @@ approximates a certain tesseroid, the discretization algorithms are
 intended to efficiently subdivide the tesseroid into smaller ones and 
 apply the GLQ to each one of them.
 These algorithms generally involve a discretization inequation that 
-controls if the tesseroid should be subdivided or not and a certain 
+controls if the tesseroid should be subdivided or not, and a certain 
 predefined parameter that works as a threshold for the discretization 
 inequation.
 
 On the variable density tesseroid problem we found two main error 
-sources in the GLQ that should be addressed: (a) the relation between 
+sources in the GLQ that should be addressed: (a) the ratio between 
 the tesseroid size and its distance to the computation point, and (b) 
 the variation of the density function.
 
