@@ -646,14 +646,23 @@ gravitational field.
 
 \section{Determination of distance-size and delta ratios}
 
-In order to determine default values for the distance-size ratio ($D$)
-and the delta ratio ($\delta$) that ensure both numerical accuracy and 
-computation effectiveness we need to compare the numerical 
-approximation with some analytical solutions.
+The discretization algorithms described on the previous section are 
+introduced to improve the accuracy of the numerical approximation of 
+the gravitational fields.
+They involve two predefined ratios that determine how many 
+times each tesseroid will be discretized and thus indirectly control 
+the numerical error of the approximation.
+The modified version of the adaptive discretization algorithm involves  
+the distance-size ratio $D$, while the density-based discretization 
+algorithm makes use of the delta ratio $\delta$.
+These algorithms need default predefined values for $D$ and $\delta$ 
+in order to ensure both acceptable numerical accuracy and computation 
+effectiveness.
 
-On the homogeneous density tesseroids case, \citet{Uieda2016} and 
-\citet{Grombein2013} compared their numerical models with the analytical 
-solution of a spherical shell.
+On the homogeneous density tesseroids case, \citet{Uieda2016} compared 
+their numerical model with the analytical solution of a spherical 
+shell in order to obtain default values for the distance-size ratio 
+$D$.
 We could follow this idea, but for our needs the spherical shell must 
 have the same density function as the numerical model.
 In contrast with the homogeneous density case, the analytical solutions 
@@ -662,7 +671,7 @@ for a variable density spherical shell must be obtained.
 We will then perform these comparisons between the analytical solutions 
 and the numerical model for specific density functions: a linear and an 
 exponential one.
-And from these results we will finally obtain default values for $D$ 
+From these results we will finally obtain default values for $D$ 
 and $\delta$ that ensure a numerical error lower than 0.1\%.
 
 
