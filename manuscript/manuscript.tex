@@ -441,7 +441,7 @@ homogeneous density.
 
 \subsection{Density-based Discretization Algorithm}
 
-Variations in the density function of an arbitrary tesseroid introduces 
+Variations in the density function of an arbitrary tesseroid introduce 
 a new type of error into the numerical approximation: only a few point 
 masses would not reproduce the effect of the density variations.
 The modified version of the adaptive discretization algorithm may help 
@@ -451,9 +451,10 @@ it's not well suited to fully perform this task.
 
 In order to overcome this, we developed a complementary discretization 
 algorithm that takes into account the variation of the density inside 
-the tesseroid. Basically, it subdivides any tesseroid on the radial 
-direction on the depth at which the \emph{maximum density variation} 
-takes place, only if a certain discretization inequation holds.
+the tesseroid.
+Basically, it subdivides any tesseroid on the radial direction on the 
+depth at which the \emph{maximum density variation} takes place, only 
+if a certain discretization inequation holds.
 
 \begin{figure*}
 \centering
@@ -542,9 +543,9 @@ $L_r^\text{sm}$ and $L_r$ are the radial dimensions of the tesseroid
 that is currently analysed and of the \emph{original} one, 
 respectively.
 On the first iteration, the former tesseroid corresponds to the 
-\emph{original} one, so $L_r^\text{sm} = L_r$, but for future 
-iterations this radial dimension will be computed as the difference of 
-the top and bottom radii of the subdividing tesseroid.
+\emph{original} one, so $L_r^\text{sm}/L_r$ is equal to one, but for 
+future iterations this radial dimension will be computed as the 
+difference of the top and bottom radii of the subdividing tesseroid.
 The tesseroid size ratio is intended to reduce the number of probable 
 unneeded discretizations and focus on discretizations that will 
 significantly reduce the numerical error.
@@ -565,10 +566,10 @@ algorithm is then applied to the resulting subdividing tesseroids.
 If on the contrary the inequation \ref{eq:delta-density} is not held, 
 then the tesseroid will not be subdivided.
 The same happens if the tesseroid radial dimension is bellow the 
-threshold of 1mm. On the first case due to the fact that no more 
-discretizations are needed, and on the second one because smaller 
-tesseroids will not introduce meaningful increases in the accuracy of 
-the computation.
+threshold of 1mm.
+On the first case due to the fact that no more discretizations are 
+needed, and on the second one because smaller tesseroids will not 
+introduce meaningful increases in the accuracy of the computation.
 This two conditions guarantee that the algorithm is finite.
 Once any of them is met and no more discretizations are carried out, 
 every subdividing tesseroid is subjected to the modified adaptive 
@@ -614,10 +615,7 @@ value of $\delta$ will produce more discretizations leading to an
 increase in the accuracy of the approximation but also in the 
 computation time.
 This raises the need to determine a maximum value of $\delta$ that 
-ensures an acceptable accuracy while minimising the computation time. 
-We will perform this determination with the same methodology as the one 
-applied to the $D$ ratio: compare the numerical model with the 
-analytical solutions for a spherical shell.
+ensures an acceptable accuracy while minimising the computation time.
 
 
 \subsection{Algorithm summary}
