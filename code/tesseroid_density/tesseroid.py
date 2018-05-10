@@ -107,7 +107,7 @@ RATIO_GG = 8
 STACK_SIZE = 100
 DELTA_V = 0.2
 DELTA_G = 0.2
-DELTA_GG = 0.02
+DELTA_GG = 0.01
 
 
 def _check_input(lon, lat, height, model, ratio, njobs, pool):
