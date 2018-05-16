@@ -2,10 +2,11 @@
 #
 # Commands:
 #
-#	make          Compile PDF in the output folder
-#	make show     Show the generated PDF (only Linux and Mac)
-#	make wc       Count the number of words in the generated PDF
-#	make clean    Delete all generated files
+#	make            Compile PDF in the output folder
+#	make show       Show the generated PDF (only Linux and Mac)
+#	make wc         Count the number of words in the generated PDF
+#	make clean      Delete all generated files
+#	make greyscale  Generates a greyscale version of the PDF
 
 
 # CONFIGURATION
@@ -62,6 +63,15 @@ show: all
 
 wc: all
 	@ pdftotext $(OUTPUT)/$(PROJECT).pdf - | wc -w
+
+greyscale: $(OUTPUT)/$(PROJECT).pdf
+	gs \
+   -sDEVICE=pdfwrite \
+   -sProcessColorModel=DeviceGray \
+   -sColorConversionStrategy=Gray \
+   -dOverrideICC \
+   -o $(OUTPUT)/$(PROJECT)-greyscale.pdf \
+   -f $(OUTPUT)/$(PROJECT).pdf
 
 ### Proselint
 # This target runs proselint (a grammar checker) on manuscript.tex.
