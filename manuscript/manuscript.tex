@@ -1370,7 +1370,7 @@ thickness of the basin on the corresponding node.
 
 We must also define a density function for the entire model.
 \citet{Sigismondi2012} proposed a minimum and maximum density contrast for the 
-Neuqu\'en basin of -412kg/m$^3$ and -275kg/m$^3$, respectively. 
+Neuqu\'en basin of -412kg/m$^3$ and -275kg/m$^3$, respectively.
 So we have chosen, for this specific example, an exponential density (like the 
 one in equation \ref{eq:density-exp}) that assumes the minimum value on the 
 surface and the maximum at 5858m, i.e. the bottom of the basin, with a value 
@@ -1393,36 +1393,115 @@ although they can be found in the repository.
 
 \section{Conclusions}
 
-We have developed a Python library that allows us to perform forward gravity computations using tesseroids with variable density in depth.
-The code numerically approximates the integral that defines the gravity potential, its gradient and the Marussi tensor through the Gauss-Legendre Quadrature (GLQ).
-It essentially consists in approximating the gravity fields of the tesseroids with the effect of point masses located on the scaled nodes of the Legendre polynomials.
-We state that this method it's well suited to approximate the effect of tesseroids with arbitrary densities, in contrast with the ones that involve Taylor series expansion.
+We have developed a new methodology that computes the gravitational generated 
+by a tesseroid with variable density in depth.
+It numerically solves the integrals that define the gravitational potential, 
+its gradient and the Marussi tensor through the Gauss-Legendre Quadrature 
+(GLQ), which essentially consists in approximating the gravitational fields of 
+the tesseroids with the effect of point masses located on the scaled nodes of 
+the Legendre polynomials.
 
-Instead of enhancing the accuracy of the method by increasing the order of the GLQ on each integration, we make use of the preexisting modified adaptive discretization algorithm and a new density-based discretization algodithm.
+%~ We state that this method it's well suited to approximate the 
+%~ effect of tesseroids with arbitrary densities, in contrast with the ones that 
+%~ involve Taylor series expansion.
 
-The former one divides the tesseroid by half if the ratio of the distance to the computation point and its size is lower than a predefined distance-size ratio $D$.
-We can summarise that $D$ controls the accuracy of the method: a higher value of $D$ generates more divisions of the tesseroids, thus more point masses, what leads to a more precise approximation.
-Nevertheless it is not sufficient to guarantee the accuracy of the method in case of specific density functions as a highly variable exponential or some discontinuous functions.
+Instead of enhancing the accuracy of the method by increasing the order of the 
+GLQ on each integration, we make use of the pre-existing modified adaptive 
+discretization algorithm and a new density-based discretization algorithm.
 
-For this reason we developed a density-based discretization algorithm that divides the tesseroid on the radius at which the \emph{maximum variation} of the density function takes place, only if a certain inequation that relates this \emph{maximum variation} with a predefined delta ratio $\delta$ holds.
-Therefore the number of subdivisions is indirectly controlled by this delta ratio $\delta$, and thus the accuracy of the computation.
+The former one divides the tesseroid by half if the ratio of the distance to 
+the computation point and its size is lower than a predefined distance-size 
+ratio $D$.
+It's intended to minimise the error when the computation point is close to the 
+tesseroid.
+We can summarise that the distance-size ratio $D$ controls the accuracy of the 
+method: a higher value of $D$ generates more divisions of the tesseroids, thus 
+more point masses, what leads to a more precise approximation.
+Nevertheless, this algorithm is not sufficient to guarantee the accuracy of 
+the method in case of tesseroid with variable density.
 
-Because there is no direct relation between the values assigned to $D$ and $\delta$ and the error of the computation, we had to empirically determine the minimum value of $D$ and the maximum value of $\delta$ that produce an acceptable accuracy for each gravity field.
+For this reason we have developed a density-based discretization algorithm that 
+divides the tesseroid on the radius at which the \emph{maximum variation} of 
+the density function takes place, only if a certain inequation that relates 
+this \emph{maximum variation} with a predefined delta ratio $\delta$ holds.
+Therefore the number of subdivisions is indirectly controlled by this delta 
+ratio $\delta$, and thus the accuracy of the computation.
 
-The distance-size ratio determinations have been made through the comparison of the numerical approximations with the analytical solutions for a spherical shell with variable density, which had to be analytically obtained.
-These tests have been made without applying the density-based discretization algorithm in order to isolate the former one.
-From the wide range of possible density variations, we've chosen a linear, an exponential and a discontinuous density functions.
-The comparisons over the first two functions have shown that values of $D$ equal to 1, 2 and 8 for the calculation of the gravity potential, its gradient and the Marussi tensor components, respectively, produce an accuracy of 0.1\% or better.
-On the other hand, the algorithm on its own does not guarantee this amount of accuracy in case of highly varying exponential functions or discontinuous densities.
+Because there is no direct relation between the values assigned to $D$ and 
+$\delta$ with the error of the computation, we had to empirically determine 
+the minimum value of $D$ and the maximum value of $\delta$ that produce an 
+acceptable accuracy for each gravitational field, while maintaining an 
+efficient computation.
+In order to determine default values of $D$ and $\delta$ we have chosen two 
+density functions: a linear and an exponential one.
 
-We have performed similar tests for the density-based discretization algorithm comparing the numerical model with the analytical solutions for a spherical shell with various exponential densities: from low to high varying functions.
-Each comparison was made for different values of $\delta$, keeping the default values of $D$ previously obtained.
-This tests have shown that a value of $\delta = 0.2$ guarantees an accuracy of 0.1\% or better on every case, while the same results can be obtained performing this tests with the discontinuous density function.
-The default value $\delta$ is the same for every gravity field computation.
+In the linear density case, the densty-based discretization algorithm is not 
+applied due to how it's build, so only a default value of $D$ had to be 
+determined.
+By comparing the analytical solutions of the gravitational fields generated by 
+a spherical shell with the ones produced by the numerical model for different 
+values of $D$, we have obtained default values for the distance-size ratio of 
+1, 2 and 8 for the potential, its gradient and the Marussi tensor components, 
+respectively.
+From these comparisons we can guarantee a precision of 0.1\% or greater on the 
+computations of the gravitational fields generated by a tesseroid with a 
+linear density.
 
-Moreover, we had performed speed comparisons between tesseroids models with homogeneous and variable densities, showing that a high varying density function requires more computation time than a low varying one, as expected.
+The exponential density case is more complex, due to the fact that both $D$ 
+and $\delta$ must be determined simultaneously.
+We have explored point in the $D$, $\delta$ space and computed the percentage 
+difference between the analytical solutions for a spherical shell and the 
+numerical model.
+We had to take into account that the $D$ values cannot be lower than the ones 
+determined for the linear density case due to the fact that they must 
+guarantee acceptable accuracy for every density function, including the linear 
+one.
+From these comparisons we have concluded that using the same $D$ values 
+obtained in the linear density scenario, a $\delta = 0.2$ is needed for the 
+computation of the potential and its gradient components, while a $\delta = 
+0.01$ must be used for the Marussi tensor components in order to ensure a 
+0.1\% precision.
 
-Finally, we have shown a real data example: we have computed the gravity fields generated by the Neuqu\'en sedimentary basin through a tesseroid model with exponential density with depth on a regular grid at 50km height.
+
+%~ This distance-size determinations have been carried out by comparing the 
+%~ analytical solutions of the gravitational fields generated by a spherical 
+%~ shell with a linear density with the gravitational fields generated by the 
+%~ numerical model for different values of $D$.
+%~ This comparisons were taken into account to obtain a percentage difference 
+%~ between the gravitational potential, the $g_z$ component of its gradient and 
+%~ the diagonal components of the Marussi tensor ($g_{xx}$, $g_{yy}$, $g_{zz}$).
+%~ We have set the default value of density-based discretization as the minimum
+
+%~ The distance-size ratio determinations have been made through the comparison 
+%~ of the numerical approximations with the analytical solutions for a spherical 
+%~ shell with variable density, which had to be analytically obtained. These 
+%~ tests have been made without applying the density-based discretization 
+%~ algorithm in order to isolate the former one. From the wide range of possible 
+%~ density variations, we've chosen a linear, an exponential and a discontinuous 
+%~ density functions. The comparisons over the first two functions have shown 
+%~ that values of $D$ equal to 1, 2 and 8 for the calculation of the gravity 
+%~ potential, its gradient and the Marussi tensor components, respectively, 
+%~ produce an accuracy of 0.1\% or better. On the other hand, the algorithm on 
+%~ its own does not guarantee this amount of accuracy in case of highly varying 
+%~ exponential functions or discontinuous densities.
+
+%~ We have performed similar tests for the density-based discretization algorithm 
+%~ comparing the numerical model with the analytical solutions for a spherical 
+%~ shell with various exponential densities: from low to high varying functions. 
+%~ Each comparison was made for different values of $\delta$, keeping the default 
+%~ values of $D$ previously obtained. This tests have shown that a value of 
+%~ $\delta = 0.2$ guarantees an accuracy of 0.1\% or better on every case, while 
+%~ the same results can be obtained performing this tests with the discontinuous 
+%~ density function. The default value $\delta$ is the same for every gravity 
+%~ field computation.
+
+%~ Moreover, we had performed speed comparisons between tesseroids models with 
+%~ homogeneous and variable densities, showing that a high varying density 
+%~ function requires more computation time than a low varying one, as expected.
+
+Finally, we have shown a real data example: we have computed the gravity 
+fields generated by the Neuqu\'en sedimentary basin through a tesseroid model 
+with exponential density with depth on a regular grid at 50km height.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
