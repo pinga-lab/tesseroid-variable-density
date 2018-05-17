@@ -282,7 +282,8 @@ def test_laplace_equation():
         trace = gxx + gyy + gzz
         assert_array_almost_equal(trace, np.zeros_like(lon), 9,
                                   'Failed tesseroid %s. Max diff %.15g'
-                                  % (str(tess), np.abs(trace).max()))
+                                  % (str(tess.get_bounds()),
+                                  np.abs(trace).max()))
 
 
 def test_stack_overflow():
