@@ -3,6 +3,7 @@ Build and install the package.
 """
 from setuptools import setup, find_packages
 from Cython.Build import cythonize
+import numpy
 
 NAME = 'tesseroid_density'
 FULLNAME = NAME
@@ -18,6 +19,9 @@ VERSION = '0.1'
 
 PACKAGES = find_packages(exclude=['tests', 'notebooks'])
 SCRIPTS = []
+
+# Prevent possible "numpy/arrayobject.h not found" error
+INCLUDE_DIRS = [numpy.get_include()]
 
 CLASSIFIERS = [
     "Development Status :: 3 - Alpha",
@@ -51,4 +55,5 @@ if __name__ == '__main__':
           classifiers=CLASSIFIERS,
           keywords=KEYWORDS,
           install_requires=INSTALL_REQUIRES,
+          include_dirs=INCLUDE_DIRS,
           ext_modules=cythonize("tesseroid_density/_tesseroid.pyx"))
