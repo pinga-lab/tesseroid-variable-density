@@ -46,32 +46,28 @@ def test_thin_shell():
 
     # Computation grids
     shape = (10, 10)
-    grids = {"pole": gridder.regular((89, 90, 0, 1), shape, z=2e3),
-             "equator": gridder.regular((0, 1, 0, 1), shape, z=2e3),
-             "260km": gridder.regular((89, 90, 0, 1), shape, z=260e3),
-             "30deg": gridder.regular((60, 90, 0, 30), shape, z=2e3)}
+    grid = gridder.regular((60, 90, 0, 30), shape, z=2e3)
     fields = 'potential gx gy gz gxx gxy gxz gyy gyz gzz'.split()
     for field in fields:
-        for grid in grids.keys():
-            msg = "Failed linear density test for thin shell while \
-                   computing {} on {} grid".format(field, grid)
-            lats, lons, heights = grids[grid]
-            analytical = shell_exponential_density(heights[0], top, bottom,
-                                                   a, b, c, deltah)
-            result = getattr(tesseroid, field)(lons, lats, heights, model)
-            diff = np.abs(result - analytical[field])
-            # gz gy and the off-diagonal gradients should be zero so I can't
-            # calculate a relative error (in %).
-            # To do that, I'll use the gz and gzz shell values to calculate the
-            # percentage.
-            if field in 'potential gz gxx gyy gzz'.split():
-                diff /= np.abs(analytical[field])
-            elif field in 'gx gy'.split():
-                diff /= np.abs(analytical['gz'])
-            elif field in "gxy gxz gyz".split():
-                diff /= np.abs(analytical['gzz'])
-            diff = 100*np.max(diff)
-            assert diff < 1e-1, msg
+        msg = "Failed linear density test for thin shell while \
+               computing {} on {} grid".format(field, grid)
+        lats, lons, heights = grid[:]
+        analytical = shell_exponential_density(heights[0], top, bottom,
+                                               a, b, c, deltah)
+        result = getattr(tesseroid, field)(lons, lats, heights, model)
+        diff = np.abs(result - analytical[field])
+        # gz gy and the off-diagonal gradients should be zero so I can't
+        # calculate a relative error (in %).
+        # To do that, I'll use the gz and gzz shell values to calculate the
+        # percentage.
+        if field in 'potential gz gxx gyy gzz'.split():
+            diff /= np.abs(analytical[field])
+        elif field in 'gx gy'.split():
+            diff /= np.abs(analytical['gz'])
+        elif field in "gxy gxz gyz".split():
+            diff /= np.abs(analytical['gzz'])
+        diff = 100*np.max(diff)
+        assert diff < 1e-1, msg
 
 
 def test_thick_shell():
@@ -92,30 +88,26 @@ def test_thick_shell():
 
     # Computation grids
     shape = (10, 10)
-    grids = {"pole": gridder.regular((89, 90, 0, 1), shape, z=2e3),
-             "equator": gridder.regular((0, 1, 0, 1), shape, z=2e3),
-             "260km": gridder.regular((89, 90, 0, 1), shape, z=260e3),
-             "30deg": gridder.regular((60, 90, 0, 30), shape, z=2e3)}
+    grid = gridder.regular((60, 90, 0, 30), shape, z=2e3)
     fields = 'potential gx gy gz gxx gxy gxz gyy gyz gzz'.split()
     for field in fields:
-        for grid in grids.keys():
-            msg = "Failed linear density test for thin shell while \
-                   computing {} on {} grid".format(field, grid)
-            lats, lons, heights = grids[grid]
-            analytical = shell_exponential_density(heights[0], top, bottom,
-                                                   a, b, c, deltah)
-            result = getattr(tesseroid, field)(lons, lats, heights, model)
-            diff = np.abs(result - analytical[field])
-            # gz gy and the off-diagonal gradients should be zero so I can't
-            # calculate a relative error (in %).
-            # To do that, I'll use the gz and gzz shell values to calculate the
-            # percentage.
-            if field in 'potential gz gxx gyy gzz'.split():
-                diff /= np.abs(analytical[field])
-            elif field in 'gx gy'.split():
-                diff /= np.abs(analytical['gz'])
-            elif field in "gxy gxz gyz".split():
-                diff /= np.abs(analytical['gzz'])
-            diff = 100*np.max(diff)
-            assert diff < 1e-1, msg
+        msg = "Failed linear density test for thin shell while \
+               computing {} on {} grid".format(field, grid)
+        lats, lons, heights = grid[:]
+        analytical = shell_exponential_density(heights[0], top, bottom,
+                                               a, b, c, deltah)
+        result = getattr(tesseroid, field)(lons, lats, heights, model)
+        diff = np.abs(result - analytical[field])
+        # gz gy and the off-diagonal gradients should be zero so I can't
+        # calculate a relative error (in %).
+        # To do that, I'll use the gz and gzz shell values to calculate the
+        # percentage.
+        if field in 'potential gz gxx gyy gzz'.split():
+            diff /= np.abs(analytical[field])
+        elif field in 'gx gy'.split():
+            diff /= np.abs(analytical['gz'])
+        elif field in "gxy gxz gyz".split():
+            diff /= np.abs(analytical['gzz'])
+        diff = 100*np.max(diff)
+        assert diff < 1e-1, msg
 
