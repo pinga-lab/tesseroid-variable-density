@@ -14,6 +14,7 @@ FIGDIR = ../manuscript/figures
 NBDIR = notebooks
 
 FIGSLIST = $(FIGDIR)/density-based-discretization-algorithm.pdf $(FIGDIR)/speed-comparison.pdf $(FIGDIR)/linear-D.pdf $(FIGDIR)/grid-search.pdf $(FIGDIR)/exponential-delta.pdf $(FIGDIR)/neuquen-basin.pdf
+RESULTS_NB = $(NBDIR)/speed-comparison.ipynb $(NBDIR)/03-linear-density-test.ipynb $(NBDIR)/grid-search-D-delta.ipynb $(NBDIR)/exponential-density.ipynb
 
 PYTEST_ARGS = --doctest-modules -v
 PYTEST_COV_ARGS = --cov-report=term-missing
@@ -61,8 +62,11 @@ all: build test figures
 
 # Main target for producing all results. Add results files as dependencies to
 # include them in the build.
-results: $(RESDIR)/hawaii-trend.csv
+results: $(RESDIR)/linear-D/gzz-30deg-decreasing-differences.ipynb
 
+$(RESDIR)/linear-D/gzz-30deg-decreasing-differences.ipynb: $(NBDIR)/03-linear-density-test.ipynb
+	$(RUN) $<
+	@touch $@
 
 # Build a result file from a notebook and a data file.
 # Execution modifies a notebook, so the time stamp will be later than the
