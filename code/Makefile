@@ -8,10 +8,12 @@
 PACKAGE = tesseroid_density
 
 TESTDIR = tests
-RESDIR = ../results
+RESDIR = notebooks/results
 DATADIR = ../data
 FIGDIR = ../manuscript/figures
 NBDIR = notebooks
+
+FIGSLIST = $(FIGDIR)/density-based-discretization-algorithm.pdf $(FIGDIR)/speed-comparison.pdf $(FIGDIR)/linear-D.pdf $(FIGDIR)/grid-search.pdf $(FIGDIR)/exponential-delta.pdf $(FIGDIR)/neuquen-basin.pdf
 
 PYTEST_ARGS = --doctest-modules -v
 PYTEST_COV_ARGS = --cov-report=term-missing
@@ -76,11 +78,11 @@ $(RESDIR)/hawaii-trend.csv: $(NBDIR)/estimate-hawaii-trend.ipynb $(DATADIR)/hawa
 
 # Main target for generating figures. Include figure files as dependencies to
 # include them in the build.
-figures: $(FIGDIR)/hawaii-trend.eps
+figures: $(FIGSLIST)
 
 
 # Generate a figure file from a notebook and a results file.
-$(FIGDIR)/hawaii-trend.eps: $(NBDIR)/figure-hawaii-trend.ipynb $(RESDIR)/hawaii-trend.csv
+$(FIGSLIST): $(NBDIR)/08-plot-figures.ipynb
 	$(RUN) $<
 	@touch $@
 
