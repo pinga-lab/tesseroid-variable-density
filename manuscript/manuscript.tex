@@ -44,11 +44,12 @@ Gauss-Legendre Quadrature along with two discretization algorithms that
 increase its accuracy by subdividing the tesseroid into smaller ones.
 The first one is a preexisting adaptive discretization algorithm that reduces 
 the errors due to the distance between the tesseroid and the computation 
-point, while being regulated by a predefined scalar called distance-size ratio 
-($D)$.
-The second one, controlled by a predefined delta ratio ($\delta$), is a new 
-density-based discretization algorithm that decreases the errors introduced by 
-the variation of the density function.
+point.
+While the second one  is a new density-based discretization algorithm that 
+decreases the errors introduced by the variation of the density function.
+The amount of discretizations made by each algorithm is indirectly controlled 
+by two predefined scalar values: the distance-size ratio $D$ for the former 
+and the delta ratio $\delta$ for the latter.
 We have also obtained analytical solutions for a spherical shell with variable 
 density and compared them with the results of the numerical model in case of a 
 linear and an exponential density function.
@@ -59,8 +60,7 @@ of its gradient and the Marussi tensor components are 1, 2 and 8,
 respectively.
 While a $\delta=0.2$ is needed for the computation of the gravitational 
 potential and its gradient components and a $\delta=0.01$ must be used for 
-the Marussi tensor components in order to guarantee the accuracy even for high 
-varying exponential densities.
+the Marussi tensor components.
 We have finally tested this new methodology by modelling the Neuqu\'en 
 sedimentary basin, located to the east of the Andes between 32$^\circ$S and 
 40$^\circ$S latitude, assigning an exponential density variation to it and 
