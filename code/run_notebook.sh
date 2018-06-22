@@ -14,6 +14,6 @@ NOTEBOOK=$1
 # nbconvert saves the executed notebook as NOTEBOOK.nbconvert.ipynb
 NOTEBOOK_BACK="${NOTEBOOK/%.ipynb/.nbconvert.ipynb}"
 
-jupyter nbconvert --to notebook --execute $NOTEBOOK
+jupyter nbconvert --ExecutePreprocessor.timeout=-1 --to notebook --execute $NOTEBOOK
 # Is the execution when well (no errors), save the executed notebook
 mv $NOTEBOOK_BACK $NOTEBOOK

@@ -8,10 +8,24 @@
 PACKAGE = tesseroid_density
 
 TESTDIR = tests
-RESDIR = ../results
+RESDIR = notebooks/results
 DATADIR = ../data
 FIGDIR = ../manuscript/figures
 NBDIR = notebooks
+
+
+RESULTS_NB = $(NBDIR)/03-linear-density-test.ipynb \
+			 $(NBDIR)/grid-search-D-delta.ipynb \
+			 $(NBDIR)/exponential-density.ipynb
+
+RESULTS = $(RESDIR)/linear-slope/gzz-1.0e+03-thin-differences.npz \
+		  $(RESDIR)/grid-search/gzz-thick-differences.npz \
+		  $(RESDIR)/exponential-density/gzz-thick-differences.npz
+
+FIGSLIST = $(FIGDIR)/density-based-discretization-algorithm.pdf \
+		   $(FIGDIR)/speed-comparison.pdf $(FIGDIR)/linear-D.pdf \
+		   $(FIGDIR)/grid-search.pdf $(FIGDIR)/exponential-delta.pdf \
+		   $(FIGDIR)/neuquen-basin.pdf
 
 PYTEST_ARGS = --doctest-modules -v
 PYTEST_COV_ARGS = --cov-report=term-missing
@@ -59,16 +73,14 @@ all: build test figures
 
 # Main target for producing all results. Add results files as dependencies to
 # include them in the build.
-results: $(RESDIR)/hawaii-trend.csv
-
+results: $(RESULTS)
 
 # Build a result file from a notebook and a data file.
 # Execution modifies a notebook, so the time stamp will be later than the
 # target. touch the target to make sure it's always newer than the dependency.
-$(RESDIR)/hawaii-trend.csv: $(NBDIR)/estimate-hawaii-trend.ipynb $(DATADIR)/hawaii-TAVG-Trend.txt
-	$(RUN) $<
-	@touch $@
-
+$(RESULTS): $(RESULTS_NB)
+	$(foreach notebook, $(RESULTS_NB), $(RUN) $(notebook);)
+	$(foreach result, $(RESULTS), @touch $(result);)
 
 
 # Generating figures
@@ -76,11 +88,11 @@ $(RESDIR)/hawaii-trend.csv: $(NBDIR)/estimate-hawaii-trend.ipynb $(DATADIR)/hawa
 
 # Main target for generating figures. Include figure files as dependencies to
 # include them in the build.
-figures: $(FIGDIR)/hawaii-trend.eps
+figures: $(FIGSLIST)
 
 
 # Generate a figure file from a notebook and a results file.
-$(FIGDIR)/hawaii-trend.eps: $(NBDIR)/figure-hawaii-trend.ipynb $(RESDIR)/hawaii-trend.csv
+$(FIGSLIST): $(NBDIR)/08-plot-figures.ipynb
 	$(RUN) $<
 	@touch $@
 

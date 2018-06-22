@@ -15,9 +15,9 @@ code/.pytest_cache/
 code/.cache
 code/.coverage*
 code/notebooks/*.nbconvert.ipynb
+code/notebooks/.ipynb_checkpoints
 manuscript/figures/*-eps-converted-to.pdf
 manuscript/output/
-*/.ipynb_checkpoints/
 
 
 ## Latex ignore files
