@@ -373,101 +373,81 @@ with density varying according to exponential and linear functions of $r$.
 
 \subsection{Density-based Discretization Algorithm}
 
-Variations in the density function of an arbitrary tesseroid introduce
-a new type of error into the numerical approximation: only a few point
-masses would not reproduce the effect of the density variations.
-The modified version of the adaptive discretization algorithm may help
-in reducing this kind of error, but as it only takes into account the
-dimensions of the tesseroid and the distance to the computation point,
-it's not well suited to fully perform this task.
+The numerical integration of an arbitrary density function introduces
+a new type of problem:
+the integration error from using only a few nodes to discretize the density function.
+The adaptive discretization may help
+to reduce this kind of error.
+However, it does not take into account the density function
+and hence it is not well suited to fully perform this task.
 
-In order to overcome this, we developed a complementary discretization
-algorithm that takes into account the variation of the density inside
-the tesseroid.
-Basically, it subdivides any tesseroid on the radial direction on the
-depth at which the \emph{maximum density variation} takes place, only
-if a certain discretization inequation holds.
+We have developed a complementary discretization
+algorithm that takes into account the variations of the density function.
+This density-based discretization happens prior to the adaptive discretization described
+in the previous section.
+In short, the algorithm divides the tesseroid along the radial dimension at the
+depths at which the \emph{maximum density variations} take place.
 
-\begin{figure*}
-\centering
-\includegraphics[width=\linewidth]
-    {figures/density-based-discretization-algorithm.pdf}
-\caption{
-    Example intended to show how the density-based algorithm works.}
-\label{fig:density-discretization-algorithm}
-\end{figure*}
-
-In a general way, the algorithm can be summarised in the following steps:
-
-\begin{enumerate}
-\renewcommand{\theenumi}{(\arabic{enumi})}
-    \item Normalise the density function to the [0, 1] interval,
-    \item Compute the absolute difference between the normalised
-          density and a linear function that assumes the same values on the
-          top and bottom radii that this normalised density.
-    \item If product of the maximum of the absolute difference and a
-          tesseroid size ratio is greater that a predefined delta ratio
-          ($\delta$), then the tesseroid will be subdivided on the
-          radius at which this maximum takes place. Otherwise, the
-          tesseroid won't be split.
-    \item If it's discretized, then apply items (2), (3) and (4) for
-          every subdividing tesseroid.
-\end{enumerate}
-
-Lets assume an arbitrary \emph{original} tesseroid with boundary radii
-$R_1$ and $R_2$ and a density function $\rho(r')$, whose radial
-dimension is $L_r = R_2 - R_1$.
-
-First we need to normalise the density function such as its minimum and
-maximum will be 0 and 1, respectively.
-We call this normalised density $\rho_n(r')$ and we calculate it as
-follows:
+Consider an \emph{original} tesseroid with density given by the function $\rho(r')$.
+Before the density-based discretization starts,
+we normalise the density function to the range $[0, 1]$ as follows
 
 \begin{equation}
     \rho_n(r') =
     \frac{\rho(r') - \rho_\text{min}}{\rho_\text{max} - \rho_\text{min}},
 \end{equation}
-\noindent where
-\begin{equation}
-    \rho_\text{min} = \text{min}\{ \rho(r') \}, \quad
-    \rho_\text{max} = \text{max}\{ \rho(r') \} \quad
-    \forall \, r' \in [R_1, R_2].
-\end{equation}
 
-\noindent Because the algorithm will be iteratively applied for every
-subdividing tesseroid, we'd like to note that this normalised density
-function will be the same for every subdividing tesseroid.
-In case that the density function is constant, both the maximum and
-minimum densities are equal and the normalised function could not
-be defined, so the density-based discretization algorithm won't be
-applied.
+\noindent in which $\rho_\text{min}$ and $\rho_\text{max}$ are the minimum and maximum
+density values inside the tesseroid boundaries.
+We emphasize that this normalised density function will not be modified throughout the
+algorithm.
+In case the density function is constant, both maximum and minimum densities will be
+equal and the density-based discretization algorithm will not be applied.
 
-Secondly, we must define a linear function $\rho_l(r')$ that assumes
-the same values as the normalised density $\rho_n(r')$ on the boundary
-radii $R_1$ and $R_2$:
+The algorithm is comprised of the following steps:
+
+\textit{Step 1}:
+Define a linear function $\rho_l(r')$ that assumes
+the same values as the normalised density $\rho_n(r')$ on the boundaries of the
+tesseroid ($r_1$ and $r_2$):
 
 \begin{equation}
     \rho_l(r') =
-    \frac{ \rho_n(R_2) - \rho_n(R_1) }{ R_2 - R_1 } (r' - R_1) + \rho_n(R_1),
+    \frac{ \rho_n(r_2) - \rho_n(r_1) }{ r_2 - r_1 } (r' - r_1) + \rho_n(r_1),
     \label{eq:density-reference-line}
 \end{equation}
 
-\noindent and compute the absolute difference between this linear
-function and the normalised density:
+\textit{Step 2}:
+Evaluate the normalized and linear density functions on a range of $N$ radii between
+$r_1$ and $r_2$.
+We have opted for $N = 101$ but the specific value of $N$ is not critical to the
+algorithm.
+
+\textit{Step 3}:
+Compute the absolute difference between the values of the linear and normalised density
+functions:
 
 \begin{equation}
     \Delta \rho (r') = | \rho_n(r') - \rho_l(r') |.
     \label{eq:density-abs-diff}
 \end{equation}
 
-Finally, if the following inequation holds, the tesseroid will be divided on
+\textit{Step 4}:
+If the following inequality holds, the tesseroid will not be divided:
+
+\begin{equation}
+    \text{max}\{ \Delta \rho(r') \} \frac{L_r}{L_r^\text{orig}} \le \delta,
+    \label{eq:delta-density}
+\end{equation}
+
+\noindent
+in which $L_r^\text{orig}$ is the radial dimension of the original tesseroid and
+$\delta$ is a positive constant henceforth called the \textit{delta ratio}.
+
+on
 the radius $R_\text{max}$ at which the maximum absolute difference takes
 place:
 
-\begin{equation}
-    \text{max}\{ \Delta \rho(r') \} \frac{L_r^\text{sm}}{L_r} > \delta,
-    \label{eq:delta-density}
-\end{equation}
 
 \noindent where the delta ratio $\delta$ is a predefined constant value and
 $L_r^\text{sm}/L_r$ is defined as the tesseroid size ratio, while
@@ -484,6 +464,16 @@ numerical error:
 a big subdividing tesseroid with small maximum absolute difference would
 cause more relative numerical error than a small subdividing tesseroid with
 higher maximum absolute difference.
+
+\begin{figure*}
+\centering
+\includegraphics[width=\linewidth]
+    {figures/density-based-discretization-algorithm.pdf}
+\caption{
+    Example intended to show how the density-based algorithm works.}
+\label{fig:density-discretization-algorithm}
+\end{figure*}
+
 
 Once the \emph{original} tesseroid is discretized, we proceed to
 subsequently apply the same algorithm on every subdividing tesseroid.
@@ -548,6 +538,23 @@ increase in the accuracy of the approximation but also in the
 computation time.
 This raises the need to determine a maximum value of $\delta$ that
 ensures an acceptable accuracy while minimising the computation time.
+
+In a general way, the algorithm can be summarised in the following steps:
+
+\begin{enumerate}
+\renewcommand{\theenumi}{(\arabic{enumi})}
+    \item Normalise the density function to the [0, 1] interval,
+    \item Compute the absolute difference between the normalised
+          density and a linear function that assumes the same values on the
+          top and bottom radii that this normalised density.
+    \item If product of the maximum of the absolute difference and a
+          tesseroid size ratio is greater that a predefined delta ratio
+          ($\delta$), then the tesseroid will be subdivided on the
+          radius at which this maximum takes place. Otherwise, the
+          tesseroid won't be split.
+    \item If it's discretized, then apply items (2), (3) and (4) for
+          every subdividing tesseroid.
+\end{enumerate}
 
 
 \subsection{Algorithm summary}
