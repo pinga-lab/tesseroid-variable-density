@@ -404,11 +404,12 @@ algorithm.
 In case the density function is constant, both maximum and minimum densities will be
 equal and the density-based discretization algorithm will not be applied.
 
-The algorithm is comprised of the following steps:
+The algorithm is comprised of the following steps
+(Fig. \ref{fig:density-discretization-algorithm}):
 
 \textit{Step 1}:
 Define a linear function $\rho_l(r')$ that assumes
-the same values as the normalised density $\rho_n(r')$ on the boundaries of the
+the same values as the normalised density $\rho_n(r')$ at the boundaries of the
 tesseroid ($r_1$ and $r_2$):
 
 \begin{equation}
@@ -441,144 +442,62 @@ If the following inequality holds, the tesseroid will not be divided:
 \end{equation}
 
 \noindent
-in which $L_r^\text{orig}$ is the radial dimension of the original tesseroid and
+in which $L_r$ is the radial dimension of the tesseroid being considered for division,
+$L_r^\text{orig}$ is the radial dimension of the original tesseroid, and
 $\delta$ is a positive constant henceforth called the \textit{delta ratio}.
 
-on
-the radius $R_\text{max}$ at which the maximum absolute difference takes
-place:
+\textit{Step 5}:
+If inequality \ref{eq:delta-density} is not satisfied, then the tesseroid is split in
+two parts at the radius $r_\text{max}$ at which the maximum absolute difference (Eq.
+\ref{eq:density-abs-diff}) takes place.
 
-
-\noindent where the delta ratio $\delta$ is a predefined constant value and
-$L_r^\text{sm}/L_r$ is defined as the tesseroid size ratio, while
-$L_r^\text{sm}$ and $L_r$ are the radial dimensions of the tesseroid that is
-currently analysed and of the \emph{original} one, respectively.
-On the first iteration, the former tesseroid corresponds to the
-\emph{original} one, so $L_r^\text{sm}/L_r$ is equal to one, but for
-future iterations this radial dimension will be computed as the
-difference of the top and bottom radii of the subdividing tesseroid, making
-$L_r^\text{sm}/L_r$ lower than one.
-The tesseroid size ratio is intended to reduce the number of unneeded
-discretizations and focus on the ones that will significantly reduce the
-numerical error:
-a big subdividing tesseroid with small maximum absolute difference would
-cause more relative numerical error than a small subdividing tesseroid with
-higher maximum absolute difference.
+\textit{Step 6}:
+Repeat steps 1-6 for each smaller tesseroid produced in step 5.
 
 \begin{figure*}
 \centering
 \includegraphics[width=\linewidth]
     {figures/density-based-discretization-algorithm.pdf}
 \caption{
-    Example intended to show how the density-based algorithm works.}
+    Example application of the density-based discretization algorithm to a non-linear
+    density function.
+    (a) the normalised density function $\rho_n(r')$ (blue), current boundaries of the
+    tesseroid (orange dots), and the linear density function $\rho_l(r')$ (orange line).
+    The dashed red line represents the maximum density difference $\Delta \rho (r')$ at
+    which the tesseroid would be divided (assuming that the inequality
+    \ref{eq:delta-density} is not satisfied).
+    (b) second iteration of the algorithm with a new linear density function and maximum
+    density difference. The tesseroid would be divided at the depth indicated by the
+    dashed red line.
+    (c) third iteration of the algorithm.
+    (d) final output of the density-based discretization, assuming that all four new
+    tesseroids satisfy inequality \ref{eq:delta-density}.
+}
 \label{fig:density-discretization-algorithm}
 \end{figure*}
 
+Once all smaller tesseroids satisfy Eq. \ref{eq:delta-density},
+each one is subjected to the adaptive
+discretization algorithm described earlier to calculate their gravitational effects.
 
-Once the \emph{original} tesseroid is discretized, we proceed to
-subsequently apply the same algorithm on every subdividing tesseroid.
-We will start from equation \ref{eq:density-reference-line} defining a
-new linear function $\rho_l(r')$, an absolute difference with equation
-\ref{eq:density-abs-diff} and evaluate the discretization inequation
-\ref{eq:delta-density}, taking into account that now $R_1$ and $R_2$
-are the radial boundaries of this smaller tesseroid.
-If the inequation holds, the current tesseroid is discretized and the
-algorithm is subsequently applied to the resulting subdividing tesseroids.
+On the first iteration, the ratio $L_r/L_r^\text{orig} = 1$ because the tesseroid being
+divided is the original one.
+For future iterations, the ratio will be progressively smaller than one as the
+tesseroids get smaller.
+This is intended to limit the number of divisions to the ones that will
+significantly reduce the numerical error:
+dividing a large tesseroid with a small $\text{max}\{ \Delta \rho(r') \}$ would
+improve the integration accuracy more than dividing a small tesseroid with a
+higher $\text{max}\{ \Delta \rho(r') \}$.
+We also do not divide tesseroids with $L_r < 1\ mm$ because any integration errors would
+be negligible due to the small mass of the tesseroid..
 
-If on the contrary the inequation \ref{eq:delta-density} is not held,
-then the tesseroid will not be discretized.
-The same happens if the tesseroid radial dimension is bellow the
-threshold of 1mm.
-On the first case due to the fact that no more discretizations are
-needed, and on the second one because smaller tesseroids will not
-introduce meaningful increases in the accuracy of the computation.
-This two conditions guarantee that the algorithm is finite.
-Once any of them is met and no more discretizations are carried out,
-every subdividing tesseroid is subjected to the modified adaptive
-discretization algorithm and then a second order GLQ will be applied in
-order to compute the gravitational field generated by it.
-
-On Figure \ref{fig:density-discretization-algorithm}(a) we propose an
-arbitrary normalised density function as an example of how this
-algorithm works.
-We plotted its corresponding linear function $\rho_l(r')$ and a
-dashed line that represents the maximum absolute difference.
-We will assume that the discretization inequation
-\ref{eq:delta-density} holds in this case, so we must divide the
-tesseroid at the depth at which the maximum difference occurs.
-The dots on Figure \ref{fig:density-discretization-algorithm}
-represent the discretization points, i.e. the radial boundaries of the
-subdividing tesseroids produced by the algorithm.
-
-On Figure \ref{fig:density-discretization-algorithm}(b) we apply the
-algorithm on the shallower subdividing tesseroid.
-In the same way, we plot the linear function and compute the maximum
-absolute difference $\Delta \rho (r')$.
-In this case, the tesseroid size-ratio $L_r^\text{sm}/L_r$ is lower
-than one and will be taken into account in the discretization
-inequation, which will be assumed to hold also in this case, leading to
-the division of this tesseroid.
-
-On Figure \ref{fig:density-discretization-algorithm}(c) we perform the
-same analysis on the deeper subdividing tesseroid, and assuming that the
-inequality holds in this case we also subdivide it.
-
-Finally, if we suppose that the value of $\delta$ used in this example
-does not produce further discretizations, the resulting subdividing
-tesseroids can be seen on Figure
-\ref{fig:density-discretization-algorithm}(d).
-
-It's easy to see that the delta ratio indirectly controls how many
-times the tesseroids will be subdivided based on the variation of the
-density function.
-Therefore it determines the accuracy involving the numerical error that
-the density variation introduces and also the computation time: a lower
-value of $\delta$ will produce more discretizations leading to an
-increase in the accuracy of the approximation but also in the
-computation time.
+The higher $\delta$ is, the fewer divisions will be made, and vice-versa.
+Thus, it controls how many times the tesseroids will be divided based on the density
+function and, indirectly, determines the accuracy and computation time of
+numerical integration.
 This raises the need to determine a maximum value of $\delta$ that
 ensures an acceptable accuracy while minimising the computation time.
-
-In a general way, the algorithm can be summarised in the following steps:
-
-\begin{enumerate}
-\renewcommand{\theenumi}{(\arabic{enumi})}
-    \item Normalise the density function to the [0, 1] interval,
-    \item Compute the absolute difference between the normalised
-          density and a linear function that assumes the same values on the
-          top and bottom radii that this normalised density.
-    \item If product of the maximum of the absolute difference and a
-          tesseroid size ratio is greater that a predefined delta ratio
-          ($\delta$), then the tesseroid will be subdivided on the
-          radius at which this maximum takes place. Otherwise, the
-          tesseroid won't be split.
-    \item If it's discretized, then apply items (2), (3) and (4) for
-          every subdividing tesseroid.
-\end{enumerate}
-
-
-\subsection{Algorithm summary}
-
-When computing any gravitational field generated by an arbitrary tesseroid on
-a specific computation point, we present the following methodology:
-
-\begin{enumerate}
-    \renewcommand{\theenumi}{(\arabic{enumi})}
-    \item Apply the density-based discretization algorithm in case of
-          variable density producing subdivisions of the original tesseroid,
-    \item Apply the modified adaptive discretization algorithm for
-          each subdivision, generating a set of smaller tesseroids,
-    \item Compute the desired gravitational field for every small tesseroid
-          through the GLQ approximation with fixed quadrature orders
-          (equation \ref{eq:glq-var-dens}).
-\end{enumerate}
-
-In most practical cases, the forward model will consist in a set of
-tesseroids whose gravitational effect will be computed on a set of
-computation points.
-These steps can be applied on every tesseroid and for each computation point,
-adding the contribution of each tesseroid to the resulting
-gravitational field.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
