@@ -528,33 +528,30 @@ numerical error lower than 0.1\% of the spherical shell values.
 
 \subsection{Linear Density}
 
-Lets perform a comparison between our numerical model and the
-analytical solution for a spherical shell with a linear density
-function like the following one:
+A spherical shell with a linear density function given by
 
 \begin{equation}
-    \rho(r') = ar' + b.
+    \rho(r') = ar' + b,
 \end{equation}
 
-Secondly we can analyse how the density-based discretization algorithm
-works in case of a linear density function.
-Because the absolute difference defined on equation
-\ref{eq:density-abs-diff} will always be zero, the discretization
-inequation \ref{eq:delta-density} will never be satisfied.
-Therefore, independently of the linear function proposed, the
-density-based algorithm will never be applied, leaving the modified
-adaptive discretization algorithm as the only mechanism to control the
-accuracy of the numerical approximation.
-That's why, for linear density scenarios, we only need to determine
-the minimum value of $D$ needed in order to guarantee an acceptable
-accuracy while ignoring the value of $\delta$.
+\noindent
+has an analytical solution given by Eq. \ref{eq:shell-pot-linear}.
+
+The absolute density difference defined on equation
+\ref{eq:density-abs-diff} will always be zero for the linear density case.
+As a result, the inequality \ref{eq:delta-density} will always be satisfied and no
+divisions will ever be performed.
+Therefore, the distance-size ration $D$ of the adaptive discretization algorithm is the
+only mechanism that controls the accuracy of the numerical integration.
+For this reason, we will only determine the minimum value of $D$ needed in order to
+guarantee an acceptable accuracy while ignoring the value of $\delta$.
 
 In order to compare the numerical model with the analytical solution we
 must build a spherical shell made of tesseroids.
-We propose a mesh of $30^\circ \times 30^\circ$ tesseroids whose outer and
+We use a mesh of $30^\circ \times 30^\circ$ tesseroids whose outer and
 inner radii are the same ones as the spherical shell in order to compute
 the gravitational potential, the vertical component of the gradient
-($g_z$) and the diagonal components of the Marussi tensor ($g_{xx}$,
+($g_z$), and the diagonal components of the Marussi tensor ($g_{xx}$,
 $g_{yy}$, $g_{zz}$) on four different grids: (1) a grid located at the
 pole, (2) another one on the Equator, (3) one located at satellite
 height and (4) a big grid of $30^\circ \times 30^\circ$.
