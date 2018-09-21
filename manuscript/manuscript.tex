@@ -576,12 +576,13 @@ guarantee an acceptable accuracy while ignoring the value of $\delta$.
 
 In order to compare the numerical results with the analytical solution we
 must build a spherical shell made of tesseroids.
-We use a combination of tesseroid models with different resolutions and compute their
-effects on $10 \times 10$ point grids at different heights and locations.
-All combinations of models and grids are shown in Table \ref{tab:grids}.
-The tesseroid model is composed of a single radial layer.
-The combinations in Table \ref{tab:grids} are repeated for two shells with thickness 1
-km and 35 km.
+We use a single radial layer of $30^\circ \times 30^\circ$ tesseroids to
+build the spherical shell.
+We compute their gravitational effects on $10 \times 10$ point grids at
+different heights and locations.
+These grids are defined in Table \ref{tab:grids}.
+The computation of the gravitational effects on each grid is repeated for
+two shells with thickness 1km and 35 km.
 The outer radius of both shells are equal to the mean Earth radius and
 the density varies linearly (Eq. \ref{eq:density-linear})
 with angular coefficient
