@@ -1,4 +1,4 @@
-# Gravity fields calculation in spherical coordinates using Tesseroids with variable density
+# Gravity fields calculation in spherical coordinates using tesseroids with variable density
 
 by
 Santiago R. Soler,
@@ -14,7 +14,8 @@ previous work by the authors and introduces a new density-based discretization a
 to ensure the accuracy of the numerical integration.
 
 ![Neuquén Basin application](neuquen-basin-application.jpg)
-*Application of the methodology to the Neuquén basin in the Andes.*
+*Application of the methodology to the Neuquén basin in the Andes. The sedimentary 
+pack was modeled using an exponential density function.*
 
 ## Abstract
 
@@ -31,7 +32,7 @@ algorithm is indirectly controlled by two parameters: the distance-size ratio an
 delta ratio. We have obtained analytical solutions for a spherical shell with radially
 variable density and compared them to the results of the numerical model for linear and
 exponential density functions. These comparisons allowed us to obtain optimum values for
-the distance-size and delta ratios that yield an accuracy of 0.1\% of the analytical
+the distance-size and delta ratios that yield an accuracy of 0.1% of the analytical
 solutions. The resulting optimal values of distance-size ratio for the gravitational
 potential, its gradient, and Marussi tensor are 1, 2 and 8, respectively. A delta ratio
 of 0.2 is needed for the computation of the gravitational potential and its gradient
