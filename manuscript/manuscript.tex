@@ -500,6 +500,21 @@ This raises the need to determine a maximum value of $\delta$ that
 ensures an acceptable accuracy while minimising the computation time.
 
 
+\subsection{Software implementation}
+
+We have implemented the algorithms described in the previous sections in the Python
+programming language.
+The software is based on the pre-existing code for the homogeneous density tesseroid
+\citep{Uieda2016}, more specifically the implementation in the Python library Fatiando a
+Terra v0.5 \citep{Uieda2013}.
+The more time consuming parts of the algorithm are written in the Cython language to
+achieve higher performance.
+This new code is freely available under the BSD 3-clause open-source license.
+It can be downloaded from the online repository
+\href{https://github.com/pinga-lab/tesseroid-variable-density}{github.com/pinga-lab/tesseroid-variable-density}.
+
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Determination of the distance-size and delta ratios}
@@ -758,37 +773,6 @@ performance for the sake of accuracy.
     }
 \label{fig:delta-exponential}
 \end{figure*}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\section{Implementation}
-
-In order to perform the determinations of the distance-size and the
-delta ratio, we have developed a Python code that implements the
-discretization algorithms and the GLQ to finally compute the
-gravitational fields.
-
-It is based on the pre-existing code developed by \citet{Uieda2016} (and
-included in Fatiando a Terra v.0.5, \citet{Uieda2013}) that computes
-the gravitational effects of tesseroids with homogeneous density.
-Our implementation keeps the the homogeneous tesseroid calculation and
-the modified adaptive discretization algorithm while incorporates the
-new variable density computations with the density-based discretization
-algorithm.
-On their software, \citet{Uieda2016} have optimised the more time
-consuming functions through the Numba compiler.
-In contrast, we have decided to develop our new library in Cython
-language due to difficulties when passing a Python function as argument
-to precompiled Numba methods.
-
-This new code is freely available under the BSD 3-clause open-source
-license and makes use of the pre-existing classes and functions of
-Fatiando a Terra v0.5 in order to define single tesseroid or meshes of
-them.
-It can be downloaded from ...
-\todo[inline]{include repo url}
-
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
