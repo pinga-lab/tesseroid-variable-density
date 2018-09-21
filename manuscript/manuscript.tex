@@ -636,165 +636,92 @@ value of $D$ equal to 8 while the later only a $D$ of 3.
 
 \subsection{Exponential Density}
 
-Lets perform a similar comparison between the numerical model and
-the analytical solution but now for a spherical shell with exponential
-density.
-On this scenario the problem is more complex due to the fact that the
-density-based discretization will be certainly applied together with
-the modified adaptive discretization algorithm.
-This means that both the distance-size ratio $D$ and the delta ratio
-$\delta$ must be simultaneously determined.
+For an exponential density function, the density-based discretization will be applied
+before the adaptive discretization algorithm.
+This means that optimal values for both the distance-size ratio $D$ and the delta ratio
+$\delta$ must be determined.
+We perform an error analysis similar to what was done for the linear density case.
+However, we only consider the "Big Grid" scenario from Table \ref{tab:grids} for the
+sake of brevity.
 
-\subsubsection{$D$, $\delta$ space exploration}
-
-From every combination of the $D$ and $\delta$ ratios we want to find
-the one that produces a numerical error lower than the 0.1\% threshold
-while keeping an effective computation, i.e. the ($D$, $\delta)$ pair
-that produces the minimum number of discretizations and ensures an
-acceptable numerical precision.
-We can propose an heuristic method to perform this task: compute the
-numerical error for every ($D$, $\delta$) points belonging to a grid on
-the $D$, $\delta$ space and choose the pair that combines an
-acceptable numerical error with an efficient computation.
-
-Firstly, lets consider a decreasing exponential density function that
-assumes the values of 2670 kg/m$^3$ and 3300 kg/m$^3$ on the shell's
-outer and inner radii, respectively, that can be defined as follows:
+The spherical shell and tesseroid model will have an exponential density function given
+by
 
 \begin{equation}
     \rho(r') = A e^{-(r' - R)/b} + C,
 \label{eq:density-exp}
 \end{equation}
+
 \noindent where
+
 \begin{equation}
     A =
     (3300 \text{kg/m}^3 - 2670 \text{kg/m}^3)
-    \left( e^{( R_2 - R_1 )/b} - 1 \right)^{-1},
+    \left( e^{( R - R_1 )/b} - 1 \right)^{-1},
 \end{equation}
+
 \begin{equation}
     C =
     2670 \text{kg/m}^3 - A,
 \end{equation}
 
-\noindent $R$ is the mean Earth radius and $b$ is a constant
-that determines the variability of the function: a low value of $b$
-increases the maximum slope of the density function.
+\noindent $R$ is the mean Earth radius, $R_1$ is the inner radius of the
+shell (determined by the thickness), and $b$ is a constant that determines the
+variability of the function: a low value of $b$ increases the maximum slope of the
+density function.
 
-Secondly, we propose a thick spherical shell with a thickness of 35km and
-modelled by a mesh of $30^\circ \times 30^\circ$ tesseroids in order to
-perform the exploration of the numerical error in the $D$, $\delta$
-space.
-We have assigned the density function proposed on equation
-\ref{eq:density-exp} to our spherical shell model with a $b$ value of
-1km, i.e. a highly varying density function.
 
-Finally, we have computed the gravitational potential ($V$), the vertical
-component of its gradient ($g_z$) and the $g_{zz}$ component of the
-Marussi tensor on the big grid (see Table \ref{tab:grids}) by exploring
-different values of $D$ and $\delta$.
-These results were used to obtain the percentage difference between
-them and their corresponding analytical solutions.
+\subsubsection{$D$-$\delta$ space exploration}
 
-On Figure \ref{fig:grid-search} we show
-the resulting percentage difference for each gravitational field.
-The points inside the dotted lines are the ones that present a
-numerical error lower than the 0.1\% threshold.
-Our intention is to choose the one that produces the most efficient computation
-and set it as the default values for $D$ and $\delta$.
+We aim to find a combination of the $D$ and $\delta$ that produces a numerical error
+lower than the 0.1\% threshold while minimizing computation time.
+We use a grid search method and compute the numerical error for every ($D$, $\delta$)
+pair belonging to a grid on the $D$-$\delta$ space (Fig. \ref{fig:grid-search}).
+Because this is a time consuming computation, we limit the analysis to a shell of 35 km
+thickness and $b = 1\ \text{km}$ (Eq. \ref{eq:density-exp}), which yields a
+sharp density variation within the shell.
+For optimum algorithm performance, we search for the smallest possible value of $D$ and
+the highest possible value of $\delta$.
+
+We compute the relative difference between the numerical and analytical results for the
+gravitational potential ($V$), the vertical component of its gradient ($g_z$), and the
+$g_{zz}$ component of the Marussi tensor.
+The results are shown in Fig. \ref{fig:grid-search}, in which points inside the dotted
+lines are the ones that present a numerical error lower than the 0.1\% threshold.
+Also shown in Fig. \ref{fig:grid-search} are the $D$ values determined for the linear
+density function in the previous section ($D_\text{linear}$).
+The values of $D_\text{linear}$ are within the 0.1\% threshold and are the optimum
+values of $D$ for $V$ and $g_z$.
+The results for $g_{zz}$ are in agreement with those obtained for the linear density
+function in the case of a thick shell (Fig. \ref{fig:D-linear}).
+Thus, we also choose the conservative value of $D=8$ as the optimum value for $g_{zz}$.
+These results indicate that the values of $D_\text{linear}$ can be safely extrapolated
+to the exponential case.
+
+Having well controlled values for $D$, we are free to explore the integration error as a
+function of $\delta$ in more detail and how it varies for different values of $b$ (Eq.
+\ref{eq:density-exp}).
+
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]
     {figures/grid-search.pdf}
 \caption{
-    Numerical error exploration in the $D$, $\delta$ space.
+    Numerical error exploration in the $D$-$\delta$ space.
     The percentage difference values were obtained from the comparison
     between the analytical solution and the numerical approximation of
     the gravitational fields ($V$, $g_z$ and $g_{zz}$) generated by a
-    spherical shell with an exponential density as the one defined on
-    equation \ref{eq:density-exp}.
-    These comparison have been carried out with a spherical shell of
-    35km of thickness, whose density function has a value of $b$ of 1km
-    and the gravitational fields were computed on the big grid
-    (defined in Table \ref{tab:grids}).
+    spherical shell with an exponential density function (Eq. \ref{eq:density-exp}).
+    These comparisons were carried out on the "Big Grid" configuration (Table
+    \ref{tab:grids}), with a spherical shell of
+    35km of thickness, and density function with $b$ of 1km.
     The points inside the dashed line are the ones that present an
     error lower than 0.1\%.
     }
 \label{fig:grid-search}
 \end{figure}
 
-
-\begin{figure}
-\centering
-\includegraphics[width=\linewidth]
-    {figures/D-delta-grid-search.pdf}
-\caption{
-    $D$, $\delta$ space divided in three regions (A, B and C) based on
-    the definitions of $D_\text{linear}$ and $\delta_p$ (see text for more
-    information).
-    Light grey points are the non-eligible ($D$, $\delta$) pairs
-    belonging to the region A (with $D < D_\text{linear}$).
-    Green points have acceptable numerical error (lower than 0.1\%),
-    while the red ones represent those whose error is greater than the
-    threshold.
-    Dark grey points represent those from which we don't have a priori
-    information about their numerical error.}
-\label{fig:D-delta-grid-search}
-\end{figure}
-
-Because the algorithm is thought to work with default $D$ and $\delta$
-values that ensures these two conditions for every density function,
-the default value for $D$ cannot be lower than the one determined for
-the linear function, which will be called $D_\text{linear}$.
-That's why we can only choose the ($D$, $\delta$) points on which
-$D \geq D_\text{linear}$.
-Taking this fact into account we can divide the $D$, $\delta$ space in
-two subregions: one with $D < D_\text{linear}$ and other with $D \ge
-D_\text{linear}$.
-We can ignore points belonging to the former one (region A on Figure
-\ref{fig:D-delta-grid-search}) and focus on the latter (regions B and C on
-Figure \ref{fig:D-delta-grid-search}).
-
-From the $D \ge D_\text{linear}$ subregion we can explore the numerical
-error of points with $D = D_\text{linear}$ and different values of
-$\delta$.
-We will call $\delta_p$ to the maximum $\delta$ at which the numerical
-error is lower than the 0.1\% threshold while keeping
-$D = D_ \text{linear}$.
-Greater $\delta$ values than $\delta_p$ will produce computations with
-high error (red points in Figure \ref{fig:D-delta-grid-search}), while
-lower $\delta$ values than $\delta_p$ will produce more discretizations
-leading to non-efficient computation (green dots under the
-$(D_\text{linear}, \delta_p)$ point on Figure \ref{fig:D-delta-grid-search}).
-
-With the definition of $\delta_p$ in mind we can subdivide the
-subregion in two: one with points with $\delta \le \delta_p$ (region B
-on Figure \ref{fig:D-delta-grid-search}) and other with points with
-$\delta > \delta_p$ (region C on Figure \ref{fig:D-delta-grid-search}).
-
-Every point in the subregion with $\delta \le \delta_p$ (region B on
-Figure \ref{fig:D-delta-grid-search}) will have a numerical error lower
-than the 0.1\% threshold, but they will always produce more
-discretizations than the ($D_\text{linear}$, $\delta_p$) point leading
-to non-efficient computations.
-It's worth remembering that a lower $\delta$ or a greter $D$ will
-produce more discretizations, increasing the accuracy but also the
-computation time.
-
-On the other hand, we have no a priori information about the numerical
-error of points with $\delta > \delta_p$ (region C on
-Figure \ref{fig:D-delta-grid-search}).
-Nevertheless, the numerical error exploration shown on
-Figure \ref{fig:grid-search} doesn't present any
-point in this region with error lower than the threshold.
-Even though we are analysing a single case, it proves that no point in
-region C is eligible as default ($D$, $\delta$) pair because it should
-ensure numerical accuracy for every exponential density scenario.
-
-In conclusion, the ($D$, $\delta$) point that minimises the number of
-discretizations while keeping an acceptable numerical error under the
-0.1\% threshold is the one whose ratio $D$ is equal to
-$D_\text{linear}$ and its delta ratio is $\delta_p$.
 
 \subsubsection{Delta ratio determination}
 
@@ -1241,7 +1168,6 @@ as follows:
 
 \begin{equation}
     \rho(r') = A e^{-(r' - R)/b} + C,
-\label{eq:density-exp}
 \end{equation}
 
 \noindent where
@@ -1260,8 +1186,7 @@ that determines the variability of the function: a low value of $b$
 increases the maximum slope of the density function.
 
 The analytical solution of the gravitational potential generated by a
-spherical shell with a density function given by equation
-\ref{eq:density-exp} is
+spherical shell with a density function is
 
 \iftwocol{
 \begin{equation}
