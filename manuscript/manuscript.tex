@@ -239,24 +239,24 @@ quadrature nodes).
 \iftwocol{
 \begin{equation}
     \begin{split}
-        \iiint\limits_\Omega \rho(r') g(r', \phi', \lambda')
+        \iiint\limits_\Omega \rho(r') f(r', \phi', \lambda')
         d\Omega \approx& \\
         A
         \sum\limits_{i=1}^{N^r}
         \sum\limits_{j=1}^{N^\phi}
         \sum\limits_{k=1}^{N^\lambda}
-        & W_i^r W_j^\phi W_k^\lambda \rho(r_i) g(r_i, \phi_j, \lambda_k),
+        & W_i^r W_j^\phi W_k^\lambda \rho(r_i) f(r_i, \phi_j, \lambda_k),
     \end{split}
 \label{eq:glq-var-dens}
 \end{equation}
 }{
 \begin{equation}
-    \iiint\limits_\Omega \rho(r') g(r', \phi', \lambda') d\Omega \approx
+    \iiint\limits_\Omega \rho(r') f(r', \phi', \lambda') d\Omega \approx
     A
     \sum\limits_{i=1}^{N^r}
     \sum\limits_{j=1}^{N^\phi}
     \sum\limits_{k=1}^{N^\lambda}
-    W_i^r W_j^\phi W_k^\lambda \rho(r_i) g(r_i, \phi_j, \lambda_k),
+    W_i^r W_j^\phi W_k^\lambda \rho(r_i) f(r_i, \phi_j, \lambda_k),
 \label{eq:glq-var-dens}
 \end{equation}
 }
