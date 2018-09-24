@@ -95,12 +95,8 @@ import warnings
 import numpy as np
 from . import _tesseroid
 from fatiando.constants import SI2MGAL, SI2EOTVOS, MEAN_EARTH_RADIUS, G
-from fatiando._our_duecredit import due, Doi, BibTeX
 
 
-due.cite(Doi("10.1190/geo2015-0204.1"),
-         description='Gravity forward modeling with tesseroids',
-         path="fatiando.gravmag.tesseroid")
 RATIO_V = 1
 RATIO_G = 2
 RATIO_GG = 8
