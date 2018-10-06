@@ -8,7 +8,7 @@ area: from 73°W to 65°W and 41°S to 33°S; obtained from
 
 The data is saved as a 2d array into a binary file with the NumPy `.npy` format.
 To access the information you must do it using the `numpy.load()` function.
-The first two columns contain the longitude and latitude points, respectively;
+The first two columns contain the latitude and longitude points, respectively;
 while the third column has the elevation data (in meters).
 
 For example, we can access the information with the following script:
