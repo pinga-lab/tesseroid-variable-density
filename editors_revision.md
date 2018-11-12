@@ -66,6 +66,8 @@ obtained with these parameters transferable to other cases?
 
 14) Eq. (25): b instead of c?
 
+* Accepted suggestion
+
 15) Figure 3: I would expect a short discussion/interpretation on the differences
 visible for the four scenarios (Pole, Equator, Satellite, Big Grid).
 
