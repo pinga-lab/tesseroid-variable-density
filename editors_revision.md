@@ -52,6 +52,8 @@ nodes and weights. At least a suitable reference should be added, where to find 
 
 11) P9, L37: "For further iterations".
 
+* Accepted suggestion
+
 12) P9, L47: Second dot at the end of line.
 
 13) Section 3: Please motivate the selected parameters and values for the numerical
