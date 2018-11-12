@@ -73,6 +73,8 @@ visible for the four scenarios (Pole, Equator, Satellite, Big Grid).
 
 16) P14, L43: "... equal to the linear density case"
 
+* Accepted suggestion
+
 17) Please provide some information about the needed computational load. For example in
 the case of Figure 4, it would be very interesting to get an impression on the relative
 computation times between the investigated cases in the D-delta space. Perhaps you can
