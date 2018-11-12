@@ -56,6 +56,8 @@ nodes and weights. At least a suitable reference should be added, where to find 
 
 12) P9, L47: Second dot at the end of line.
 
+* Accepted suggestion
+
 13) Section 3: Please motivate the selected parameters and values for the numerical
 investigations (e.g, tesseroid discretization, computation grid sizes/regions/heights
 and coefficients for the linear and exponential density function). For which
