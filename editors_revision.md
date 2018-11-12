@@ -44,6 +44,8 @@ nodes and weights. At least a suitable reference should be added, where to find 
 
 9) P5, L49: "... and W^r_i, W^\phi_j, W^\lambda_k are the quadrature weights."
 
+* Accepted suggestion
+
 10) P7, L16: I am not sure what is meant by "offending dimensions".
 
 11) P9, L37: "For further iterations".
