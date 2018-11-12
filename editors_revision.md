@@ -34,6 +34,11 @@ include the original reference to Anderson (1976).
 For example this is not the case for lambda{1,2}, phi{1,2}, r{1,2} in Eq. (1)-(3) and
 sigma and f in Eq.(11).
 
+* Added definition of tesseroid boundaries.
+* Added definition of integration kernel f.
+* Don't know what sigma is. Assume is Omega.
+* Replaced Omega for the explicit boundaries of the tesseroid.
+
 8) Section 2.1: Please provide some more information how to calculate the quadrature
 nodes and weights. At least a suitable reference should be added, where to find them.
 

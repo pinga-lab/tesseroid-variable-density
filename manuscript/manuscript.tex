@@ -144,9 +144,12 @@ tesseroids with an exponentially increasing density with depth.
 
 \section{Methodology}
 
-We define an external computation point $P(r, \phi, \lambda)$ in a geocentric spherical
-coordinate system at a radius $r$, geocentric latitude $\phi$, and longitude $\lambda$
-where the gravitational fields are going to be calculated.
+Consider an arbitrary tesseroid in a geocentric spherical coordinate system defined by
+pairs of geocentric latitudinal ($\phi_1$, $\phi_2$), longitudinal ($\lambda_1$,
+$\lambda_2$) and radial ($r_1$, $r_2$) boundaries.
+We define an external computation point $P(r, \phi, \lambda)$ located at radius $r$,
+geocentric latitude $\phi$, and longitude $\lambda$ where the gravitational fields the
+tesseroid generates are going to be calculated.
 The first- and second-order derivatives of the gravitational potential are taken with
 respect to the local north-oriented Cartesian coordinate system of $P$
 (Fig.~\ref{fig:tesseroid}).
@@ -238,19 +241,27 @@ quadrature nodes).
 \iftwocol{
 \begin{equation}
     \begin{split}
-        \iiint\limits_\Omega \rho(r') f(r', \phi', \lambda')
-        d\Omega \approx& \\
+        \int\limits_{\lambda_1}^{\lambda_2}
+        \int\limits_{\phi_1}^{\phi_2}
+        \int\limits_{r_1}^{r_2}
+        \rho(r') f(r', \phi', \lambda')
+        dr' d\phi' d\lambda' \approx& \\
         A
         \sum\limits_{i=1}^{N^r}
         \sum\limits_{j=1}^{N^\phi}
         \sum\limits_{k=1}^{N^\lambda}
-        & W_i^r W_j^\phi W_k^\lambda \rho(r_i) f(r_i, \phi_j, \lambda_k),
+        W_i^r W_j^\phi W_k^\lambda
+        &\rho(r_i) f(r_i, \phi_j, \lambda_k),
     \end{split}
 \label{eq:glq-var-dens}
 \end{equation}
 }{
 \begin{equation}
-    \iiint\limits_\Omega \rho(r') f(r', \phi', \lambda') d\Omega \approx
+    \int\limits_{\lambda_1}^{\lambda_2}
+    \int\limits_{\phi_1}^{\phi_2}
+    \int\limits_{r_1}^{r_2}
+    \rho(r') f(r', \phi', \lambda')
+    dr' d\phi' d\lambda' \approx
     A
     \sum\limits_{i=1}^{N^r}
     \sum\limits_{j=1}^{N^\phi}
@@ -267,8 +278,10 @@ quadrature nodes).
     \frac{(\lambda_2 - \lambda_1)(\phi_2 - \phi_1)(r_2 - r_1)}{8},
 \end{equation}
 
-\noindent $(r_i, \phi_j, \lambda_k)$ are the quadrature nodes, and $W_i^r$ are the
-quadrature weights.
+\noindent $f(r', \phi', \lambda')$ are the non-density dependent portion of the
+integration kernels, $(r_i, \phi_j, \lambda_k)$ are the quadrature nodes, and $W_i^r$
+are
+the quadrature weights.
 
 
 \subsection{Adaptive Discretization}
