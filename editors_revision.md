@@ -26,7 +26,7 @@ include the original reference to Anderson (1976).
 
     **Accepted suggestion with different order of words**
 
-    6. P4, L25 and elsewhere "first- and second-order derivatives"
+6. P4, L25 and elsewhere "first- and second-order derivatives"
 
     **Accepted suggestion**
 
