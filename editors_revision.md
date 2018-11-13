@@ -104,3 +104,5 @@ with previous results ...".
 
 23. To help the reader, it is useful to additionally provide a chapter or page number
 for references based on text books like Hildebrand (1987).
+
+    **Every time we cite Hildebrand (1987) we add page number**
