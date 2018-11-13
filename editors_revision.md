@@ -100,5 +100,7 @@ with previous results ...".
 
 22. P21, L33: "... expressions for the gravitational potential with different"
 
+    **Accepted mistake, fixed with small modification**
+
 23. To help the reader, it is useful to additionally provide a chapter or page number
 for references based on text books like Hildebrand (1987).
