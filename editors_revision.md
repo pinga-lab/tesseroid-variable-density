@@ -92,6 +92,8 @@ with previous results ...".
 
 20. P20, L30: "z-axis"
 
+    **Accepted suggestion**
+
 21. Eq. (A.9): Missing dot at the end of line.
 
     **Accepted suggestion**
