@@ -94,6 +94,8 @@ with previous results ...".
 
 21. Eq. (A.9): Missing dot at the end of line.
 
+    **Accepted suggestion**
+
 22. P21, L33: "... expressions for the gravitational potential with different"
 
 23. To help the reader, it is useful to additionally provide a chapter or page number
