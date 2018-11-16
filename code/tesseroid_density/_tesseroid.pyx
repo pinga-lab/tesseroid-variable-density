@@ -53,7 +53,7 @@ cdef rediscretizer(
         double[::1] coslatc =  numpy.empty(2, numpy.float)
         double[::1] rc =  numpy.empty(2, numpy.float)
         double scale
-        int nlon, nlat, nr, new_cells
+        int nlon, nlat, new_cells
         int stktop, error, error_code
         double[:, ::1] stack =  numpy.empty((STACK_SIZE, 6), numpy.float)
         double w, e, s, n, top, bottom
@@ -82,14 +82,12 @@ cdef rediscretizer(
             distance = distance_n_size(w, e, s, n, top, bottom, lon, sinlat,
                                        coslat, radius, &Llon, &Llat, &Lr)
             # Check which dimensions I have to divide
-            error = divisions(distance, Llon, Llat, Lr, ratio, &nlon,
-                              &nlat, &nr, &new_cells)
+            error = divisions(distance, Llon, Llat, Lr, ratio, &nlon, &nlat, &new_cells)
             error_code += error
             if new_cells > 1:
-                if stktop + nlon*nlat*nr > STACK_SIZE:
+                if stktop + nlon*nlat > STACK_SIZE:
                     raise ValueError('Tesseroid stack overflow')
-                stktop = split(w, e, s, n, top, bottom, nlon, nlat, nr,
-                               stack, stktop)
+                stktop = split(w, e, s, n, top, bottom, nlon, nlat, stack, stktop)
             else:
                 # Put the nodes in the current range
                 scale = scale_nodes(w, e, s, n, top, bottom, lonc, sinlatc,
@@ -129,12 +127,10 @@ cdef inline double distance_n_size(
 @cython.wraparound(False)
 @cython.cdivision(True)
 cdef inline int divisions(double distance, double Llon, double Llat, double Lr,
-                          double ratio, int* nlon, int* nlat, int* nr,
-                          int* new_cells):
+                          double ratio, int* nlon, int* nlat, int* new_cells):
     "How many divisions should be made per dimension"
     nlon[0] = 1
     nlat[0] = 1
-    nr[0] = 1
     error = 0
     if distance <= ratio*Llon:
         if Llon <= 0.1:  # in meters. ~1e-6  degrees
@@ -146,12 +142,7 @@ cdef inline int divisions(double distance, double Llon, double Llat, double Lr,
             error = -1
         else:
             nlat[0] = 2
-    if distance <= ratio*Lr:
-        if Lr <= 1e-3:
-            error = -1
-        else:
-            nr[0] = 2
-    new_cells[0] = nlon[0]*nlat[0]*nr[0]
+    new_cells[0] = nlon[0]*nlat[0]
     return error
 
 
@@ -188,25 +179,22 @@ cdef inline double scale_nodes(
 @cython.boundscheck(False)
 @cython.wraparound(False)
 @cython.cdivision(True)
-cdef int split(double w, double e, double s, double n, double top,
-               double bottom, int nlon, int nlat, int nr,
-               double[:, ::1] stack, int stktop):
+cdef int split(double w, double e, double s, double n, double top, double bottom,
+               int nlon, int nlat, double[:, ::1] stack, int stktop):
     cdef:
-        unsigned int i, j, k
-        double dlon, dlat, dr
+        unsigned int i, j
+        double dlon, dlat
     dlon = (e - w)/nlon
     dlat = (n - s)/nlat
-    dr = (top - bottom)/nr
     for i in xrange(nlon):
         for j in xrange(nlat):
-            for k in xrange(nr):
-                stktop += 1
-                stack[stktop, 0] = w + i*dlon
-                stack[stktop, 1] = w + (i + 1)*dlon
-                stack[stktop, 2] = s + j*dlat
-                stack[stktop, 3] = s + (j + 1)*dlat
-                stack[stktop, 4] = bottom + (k + 1)*dr
-                stack[stktop, 5] = bottom + k*dr
+            stktop += 1
+            stack[stktop, 0] = w + i*dlon
+            stack[stktop, 1] = w + (i + 1)*dlon
+            stack[stktop, 2] = s + j*dlat
+            stack[stktop, 3] = s + (j + 1)*dlat
+            stack[stktop, 4] = top
+            stack[stktop, 5] = bottom
     return stktop
 
 
