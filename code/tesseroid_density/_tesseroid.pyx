@@ -147,7 +147,7 @@ cdef inline int divisions(double distance, double Llon, double Llat, double Lr,
         else:
             nlat[0] = 2
     if distance <= ratio*Lr:
-        if Lr <= 1e3:
+        if Lr <= 1e-3:
             error = -1
         else:
             nr[0] = 2
