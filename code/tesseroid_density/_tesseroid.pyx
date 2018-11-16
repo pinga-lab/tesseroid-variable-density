@@ -94,7 +94,7 @@ cdef rediscretizer(
                 # Put the nodes in the current range
                 scale = scale_nodes(w, e, s, n, top, bottom, lonc, sinlatc,
                                     coslatc, rc)
-                res += kernel(lon, sinlat, coslat, radius, scale, density, 
+                res += kernel(lon, sinlat, coslat, radius, scale, density,
                               lonc, sinlatc, coslatc, rc)
         result[l] += res
     return error_code
@@ -147,7 +147,7 @@ cdef inline int divisions(double distance, double Llon, double Llat, double Lr,
         else:
             nlat[0] = 2
     if distance <= ratio*Lr:
-        if Lr <= 1e3:
+        if Lr <= 1e-3:
             error = -1
         else:
             nr[0] = 2
