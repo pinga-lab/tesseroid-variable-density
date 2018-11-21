@@ -100,9 +100,7 @@ if compute:
 # Plot Results
 # ------------
 titles = '$V$ $g_z$'.split()
-
-colors = plt.cm.viridis(np.linspace(0, 1, len(thicknesses)))
-colors = dict(zip(thicknesses, colors))
+colors = dict(zip(thicknesses, plt.cm.viridis(np.linspace(0, 1, len(thicknesses)))))
 
 fig, axes = plt.subplots(nrows=len(fields), ncols=1, sharex=True)
 fig.set_size_inches((5, 5))
@@ -127,8 +125,7 @@ for ax, field, title in zip(axes, fields, titles):
               for thickness in thicknesses if thickness < 1e3]
     labels += ["{}km".format(int(thickness * 1e-3))
                for thickness in thicknesses if thickness >= 1e3]
-    lines = [mlines.Line2D([], [], color=colors[thickness], marker=".",
-                           label=label)
+    lines = [mlines.Line2D([], [], color=colors[thickness], marker=".", label=label)
              for thickness, label in zip(thicknesses, labels)]
     plt.legend(handles=lines)
 
