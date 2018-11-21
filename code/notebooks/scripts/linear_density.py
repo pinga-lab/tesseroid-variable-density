@@ -39,7 +39,7 @@ if not os.path.isdir(result_dir):
 # Define Tesseroids models
 # ------------------------
 thicknesses = [100, 1e3, 1e4, 1e5, 1e6]
-shapes = [(1, 6, 12), (1, 12, 24), (1, 18, 36)]
+shapes = [(1, 1, 2), (1, 6, 12), (1, 12, 24), (1, 18, 36)]
 models = [
     TesseroidMesh((0, 360, -90, 90, 0, -thickness), shape)
     for thickness in thicknesses
