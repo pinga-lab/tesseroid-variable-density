@@ -98,7 +98,7 @@ from fatiando.constants import SI2MGAL, MEAN_EARTH_RADIUS, G
 
 
 RATIO_V = 1
-RATIO_G = 2
+RATIO_G = 2.5
 STACK_SIZE = 200
 DELTA_V = 0.2
 DELTA_G = 0.2
