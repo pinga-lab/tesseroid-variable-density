@@ -39,7 +39,7 @@ if not os.path.isdir(result_dir):
 # Define Tesseroids models
 # ------------------------
 thicknesses = [100, 1e3, 1e4, 1e5, 1e6]
-shapes = [(1, 6, 12), (2, 12, 24), (3, 18, 36)]
+shapes = [(1, 6, 12), (1, 12, 24), (1, 18, 36)]
 models = [
     TesseroidMesh((0, 360, -90, 90, 0, -thickness), shape)
     for thickness in thicknesses
@@ -76,7 +76,9 @@ if compute:
             model.addprop("density", [density_linear for i in range(model.size)])
 
             for grid_name, grid in grids.items():
-                print(top - bottom, field, grid_name)
+                print("Thickness: {} Model size: {} Field: {} Grid: {}".format(
+                    int(top - bottom), model.size, field, grid_name)
+                    )
                 lats, lons, heights = grid
                 analytical = shell_linear_density(heights[0], top, bottom,
                                                   slope, constant_term)
