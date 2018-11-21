@@ -94,7 +94,7 @@ import warnings
 
 import numpy as np
 from . import _tesseroid
-from fatiando.constants import SI2MGAL, SI2EOTVOS, MEAN_EARTH_RADIUS, G
+from fatiando.constants import SI2MGAL, MEAN_EARTH_RADIUS, G
 
 
 RATIO_V = 1
