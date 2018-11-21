@@ -5,6 +5,7 @@ from fatiando.constants import G, MEAN_EARTH_RADIUS, SI2MGAL, SI2EOTVOS
 from fatiando.mesher import TesseroidMesh
 from fatiando import gridder
 import matplotlib.pyplot as plt
+import matplotlib.lines as mlines
 # This is our custom tesseroid code
 from tesseroid_density import tesseroid
 
@@ -59,7 +60,7 @@ grids = {"pole": gridder.regular((89, 90, 0, 1), (10, 10), z=0),
 # Compute differences
 # -------------------
 fields = 'potential gz'.split()
-compute = True
+compute = False
 if compute:
     D_values = np.arange(0.5, 5.5, 0.5)
     for field in fields:
@@ -98,34 +99,58 @@ if compute:
 
 # Plot Results
 # ------------
-styles = ['-o', '-^', '-v', '-s']
-colors = ["C" + str(i) for i in range(4)]
-labels = [r'Pole', r'Equator', r'Global', r'260 km']
 titles = '$V$ $g_z$'.split()
 
-for model in models:
-    print(model.bounds[4] - model.bounds[5], model.size)
-    fig, axes = plt.subplots(nrows=len(fields), ncols=1, sharex=True)
-    fig.set_size_inches((5, 5))
-    fig.subplots_adjust(hspace=0)
-    for ax, field, title in zip(axes, fields, titles):
+colors = plt.cm.viridis(np.linspace(0, 1, len(thicknesses)))
+colors = dict(zip(thicknesses, colors))
+
+fig, axes = plt.subplots(nrows=len(fields), ncols=1, sharex=True)
+fig.set_size_inches((5, 5))
+fig.subplots_adjust(hspace=0)
+
+for ax, field, title in zip(axes, fields, titles):
+    for model in models:
+        thickness = model.bounds[4] - model.bounds[5]
+        color = colors[thickness]
         for grid_name in grids:
-            thickness = model.bounds[4] - model.bounds[5]
             fname = "{}-{}-{}-{}.npz".format(field, grid_name, int(thickness),
                                              model.size)
             diff_file = np.load(os.path.join(result_dir, fname))
             D_values, differences = diff_file["D_values"], diff_file["differences"]
-            ax.plot(D_values, differences)
-            ax.plot([0, 10], [1e-1, 1e-1], '--', color='k', linewidth=0.5)
-            ax.set_yscale('log')
-            ax.set_yticks(ax.get_yticks()[2:-2])
-            ax.set_ylabel('Difference (%)')
-            ax.grid(True, linewidth=0.5, color='#aeaeae')
-            ax.set_axisbelow(True)
-        ax.set_title(title)
-    ax = axes[-1]
-    ax.set_xlabel(r"D")
-    ax.set_xlim(0, 5.5)
-    ax.set_xticks(np.arange(0, 6, 1))
-    ax.legend()
-    plt.show()
+            ax.plot(D_values, differences, '.-', color=color, linewidth=1, alpha=0.5)
+
+    # Add threshold line
+    ax.plot([0, 10], [1e-1, 1e-1], '--', color='k', linewidth=0.5)
+
+    # Legend creation
+    labels = ["{}m".format(int(thickness))
+              for thickness in thicknesses if thickness < 1e3]
+    labels += ["{}km".format(int(thickness * 1e-3))
+               for thickness in thicknesses if thickness >= 1e3]
+    lines = [mlines.Line2D([], [], color=colors[thickness], marker=".",
+                           label=label)
+             for thickness, label in zip(thicknesses, labels)]
+    plt.legend(handles=lines)
+
+    # Add field annotation on each axe
+    ax.text(0.5, 0.87, title, fontsize=11,
+            horizontalalignment='center',
+            verticalalignment='center',
+            bbox={'facecolor': 'w',
+                  'edgecolor': '#9b9b9b',
+                  'linewidth': 0.5, 'pad': 5,
+                  'boxstyle': 'circle, pad=0.4'},
+            transform=ax.transAxes)
+
+    # Configure axes
+    ax.set_yscale('log')
+    ax.set_yticks(ax.get_yticks()[2:-2])
+    ax.set_ylabel('Difference (%)')
+    ax.grid(True, linewidth=0.5, color='#aeaeae')
+    ax.set_axisbelow(True)
+ax = axes[-1]
+ax.set_xlabel(r"D")
+ax.set_xlim(0, 5.5)
+ax.set_xticks(np.arange(0, 6, 1))
+ax.legend()
+plt.show()
