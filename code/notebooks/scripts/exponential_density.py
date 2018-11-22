@@ -77,7 +77,7 @@ grids = {"pole": gridder.regular((89, 90, 0, 1), (10, 10), z=0),
 # -------------------
 fields = 'potential gz'.split()
 density_in, density_out = 3300, 2670
-b_ratii = [1, 10, 100]
+b_ratios = [1, 10, 100]
 
 compute = True
 if compute:
@@ -87,8 +87,8 @@ if compute:
             top, bottom = model.bounds[4], model.bounds[5]
             thickness = top - bottom
 
-            for b_factor in b_ratii:
-                b_factor = b_ratii * thickness
+            for b_factor in b_ratios:
+                b_factor = b_ratios * thickness
                 amplitude = (density_in - density_out) / \
                     (np.exp(thickness / b_factor) - 1)
                 constant_term = density_out - amplitude
