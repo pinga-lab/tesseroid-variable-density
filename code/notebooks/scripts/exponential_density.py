@@ -87,8 +87,8 @@ if compute:
             top, bottom = model.bounds[4], model.bounds[5]
             thickness = top - bottom
 
-            for b_factor in b_ratios:
-                b_factor = b_ratios * thickness
+            for b_ratio in b_ratios:
+                b_factor = b_ratio * thickness
                 amplitude = (density_in - density_out) / \
                     (np.exp(thickness / b_factor) - 1)
                 constant_term = density_out - amplitude
