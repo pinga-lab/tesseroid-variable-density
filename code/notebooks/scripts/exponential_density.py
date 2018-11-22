@@ -77,11 +77,11 @@ grids = {"pole": gridder.regular((89, 90, 0, 1), (10, 10), z=0),
 # -------------------
 fields = 'potential gz'.split()
 density_in, density_out = 3300, 2670
-b_ratios = [1, 10, 100]
+b_ratios = np.logspace(-2, 0, 5)
 
 compute = True
 if compute:
-    delta_values = np.logspace(-3, -1, 5)
+    delta_values = np.logspace(-3, 1, 13)
     for field in fields:
         for model in models:
             top, bottom = model.bounds[4], model.bounds[5]
@@ -123,3 +123,64 @@ if compute:
                                                  int(b_factor))
                     np.savez(os.path.join(result_dir, fname),
                              delta_values=delta_values, differences=differences)
+
+
+# Plot Results
+# ------------
+titles = '$V$ $g_z$'.split()
+colors = dict(zip(b_ratios, plt.cm.viridis(np.linspace(0, 0.9, len(b_ratios)))))
+markers = dict(zip(thicknesses, ["o-", "^-", "s-", "D-"]))
+
+for grid_name in grids:
+
+    fig, axes = plt.subplots(nrows=len(fields), ncols=1, sharex=True)
+    fig.set_size_inches((5, 5))
+    fig.subplots_adjust(hspace=0)
+
+    for ax, field, title in zip(axes, fields, titles):
+        for model in models:
+            thickness = model.bounds[4] - model.bounds[5]
+            for b_ratio in b_ratios:
+                color = colors[b_ratio]
+                b_factor = b_ratio * thickness
+                fname = "{}-{}-{}-{}.npz".format(field, grid_name, int(thickness),
+                                                 int(b_factor))
+                diff_file = np.load(os.path.join(result_dir, fname))
+                delta_values = diff_file["delta_values"]
+                differences = diff_file["differences"]
+                ax.plot(delta_values, differences, color=color, marker=".",
+                        linewidth=1, markersize=5)
+
+        # Add threshold line
+        # ax.plot([0.1, 1], [1e-1, 1e-1], '--', color='k', linewidth=0.5)
+
+        # Legend creation
+        labels = ["b = {} thickness".format(b_ratio) for b_ratio in b_ratios]
+        lines = [mlines.Line2D([], [], color=colors[b_ratio], marker=".", label=label)
+                 for b_ratio, label in zip(b_ratios, labels)]
+        plt.legend(handles=lines)
+
+        # Add field annotation on each axe
+        ax.text(0.5, 0.87, title, fontsize=11,
+                horizontalalignment='center',
+                verticalalignment='center',
+                bbox={'facecolor': 'w',
+                      'edgecolor': '#9b9b9b',
+                      'linewidth': 0.5, 'pad': 5,
+                      'boxstyle': 'circle, pad=0.4'},
+                transform=ax.transAxes)
+
+        # Configure axes
+        ax.set_xscale('log')
+        ax.set_yscale('log')
+        ax.set_yticks(ax.get_yticks()[2:-2])
+        ax.set_ylabel('Difference (%)')
+        ax.grid(True, linewidth=0.5, color='#aeaeae')
+        ax.set_axisbelow(True)
+    ax = axes[-1]
+    ax.set_xlabel(r"$\delta$")
+    # ax.set_xlim(0, 5.5)
+    # ax.set_xticks(np.arange(0, 6, 1))
+    ax.legend()
+    axes[0].set_title(grid_name)
+    plt.show()
