@@ -77,11 +77,11 @@ grids = {"pole": gridder.regular((89, 90, 0, 1), (10, 10), z=0),
 # -------------------
 fields = 'potential gz'.split()
 density_in, density_out = 3300, 2670
-b_ratios = np.logspace(-2, 0, 5)
+b_ratios = np.logspace(-4, 0, 5)
 
 compute = True
 if compute:
-    delta_values = np.logspace(-3, 1, 13)
+    delta_values = np.logspace(-3, 1, 9)
     for field in fields:
         for model in models:
             top, bottom = model.bounds[4], model.bounds[5]
