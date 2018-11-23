@@ -73,15 +73,38 @@ grids = {"pole": gridder.regular((89, 90, 0, 1), (10, 10), z=0),
          }
 
 
+# Configure comparisons
+# ---------------------
+fields = 'potential gz'.split()
+density_bottom, density_top = 3300, 2670
+b_ratios = [1e-2, 5e-2, 1e-1, 2.5e-1, 5e-1, 1e0]
+delta_values = np.logspace(-3, 1, 9)
+
+
+# Plot Densities
+# --------------
+bottom, top = 0, 1
+thickness = top - bottom
+for b_ratio in b_ratios:
+    b_factor = b_ratio * thickness
+    amplitude = (density_bottom - density_top) / \
+        (np.exp(-bottom / b_factor) - np.exp(-top / b_factor))
+    constant_term = density_bottom - amplitude * np.exp(-bottom / b_factor)
+
+    # Define density function
+    def density_exponential(height):
+        return amplitude*np.exp(-height / b_factor) + constant_term
+
+    heights = np.linspace(bottom, top, 101)
+    plt.plot(heights, density_exponential(heights), label=str(b_ratio))
+plt.legend()
+plt.show()
+
+
 # Compute differences
 # -------------------
-fields = 'potential gz'.split()
-density_in, density_out = 3300, 2670
-b_ratios = np.logspace(-4, 0, 5)
-
 compute = True
 if compute:
-    delta_values = np.logspace(-3, 1, 9)
     for field in fields:
         for model in models:
             top, bottom = model.bounds[4], model.bounds[5]
@@ -89,9 +112,9 @@ if compute:
 
             for b_ratio in b_ratios:
                 b_factor = b_ratio * thickness
-                amplitude = (density_in - density_out) / \
-                    (np.exp(thickness / b_factor) - 1)
-                constant_term = density_out - amplitude
+                amplitude = (density_bottom - density_top) / \
+                    (np.exp(-bottom / b_factor) - np.exp(-top / b_factor))
+                constant_term = density_bottom - amplitude * np.exp(-bottom / b_factor)
 
                 # Define density function
                 def density_exponential(height):
