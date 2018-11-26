@@ -17,21 +17,22 @@ def shell_exponential_density(height, top, bottom, amplitude, b_factor, constant
     the radial coordinate `height + MEAN_EARTH_RADIUS` with an exponential density as:
 
     .. math :
-        \rho(r') = A e^{-(r' - R) / b} + C
+        \rho(r') = A e^{- b * (r' - R) / T} + C
 
     Where $r$ is the radial coordinate where the density is going to be evaluated,
-    $A$ is the amplitude, $C$ the constant term, $b$ the b factor and $R$ the mean Earth
-    radius.
+    $A$ is the amplitude, $C$ the constant term, $T$ is the thickness of the tesseroid,
+    $b$ the b factor and $R$ the mean Earth radius.
     """
     r = height + MEAN_EARTH_RADIUS
     r1 = bottom + MEAN_EARTH_RADIUS
     r2 = top + MEAN_EARTH_RADIUS
-    potential = 4 * np.pi * G * amplitude * b_factor / r * \
+    thickness = r2 - r1
+    potential = 4 * np.pi * G * amplitude * thickness / b_factor / r * \
         (
-         (r1**2 + 2 * r1 * b_factor + 2 * b_factor**2) *
-         np.exp(-(r1 - MEAN_EARTH_RADIUS) / b_factor) -
-         (r2**2 + 2 * r2 * b_factor + 2 * b_factor**2) *
-         np.exp(-(r2 - MEAN_EARTH_RADIUS) / b_factor)
+         (r1**2 + 2 * r1 * thickness / b_factor + 2 * (thickness / b_factor)**2) *
+         np.exp(-(r1 - MEAN_EARTH_RADIUS) / thickness * b_factor) -
+         (r2**2 + 2 * r2 * thickness / b_factor + 2 * (thickness / b_factor)**2) *
+         np.exp(-(r2 - MEAN_EARTH_RADIUS) / thickness * b_factor)
         ) + \
         4/3 * np.pi * G * constant_term * (r2**3 - r1**3) / r
     data = {'potential': potential,
@@ -72,12 +73,11 @@ grids = {"pole": gridder.regular((89, 90, 0, 1), (10, 10), z=0),
          "260km": gridder.regular((-90, 90, 0, 360), (19, 13), z=260e3),
          }
 
-
 # Configure comparisons
 # ---------------------
 fields = 'potential gz'.split()
 density_bottom, density_top = 3300, 2670
-b_ratios = [1e-2, 5e-2, 1e-1, 2.5e-1, 5e-1, 1e0]
+b_factors = [1, 5, 10, 100]
 delta_values = np.logspace(-3, 1, 9)
 
 
@@ -85,18 +85,17 @@ delta_values = np.logspace(-3, 1, 9)
 # --------------
 bottom, top = 0, 1
 thickness = top - bottom
-for b_ratio in b_ratios:
-    b_factor = b_ratio * thickness
+for b_factor in b_factors:
     amplitude = (density_bottom - density_top) / \
-        (np.exp(-bottom / b_factor) - np.exp(-top / b_factor))
-    constant_term = density_bottom - amplitude * np.exp(-bottom / b_factor)
+        (np.exp(-bottom * b_factor / thickness) - np.exp(-top * b_factor / thickness))
+    constant_term = density_bottom - amplitude * np.exp(-bottom * b_factor / thickness)
 
     # Define density function
     def density_exponential(height):
-        return amplitude*np.exp(-height / b_factor) + constant_term
+        return amplitude*np.exp(-height * b_factor / thickness) + constant_term
 
     heights = np.linspace(bottom, top, 101)
-    plt.plot(heights, density_exponential(heights), label=str(b_ratio))
+    plt.plot(heights, density_exponential(heights), label="b={}".format(b_factor))
 plt.legend()
 plt.show()
 
@@ -110,15 +109,17 @@ if compute:
             top, bottom = model.bounds[4], model.bounds[5]
             thickness = top - bottom
 
-            for b_ratio in b_ratios:
-                b_factor = b_ratio * thickness
+            for b_factor in b_factors:
                 amplitude = (density_bottom - density_top) / \
-                    (np.exp(-bottom / b_factor) - np.exp(-top / b_factor))
-                constant_term = density_bottom - amplitude * np.exp(-bottom / b_factor)
+                    (np.exp(-bottom * b_factor / thickness) -
+                     np.exp(-top * b_factor / thickness))
+                constant_term = density_bottom - amplitude * \
+                    np.exp(-bottom * b_factor / thickness)
 
                 # Define density function
                 def density_exponential(height):
-                    return amplitude*np.exp(-height / b_factor) + constant_term
+                    return amplitude*np.exp(-height * b_factor / thickness) + \
+                        constant_term
 
                 # Append density function to every tesseroid of the model
                 model.addprop(
@@ -151,7 +152,7 @@ if compute:
 # Plot Results
 # ------------
 titles = '$V$ $g_z$'.split()
-colors = dict(zip(b_ratios, plt.cm.viridis(np.linspace(0, 0.9, len(b_ratios)))))
+colors = dict(zip(b_factors, plt.cm.viridis(np.linspace(0, 0.9, len(b_factors)))))
 markers = dict(zip(thicknesses, ["o-", "^-", "s-", "D-"]))
 
 for grid_name in grids:
@@ -163,9 +164,8 @@ for grid_name in grids:
     for ax, field, title in zip(axes, fields, titles):
         for model in models:
             thickness = model.bounds[4] - model.bounds[5]
-            for b_ratio in b_ratios:
-                color = colors[b_ratio]
-                b_factor = b_ratio * thickness
+            for b_factor in b_factors:
+                color = colors[b_factor]
                 fname = "{}-{}-{}-{}.npz".format(field, grid_name, int(thickness),
                                                  int(b_factor))
                 diff_file = np.load(os.path.join(result_dir, fname))
@@ -178,9 +178,9 @@ for grid_name in grids:
         # ax.plot([0.1, 1], [1e-1, 1e-1], '--', color='k', linewidth=0.5)
 
         # Legend creation
-        labels = ["b = {} thickness".format(b_ratio) for b_ratio in b_ratios]
-        lines = [mlines.Line2D([], [], color=colors[b_ratio], marker=".", label=label)
-                 for b_ratio, label in zip(b_ratios, labels)]
+        labels = ["b = {} thickness".format(b_factor) for b_factor in b_factors]
+        lines = [mlines.Line2D([], [], color=colors[b_factor], marker=".", label=label)
+                 for b_factor, label in zip(b_factors, labels)]
         plt.legend(handles=lines)
 
         # Add field annotation on each axe
