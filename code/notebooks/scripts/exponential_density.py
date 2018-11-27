@@ -77,7 +77,7 @@ grids = {"pole": gridder.regular((89, 90, 0, 1), (10, 10), z=0),
 # ---------------------
 fields = 'potential gz'.split()
 density_bottom, density_top = 3300, 2670
-b_factors = [1, 5, 10, 100]
+b_factors = [1, 2, 5, 10, 30, 100]
 delta_values = np.logspace(-3, 1, 9)
 
 
@@ -102,51 +102,50 @@ plt.show()
 
 # Compute differences
 # -------------------
-compute = True
-if compute:
-    for field in fields:
-        for model in models:
-            top, bottom = model.bounds[4], model.bounds[5]
-            thickness = top - bottom
+for field in fields:
+    for model in models:
+        top, bottom = model.bounds[4], model.bounds[5]
+        thickness = top - bottom
 
-            for b_factor in b_factors:
-                amplitude = (density_bottom - density_top) / \
-                    (np.exp(-bottom * b_factor / thickness) -
-                     np.exp(-top * b_factor / thickness))
-                constant_term = density_bottom - amplitude * \
-                    np.exp(-bottom * b_factor / thickness)
+        for b_factor in b_factors:
+            amplitude = (density_bottom - density_top) / \
+                (np.exp(-bottom * b_factor / thickness) -
+                 np.exp(-top * b_factor / thickness))
+            constant_term = density_bottom - amplitude * \
+                np.exp(-bottom * b_factor / thickness)
 
-                # Define density function
-                def density_exponential(height):
-                    return amplitude*np.exp(-height * b_factor / thickness) + \
-                        constant_term
+            # Define density function
+            def density_exponential(height):
+                return amplitude*np.exp(-height * b_factor / thickness) + constant_term
 
-                # Append density function to every tesseroid of the model
-                model.addprop(
-                    "density",
-                    [density_exponential for i in range(model.size)]
-                )
+            # Append density function to every tesseroid of the model
+            model.addprop(
+                "density",
+                [density_exponential for i in range(model.size)]
+            )
 
-                for grid_name, grid in grids.items():
-                    print("Thickness: {} Field: {} Grid: {} b: {}".format(
-                        int(thickness), field, grid_name, b_factor)
-                        )
-                    lats, lons, heights = grid
-                    analytical = shell_exponential_density(heights[0], top, bottom,
-                                                           amplitude, b_factor,
-                                                           constant_term)
-                    differences = []
-                    for delta in delta_values:
-                        result = getattr(tesseroid, field)(lons, lats, heights, model,
-                                                           delta=delta)
-                        diff = np.abs((result - analytical[field]) / analytical[field])
-                        diff = 100 * np.max(diff)
-                        differences.append(diff)
-                    differences = np.array(differences)
-                    fname = "{}-{}-{}-{}".format(field, grid_name, int(thickness),
+            for grid_name, grid in grids.items():
+                fname = "{}-{}-{}-{}.npz".format(field, grid_name, int(thickness),
                                                  int(b_factor))
-                    np.savez(os.path.join(result_dir, fname),
-                             delta_values=delta_values, differences=differences)
+                if os.path.isfile(os.path.join(result_dir, fname)):
+                    continue
+                print("Thickness: {} Field: {} Grid: {} b: {}".format(
+                    int(thickness), field, grid_name, b_factor)
+                    )
+                lats, lons, heights = grid
+                analytical = shell_exponential_density(heights[0], top, bottom,
+                                                       amplitude, b_factor,
+                                                       constant_term)
+                differences = []
+                for delta in delta_values:
+                    result = getattr(tesseroid, field)(lons, lats, heights, model,
+                                                       delta=delta)
+                    diff = np.abs((result - analytical[field]) / analytical[field])
+                    diff = 100 * np.max(diff)
+                    differences.append(diff)
+                differences = np.array(differences)
+                np.savez(os.path.join(result_dir, fname),
+                         delta_values=delta_values, differences=differences)
 
 
 # Plot Results
