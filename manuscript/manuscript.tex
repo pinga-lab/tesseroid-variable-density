@@ -645,16 +645,16 @@ numerical error lower than 0.1\% of the spherical shell values.
 \caption{
     Description of the computation grids used to characterize the accuracy of the
     numerical integration.
-    All grids consist of a set of $10 \times 10$ points.
+    Grid height is defined above the mean Earth radius.
 }
 \label{tab:grids}
 \begin{tabular}{lccc}
     Name & Grid size & Grid region (degrees) & Grid height (km)
     \\ \hline
-    Pole & $1^\circ \times 1^\circ$ & $0\text{E}/1\text{E}/89\text{N}/90\text{N}$ & 2 \\
-    Equator & $1^\circ \times 1^\circ$ & $0\text{E}/1\text{E}/0\text{N}/1\text{N}$ & 2 \\
-    Satellite & $1^\circ \times 1^\circ$ & $0\text{E}/1\text{E}/89\text{N}/90\text{N}$ & 260 \\
-    Big Grid & $30^\circ \times 30^\circ$ & $0\text{E}/30\text{E}/60\text{N}/90\text{N}$ & 2 \\
+    Pole      & $0.1^\circ \times 0.1^\circ$ & 0E / 1E / 89N / 90N  & 0   \\
+    Equator   & $0.1^\circ \times 0.1^\circ$ & 0E / 1E / 0N  / 1N   & 0   \\
+    Global    & $ 10^\circ \times  10^\circ$ & 0E / 1E / 0N  / 1N   & 0   \\
+    Satellite & $ 10^\circ \times  10^\circ$ & 0E / 1E / 89N / 90N  & 260 \\
 \end{tabular}
 \end{table}
 
