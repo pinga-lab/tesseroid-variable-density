@@ -50,8 +50,8 @@ models = [
 
 # Define computation grids
 # ------------------------
-grids = {"pole": gridder.regular((89, 90, 0, 1), (10, 10), z=0),
-         "equator": gridder.regular((0, 1, 0, 1), (10, 10), z=0),
+grids = {"pole": gridder.regular((89, 90, 0, 1), (11, 11), z=0),
+         "equator": gridder.regular((0, 1, 0, 1), (11, 11), z=0),
          "global": gridder.regular((-90, 90, 0, 360), (19, 13), z=0),
          "260km": gridder.regular((-90, 90, 0, 360), (19, 13), z=260e3),
          }
