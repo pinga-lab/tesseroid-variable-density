@@ -619,6 +619,30 @@ numerical error lower than 0.1\% of the spherical shell values.
 
 \begin{table}
 \caption{
+    Description of the tesseroid models used to build a spherical shell and characterize
+    the accuracy of the numerical integration.
+    The first three columns describe the shapes of the tesseroid models: each one
+    specifies the number of tesseroids on the corresponding dimension (radial,
+    latitudinal, longitudinal).
+    The last two columns specify the latitudinal and longitudinal size of each
+    tesseroid that compose the spherical shell model.
+    For each shape, we define several spherical shell models which the following
+    thicknesses: 100m, 1km, 10km, 100km and 1000km.
+    While the outer radius of every shell is equal to the mean Earth radius
+}
+\label{tab:tess-models}
+\begin{tabular}{cccccc}
+    Radial & Latitudinal & Longitudinal  & Total tesseroids & $L_\phi$ & $L_\lambda$
+    \\ \hline
+    1 & 1  & 2  & 2   & 180$^\circ$ & 180$^\circ$ \\
+    1 & 6  & 12 & 72  &  30$^\circ$ &  30$^\circ$ \\
+    1 & 12 & 24 & 288 &  15$^\circ$ &  15$^\circ$ \\
+    1 & 18 & 36 & 648 &  10$^\circ$ &  10$^\circ$ \\
+\end{tabular}
+\end{table}
+
+\begin{table}
+\caption{
     Description of the computation grids used to characterize the accuracy of the
     numerical integration.
     All grids consist of a set of $10 \times 10$ points.
