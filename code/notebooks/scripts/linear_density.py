@@ -75,8 +75,8 @@ for field in fields:
         model.addprop("density", [density_linear for i in range(model.size)])
 
         for grid_name, grid in grids.items():
-            fname = "{}-{}-{}-{}".format(field, grid_name, int(top - bottom),
-                                         model.size)
+            fname = "{}-{}-{}-{}.npz".format(field, grid_name, int(top - bottom),
+                                             model.size)
             if os.path.isfile(os.path.join(result_dir, fname)):
                 continue
             print("Thickness: {} Model size: {} Field: {} Grid: {}".format(
