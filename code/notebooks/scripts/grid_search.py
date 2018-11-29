@@ -19,22 +19,21 @@ def shell_exponential_density(height, top, bottom, amplitude, b_factor, constant
     .. math :
         \rho(r') = A e^{- b * (r' - R) / T} + C
 
-    Where $r$ is the radial coordinate where the density is going to be evaluated,
+    Where $r'$ is the radial coordinate where the density is going to be evaluated,
     $A$ is the amplitude, $C$ the constant term, $T$ is the thickness of the tesseroid,
     $b$ the b factor and $R$ the mean Earth radius.
     """
     r = height + MEAN_EARTH_RADIUS
     r1 = bottom + MEAN_EARTH_RADIUS
     r2 = top + MEAN_EARTH_RADIUS
-    thickness = r2 - r1
-    potential = 4 * np.pi * G * amplitude * thickness / b_factor / r * \
+    thickness = float(top - bottom)
+    k = b_factor / thickness
+    potential = 4 * np.pi * G * amplitude / k**3 / r * \
         (
-         (r1**2 + 2 * r1 * thickness / b_factor + 2 * (thickness / b_factor)**2) *
-         np.exp(-(r1 - MEAN_EARTH_RADIUS) / thickness * b_factor) -
-         (r2**2 + 2 * r2 * thickness / b_factor + 2 * (thickness / b_factor)**2) *
-         np.exp(-(r2 - MEAN_EARTH_RADIUS) / thickness * b_factor)
+         ((r1 * k)**2 + 2*r1*k + 2) * np.exp(-k * bottom) -
+         ((r2 * k)**2 + 2*r2*k + 2) * np.exp(-k * top)
         ) + \
-        4/3 * np.pi * G * constant_term * (r2**3 - r1**3) / r
+        4 / 3. * np.pi * G * constant_term * (r2**3 - r1**3) / r
     data = {'potential': potential,
             'gx': 0,
             'gy': 0,
@@ -88,9 +87,13 @@ D_values = np.arange(0.5, 4.5, 0.5)
 bottom, top = 0, 1
 thickness = top - bottom
 for b_factor in b_factors:
-    amplitude = (density_bottom - density_top) / \
-        (np.exp(-bottom * b_factor / thickness) - np.exp(-top * b_factor / thickness))
-    constant_term = density_bottom - amplitude * np.exp(-bottom * b_factor / thickness)
+    denominator = np.exp(- bottom * b_factor / thickness) - \
+                  np.exp(- top * b_factor / thickness)
+    amplitude = (density_bottom - density_top) / denominator
+    constant_term = (
+        density_top * np.exp(-bottom * b_factor / thickness) -
+        density_bottom * np.exp(-top * b_factor / thickness)
+        ) / denominator
 
     # Define density function
     def density_exponential(height):
@@ -110,11 +113,13 @@ for field in fields:
         thickness = top - bottom
 
         for b_factor in b_factors:
-            amplitude = (density_bottom - density_top) / \
-                (np.exp(-bottom * b_factor / thickness) -
-                 np.exp(-top * b_factor / thickness))
-            constant_term = density_bottom - amplitude * \
-                np.exp(-bottom * b_factor / thickness)
+            denominator = np.exp(- bottom * b_factor / thickness) - \
+                          np.exp(- top * b_factor / thickness)
+            amplitude = (density_bottom - density_top) / denominator
+            constant_term = (
+                density_top * np.exp(-bottom * b_factor / thickness) -
+                density_bottom * np.exp(-top * b_factor / thickness)
+                ) / denominator
 
             # Define density function
             def density_exponential(height):
