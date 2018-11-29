@@ -60,41 +60,41 @@ grids = {"pole": gridder.regular((89, 90, 0, 1), (11, 11), z=0),
 # Compute differences
 # -------------------
 fields = 'potential gz'.split()
-compute = False
-if compute:
-    D_values = np.arange(0.5, 5.5, 0.5)
-    for field in fields:
-        for model in models:
-            top, bottom = model.bounds[4], model.bounds[5]
-            slope = -(3300 - 2670) / (top - bottom)
-            constant_term = (3300 - 2670) * MEAN_EARTH_RADIUS + 2670
+D_values = np.arange(0.5, 5.5, 0.5)
+for field in fields:
+    for model in models:
+        top, bottom = model.bounds[4], model.bounds[5]
+        slope = -(3300 - 2670) / (top - bottom)
+        constant_term = (3300 - 2670) * MEAN_EARTH_RADIUS + 2670
 
-            # Define density function
-            def density_linear(height):
-                r = height + MEAN_EARTH_RADIUS
-                return slope*r + constant_term
+        # Define density function
+        def density_linear(height):
+            r = height + MEAN_EARTH_RADIUS
+            return slope*r + constant_term
 
-            model.addprop("density", [density_linear for i in range(model.size)])
+        model.addprop("density", [density_linear for i in range(model.size)])
 
-            for grid_name, grid in grids.items():
-                print("Thickness: {} Model size: {} Field: {} Grid: {}".format(
-                    int(top - bottom), model.size, field, grid_name)
-                    )
-                lats, lons, heights = grid
-                analytical = shell_linear_density(heights[0], top, bottom,
-                                                  slope, constant_term)
-                differences = []
-                for D in D_values:
-                    result = getattr(tesseroid, field)(lons, lats, heights, model,
-                                                       ratio=D, delta=None)
-                    diff = np.abs((result - analytical[field]) / analytical[field])
-                    diff = 100 * np.max(diff)
-                    differences.append(diff)
-                differences = np.array(differences)
-                fname = "{}-{}-{}-{}".format(field, grid_name, int(top - bottom),
-                                             model.size)
-                np.savez(os.path.join(result_dir, fname),
-                         D_values=D_values, differences=differences)
+        for grid_name, grid in grids.items():
+            fname = "{}-{}-{}-{}".format(field, grid_name, int(top - bottom),
+                                         model.size)
+            if os.path.isfile(os.path.join(result_dir, fname)):
+                continue
+            print("Thickness: {} Model size: {} Field: {} Grid: {}".format(
+                int(top - bottom), model.size, field, grid_name)
+                )
+            lats, lons, heights = grid
+            analytical = shell_linear_density(heights[0], top, bottom,
+                                              slope, constant_term)
+            differences = []
+            for D in D_values:
+                result = getattr(tesseroid, field)(lons, lats, heights, model,
+                                                   ratio=D, delta=None)
+                diff = np.abs((result - analytical[field]) / analytical[field])
+                diff = 100 * np.max(diff)
+                differences.append(diff)
+            differences = np.array(differences)
+            np.savez(os.path.join(result_dir, fname),
+                     D_values=D_values, differences=differences)
 
 
 # Plot Results
