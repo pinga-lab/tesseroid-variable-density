@@ -81,29 +81,6 @@ b_factors = [1, 2, 5, 10, 30, 100]
 delta_values = np.logspace(-3, 1, 9)
 
 
-# Plot Densities
-# --------------
-bottom, top = 0, 1
-thickness = top - bottom
-for b_factor in b_factors:
-    denominator = np.exp(- bottom * b_factor / thickness) - \
-                  np.exp(- top * b_factor / thickness)
-    amplitude = (density_bottom - density_top) / denominator
-    constant_term = (
-        density_top * np.exp(-bottom * b_factor / thickness) -
-        density_bottom * np.exp(-top * b_factor / thickness)
-        ) / denominator
-
-    # Define density function
-    def density_exponential(height):
-        return amplitude*np.exp(-height * b_factor / thickness) + constant_term
-
-    heights = np.linspace(bottom, top, 101)
-    plt.plot(heights, density_exponential(heights), label="b={}".format(b_factor))
-plt.legend()
-plt.show()
-
-
 # Compute differences
 # -------------------
 for field in fields:
@@ -154,42 +131,77 @@ for field in fields:
                          delta_values=delta_values, differences=differences)
 
 
+# Plot Densities
+# --------------
+bottom, top = 0, 1
+thickness = top - bottom
+colors = dict(zip(b_factors, plt.cm.viridis(np.linspace(0, 0.9, len(b_factors)))))
+for b_factor in b_factors:
+    denominator = np.exp(- bottom * b_factor / thickness) - \
+                  np.exp(- top * b_factor / thickness)
+    amplitude = (density_bottom - density_top) / denominator
+    constant_term = (
+        density_top * np.exp(-bottom * b_factor / thickness) -
+        density_bottom * np.exp(-top * b_factor / thickness)
+        ) / denominator
+
+    # Define density function
+    def density_exponential(height):
+        return amplitude*np.exp(-height * b_factor / thickness) + constant_term
+
+    heights = np.linspace(bottom, top, 101)
+    plt.plot(heights, density_exponential(heights), color=colors[b_factor],
+             label="b={}".format(b_factor))
+plt.ylabel(r"Density [kg/m$^3$]")
+plt.xticks([bottom, top], ["Inner Radius", "Outer Radius"])
+plt.legend()
+plt.show()
+
+
 # Plot Results
 # ------------
-titles = '$V$ $g_z$'.split()
+field_titles = dict(zip(fields, '$V$ $g_z$'.split()))
+grid_titles = {"pole": "Pole",
+               "equator": "Equator",
+               "global": "Global",
+               "260km": "Satellite"}
 colors = dict(zip(b_factors, plt.cm.viridis(np.linspace(0, 0.9, len(b_factors)))))
-markers = dict(zip(thicknesses, ["o-", "^-", "s-", "D-"]))
 
 for grid_name in grids:
 
     fig, axes = plt.subplots(nrows=len(fields), ncols=1, sharex=True)
     fig.set_size_inches((5, 5))
     fig.subplots_adjust(hspace=0)
+    grid_title = grid_titles[grid_name]
 
-    for ax, field, title in zip(axes, fields, titles):
-        for model in models:
-            thickness = model.bounds[4] - model.bounds[5]
-            for b_factor in b_factors:
-                color = colors[b_factor]
+    for ax, field in zip(axes, fields):
+        field_title = field_titles[field]
+        for b_factor in b_factors:
+            differences_per_b = []
+            color = colors[b_factor]
+            for model in models:
+                thickness = model.bounds[4] - model.bounds[5]
                 fname = "{}-{}-{}-{}.npz".format(field, grid_name, int(thickness),
                                                  int(b_factor))
                 diff_file = np.load(os.path.join(result_dir, fname))
                 delta_values = diff_file["delta_values"]
                 differences = diff_file["differences"]
-                ax.plot(delta_values, differences, color=color, marker=".",
-                        linewidth=1, markersize=5)
+                differences_per_b.append(differences)
+            differences_per_b = np.array(differences_per_b)
+            differences_per_b = np.max(differences_per_b, axis=0)
+            ax.plot(delta_values, differences_per_b, "-o", color=color)
 
         # Add threshold line
-        # ax.plot([0.1, 1], [1e-1, 1e-1], '--', color='k', linewidth=0.5)
+        ax.plot([1e-3, 1e1], [1e-1, 1e-1], '--', color='k', linewidth=0.5)
 
         # Legend creation
-        labels = ["b = {} thickness".format(b_factor) for b_factor in b_factors]
+        labels = ["b={}".format(b_factor) for b_factor in b_factors]
         lines = [mlines.Line2D([], [], color=colors[b_factor], marker=".", label=label)
                  for b_factor, label in zip(b_factors, labels)]
         plt.legend(handles=lines)
 
         # Add field annotation on each axe
-        ax.text(0.5, 0.87, title, fontsize=11,
+        ax.text(0.5, 0.87, field_title, fontsize=11,
                 horizontalalignment='center',
                 verticalalignment='center',
                 bbox={'facecolor': 'w',
@@ -207,8 +219,8 @@ for grid_name in grids:
         ax.set_axisbelow(True)
     ax = axes[-1]
     ax.set_xlabel(r"$\delta$")
-    # ax.set_xlim(0, 5.5)
+    ax.set_xlim(1e-3, 1e1)
     # ax.set_xticks(np.arange(0, 6, 1))
     ax.legend()
-    axes[0].set_title(grid_name)
+    axes[0].set_title(grid_title)
     plt.show()
