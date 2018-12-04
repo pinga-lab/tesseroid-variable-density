@@ -57,7 +57,7 @@ if not os.path.isdir(result_dir):
 
 # Define Tesseroids models
 # ------------------------
-thicknesses = [1e3]
+thicknesses = [100, 1e3, 1e4, 1e5, 1e6]
 shape = (1, 6, 12)
 models = [
     TesseroidMesh((0, 360, -90, 90, 0, -thickness), shape)
@@ -87,6 +87,7 @@ D_values = np.arange(0.5, 4.5, 0.5)
 # --------------
 bottom, top = 0, 1
 thickness = top - bottom
+colors = dict(zip(b_factors, plt.cm.viridis(np.linspace(0, 0.9, len(b_factors)))))
 for b_factor in b_factors:
     denominator = np.exp(- bottom * b_factor / thickness) - \
                   np.exp(- top * b_factor / thickness)
@@ -101,7 +102,10 @@ for b_factor in b_factors:
         return amplitude*np.exp(-height * b_factor / thickness) + constant_term
 
     heights = np.linspace(bottom, top, 101)
-    plt.plot(heights, density_exponential(heights), label="b={}".format(b_factor))
+    plt.plot(heights, density_exponential(heights), color=colors[b_factor],
+             label="b={}".format(b_factor))
+plt.ylabel(r"Density [kg/m$^3$]")
+plt.xticks([bottom, top], ["Inner Radius", "Outer Radius"])
 plt.legend()
 plt.show()
 
@@ -162,35 +166,36 @@ for field in fields:
 
 # Plot Results
 # ------------
-for grid_name in grids.keys():
-    for model in models:
-        top, bottom = model.bounds[4], model.bounds[5]
-        thickness = top - bottom
-        for b_factor in b_factors:
+fig, axes = plt.subplots(2, 1, sharex=True)
+for field, ax in zip(fields, axes):
+    total_differences = []
 
-            fig, axes = plt.subplots(2, 1, sharex=True)
-
-            for field, ax in zip(fields, axes):
+    for grid_name in grids.keys():
+        for model in models:
+            top, bottom = model.bounds[4], model.bounds[5]
+            thickness = top - bottom
+            for b_factor in b_factors:
                 fname = "{}-{}-{}-{}.npz".format(field, grid_name, int(thickness),
                                                  int(b_factor))
                 data = np.load(os.path.join(result_dir, fname))
                 D_grid, delta_grid = data["D_grid"], data["delta_grid"]
                 differences = data["differences"]
+                total_differences.append(differences)
 
-                # Plot bigger points if error <= 1e-1
-                size = 50
-                sizes = size * np.ones_like(differences)
-                sizes[differences <= 1e-1] *= 2.5
-                cm = ax.scatter(D_grid.ravel(), delta_grid.ravel(),
-                                c=differences.ravel(), s=sizes,
-                                norm=matplotlib.colors.LogNorm())
+    total_differences = np.array(total_differences)
+    total_differences = np.max(total_differences, axis=0)
 
-                plt.colorbar(cm, label="Differences (%)", ax=ax)
-                ax.set_yscale('log')
-                ax.set_ylim(1e-4, 1e2)
-                ax.set_aspect(6)
+    # Plot bigger points if error <= 1e-1
+    size = 50
+    sizes = size * np.ones_like(total_differences)
+    sizes[total_differences <= 1e-1] *= 3
+    cm = ax.scatter(D_grid.ravel(), delta_grid.ravel(),
+                    c=total_differences.ravel(), s=sizes,
+                    norm=matplotlib.colors.LogNorm())
 
-            plt.suptitle(
-                "Grid: {}, b={}, thickness={}m".format(grid_name, b_factor, thickness)
-            )
-            plt.show()
+    plt.colorbar(cm, label="Differences (%)", ax=ax)
+    ax.set_yscale('log')
+    ax.set_ylim(1e-4, 1e2)
+    ax.set_aspect(6)
+
+plt.show()
