@@ -49,7 +49,8 @@ def shell_exponential_density(height, top, bottom, amplitude, b_factor, constant
 
 # Create results dir if it does not exist
 # ---------------------------------------
-result_dir = 'results/grid-search'
+script_path = os.path.dirname(os.path.abspath(__file__))
+result_dir = os.path.join(script_path, 'results/grid-search')
 if not os.path.isdir(result_dir):
     os.makedirs(result_dir)
 

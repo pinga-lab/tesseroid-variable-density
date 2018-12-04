@@ -32,7 +32,8 @@ def shell_linear_density(height, top, bottom, slope, constant_term):
 
 # Create results dir if it does not exist
 # ---------------------------------------
-result_dir = 'results/linear'
+script_path = os.path.dirname(os.path.abspath(__file__))
+result_dir = os.path.join(script_path, 'results/linear')
 if not os.path.isdir(result_dir):
     os.makedirs(result_dir)
 
