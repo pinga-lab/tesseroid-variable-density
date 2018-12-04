@@ -53,7 +53,7 @@ cdef rediscretizer(
         double[::1] coslatc =  numpy.empty(2, numpy.float)
         double[::1] rc =  numpy.empty(2, numpy.float)
         double scale
-        int nlon, nlat, nr, new_cells
+        int nlon, nlat, new_cells
         int stktop, error, error_code
         double[:, ::1] stack =  numpy.empty((STACK_SIZE, 6), numpy.float)
         double w, e, s, n, top, bottom
@@ -82,14 +82,12 @@ cdef rediscretizer(
             distance = distance_n_size(w, e, s, n, top, bottom, lon, sinlat,
                                        coslat, radius, &Llon, &Llat, &Lr)
             # Check which dimensions I have to divide
-            error = divisions(distance, Llon, Llat, Lr, ratio, &nlon,
-                              &nlat, &nr, &new_cells)
+            error = divisions(distance, Llon, Llat, Lr, ratio, &nlon, &nlat, &new_cells)
             error_code += error
             if new_cells > 1:
-                if stktop + nlon*nlat*nr > STACK_SIZE:
+                if stktop + nlon*nlat > STACK_SIZE:
                     raise ValueError('Tesseroid stack overflow')
-                stktop = split(w, e, s, n, top, bottom, nlon, nlat, nr,
-                               stack, stktop)
+                stktop = split(w, e, s, n, top, bottom, nlon, nlat, stack, stktop)
             else:
                 # Put the nodes in the current range
                 scale = scale_nodes(w, e, s, n, top, bottom, lonc, sinlatc,
@@ -129,12 +127,10 @@ cdef inline double distance_n_size(
 @cython.wraparound(False)
 @cython.cdivision(True)
 cdef inline int divisions(double distance, double Llon, double Llat, double Lr,
-                          double ratio, int* nlon, int* nlat, int* nr,
-                          int* new_cells):
+                          double ratio, int* nlon, int* nlat, int* new_cells):
     "How many divisions should be made per dimension"
     nlon[0] = 1
     nlat[0] = 1
-    nr[0] = 1
     error = 0
     if distance <= ratio*Llon:
         if Llon <= 0.1:  # in meters. ~1e-6  degrees
@@ -146,12 +142,7 @@ cdef inline int divisions(double distance, double Llon, double Llat, double Lr,
             error = -1
         else:
             nlat[0] = 2
-    if distance <= ratio*Lr:
-        if Lr <= 1e-3:
-            error = -1
-        else:
-            nr[0] = 2
-    new_cells[0] = nlon[0]*nlat[0]*nr[0]
+    new_cells[0] = nlon[0]*nlat[0]
     return error
 
 
@@ -188,25 +179,22 @@ cdef inline double scale_nodes(
 @cython.boundscheck(False)
 @cython.wraparound(False)
 @cython.cdivision(True)
-cdef int split(double w, double e, double s, double n, double top,
-               double bottom, int nlon, int nlat, int nr,
-               double[:, ::1] stack, int stktop):
+cdef int split(double w, double e, double s, double n, double top, double bottom,
+               int nlon, int nlat, double[:, ::1] stack, int stktop):
     cdef:
-        unsigned int i, j, k
-        double dlon, dlat, dr
+        unsigned int i, j
+        double dlon, dlat
     dlon = (e - w)/nlon
     dlat = (n - s)/nlat
-    dr = (top - bottom)/nr
     for i in xrange(nlon):
         for j in xrange(nlat):
-            for k in xrange(nr):
-                stktop += 1
-                stack[stktop, 0] = w + i*dlon
-                stack[stktop, 1] = w + (i + 1)*dlon
-                stack[stktop, 2] = s + j*dlat
-                stack[stktop, 3] = s + (j + 1)*dlat
-                stack[stktop, 4] = bottom + (k + 1)*dr
-                stack[stktop, 5] = bottom + k*dr
+            stktop += 1
+            stack[stktop, 0] = w + i*dlon
+            stack[stktop, 1] = w + (i + 1)*dlon
+            stack[stktop, 2] = s + j*dlat
+            stack[stktop, 3] = s + (j + 1)*dlat
+            stack[stktop, 4] = top
+            stack[stktop, 5] = bottom
     return stktop
 
 
@@ -529,489 +517,4 @@ cdef inline double kernelz_variable(
     # Multiply by -1 so that z is pointing down for gz and the gravity anomaly
     # doesn't look inverted (ie, negative for positive density)
     result *= -1
-    return result*scale
-
-
-@cython.boundscheck(False)
-@cython.wraparound(False)
-@cython.cdivision(True)
-def gxx(
-    numpy.ndarray[double, ndim=1] bounds,
-    object density,
-    double ratio,
-    int STACK_SIZE,
-    numpy.ndarray[double, ndim=1] lons,
-    numpy.ndarray[double, ndim=1] sinlats,
-    numpy.ndarray[double, ndim=1] coslats,
-    numpy.ndarray[double, ndim=1] radii,
-    numpy.ndarray[double, ndim=1] result):
-    """
-    Calculate this gravity field of a tesseroid at given locations.
-    """
-    cdef int error
-    if callable(density):
-        error = rediscretizer(bounds, density, ratio, STACK_SIZE, lons,
-                              sinlats, coslats, radii, result,
-                              kernelxx_variable)
-    else:
-        error = rediscretizer(bounds, density, ratio, STACK_SIZE, lons,
-                              sinlats, coslats, radii, result, kernelxx)
-    return error
-
-
-@cython.boundscheck(False)
-@cython.wraparound(False)
-@cython.cdivision(True)
-cdef inline double kernelxx(
-    double lon, double sinlat, double coslat, double radius, double scale,
-    object density, double[::1] lonc, double[::1] sinlatc, double[::1] coslatc,
-    double[::1] rc):
-    cdef:
-        unsigned int i, j, k
-        double kappa, r_sqr, coslon, l_sqr, cospsi, kphi
-        double result, rc_sqr
-    r_sqr = radius**2
-    result = 0
-    for i in range(2):
-        coslon = cos(lon - lonc[i])
-        for j in range(2):
-            kphi = coslat*sinlatc[j] - sinlat*coslatc[j]*coslon
-            cospsi = sinlat*sinlatc[j] + coslat*coslatc[j]*coslon
-            for k in range(2):
-                rc_sqr = rc[k]**2
-                l_sqr = r_sqr + rc_sqr - 2*radius*rc[k]*cospsi
-                kappa = rc_sqr*coslatc[j]
-                result += kappa*(3*((rc[k]*kphi)**2) - l_sqr)/(l_sqr**2.5)
-    return result*scale*density
-
-
-@cython.boundscheck(False)
-@cython.wraparound(False)
-@cython.cdivision(True)
-cdef inline double kernelxx_variable(
-    double lon, double sinlat, double coslat, double radius, double scale,
-    object density, double[::1] lonc, double[::1] sinlatc, double[::1] coslatc,
-    double[::1] rc):
-    cdef:
-        unsigned int i, j, k
-        double kappa, r_sqr, coslon, l_sqr, cospsi, kphi
-        double result, rc_sqr, dens
-    r_sqr = radius**2
-    result = 0
-    for i in range(2):
-        coslon = cos(lon - lonc[i])
-        for j in range(2):
-            kphi = coslat*sinlatc[j] - sinlat*coslatc[j]*coslon
-            cospsi = sinlat*sinlatc[j] + coslat*coslatc[j]*coslon
-            for k in range(2):
-                rc_sqr = rc[k]**2
-                l_sqr = r_sqr + rc_sqr - 2*radius*rc[k]*cospsi
-                kappa = rc_sqr*coslatc[j]
-                dens = density(rc[k] - MEAN_EARTH_RADIUS)
-                result += dens*kappa*(3*((rc[k]*kphi)**2) - l_sqr)/(l_sqr**2.5)
-    return result*scale
-
-
-@cython.boundscheck(False)
-@cython.wraparound(False)
-@cython.cdivision(True)
-def gxy(
-    numpy.ndarray[double, ndim=1] bounds,
-    object density,
-    double ratio,
-    int STACK_SIZE,
-    numpy.ndarray[double, ndim=1] lons,
-    numpy.ndarray[double, ndim=1] sinlats,
-    numpy.ndarray[double, ndim=1] coslats,
-    numpy.ndarray[double, ndim=1] radii,
-    numpy.ndarray[double, ndim=1] result):
-    """
-    Calculate this gravity field of a tesseroid at given locations.
-    """
-    cdef int error
-    if callable(density):
-        error = rediscretizer(bounds, density, ratio, STACK_SIZE, lons,
-                              sinlats, coslats, radii, result,
-                              kernelxy_variable)
-    else:
-        error = rediscretizer(bounds, density, ratio, STACK_SIZE, lons,
-                              sinlats, coslats, radii, result, kernelxy)
-    return error
-
-
-@cython.boundscheck(False)
-@cython.wraparound(False)
-@cython.cdivision(True)
-cdef inline double kernelxy(
-    double lon, double sinlat, double coslat, double radius, double scale,
-    object density, double[::1] lonc, double[::1] sinlatc, double[::1] coslatc,
-    double[::1] rc):
-    cdef:
-        unsigned int i, j, k
-        double kappa, r_sqr, rc_sqr, coslon, sinlon, l_sqr, cospsi, kphi
-        double result
-    r_sqr = radius**2
-    result = 0
-    for i in range(2):
-        sincos(lonc[i] - lon, &sinlon, &coslon)
-        for j in range(2):
-            kphi = coslat*sinlatc[j] - sinlat*coslatc[j]*coslon
-            cospsi = sinlat*sinlatc[j] + coslat*coslatc[j]*coslon
-            for k in range(2):
-                rc_sqr = rc[k]**2
-                l_sqr = r_sqr + rc_sqr - 2*radius*rc[k]*cospsi
-                kappa = rc_sqr*coslatc[j]
-                result += kappa*3*rc_sqr*kphi*coslatc[j]*sinlon/(l_sqr**2.5)
-    return result*scale*density
-
-
-@cython.boundscheck(False)
-@cython.wraparound(False)
-@cython.cdivision(True)
-cdef inline double kernelxy_variable(
-    double lon, double sinlat, double coslat, double radius, double scale,
-    object density, double[::1] lonc, double[::1] sinlatc, double[::1] coslatc,
-    double[::1] rc):
-    cdef:
-        unsigned int i, j, k
-        double kappa, r_sqr, rc_sqr, coslon, sinlon, l_sqr, cospsi, kphi
-        double result, dens
-    r_sqr = radius**2
-    result = 0
-    for i in range(2):
-        sincos(lonc[i] - lon, &sinlon, &coslon)
-        for j in range(2):
-            kphi = coslat*sinlatc[j] - sinlat*coslatc[j]*coslon
-            cospsi = sinlat*sinlatc[j] + coslat*coslatc[j]*coslon
-            for k in range(2):
-                rc_sqr = rc[k]**2
-                l_sqr = r_sqr + rc_sqr - 2*radius*rc[k]*cospsi
-                kappa = rc_sqr*coslatc[j]
-                dens = density(rc[k] - MEAN_EARTH_RADIUS)
-                result += dens*kappa * \
-                    3*rc_sqr*kphi*coslatc[j]*sinlon/(l_sqr**2.5)
-    return result*scale
-
-
-@cython.boundscheck(False)
-@cython.wraparound(False)
-@cython.cdivision(True)
-def gxz(
-    numpy.ndarray[double, ndim=1] bounds,
-    object density,
-    double ratio,
-    int STACK_SIZE,
-    numpy.ndarray[double, ndim=1] lons,
-    numpy.ndarray[double, ndim=1] sinlats,
-    numpy.ndarray[double, ndim=1] coslats,
-    numpy.ndarray[double, ndim=1] radii,
-    numpy.ndarray[double, ndim=1] result):
-    """
-    Calculate this gravity field of a tesseroid at given locations.
-    """
-    cdef int error
-    if callable(density):
-        error = rediscretizer(bounds, density, ratio, STACK_SIZE, lons,
-                              sinlats, coslats, radii, result,
-                              kernelxz_variable)
-    else:
-        error = rediscretizer(bounds, density, ratio, STACK_SIZE, lons,
-                              sinlats, coslats, radii, result, kernelxz)
-    return error
-
-
-@cython.boundscheck(False)
-@cython.wraparound(False)
-@cython.cdivision(True)
-cdef inline double kernelxz(
-    double lon, double sinlat, double coslat, double radius, double scale,
-    object density, double[::1] lonc, double[::1] sinlatc, double[::1] coslatc,
-    double[::1] rc):
-    cdef:
-        unsigned int i, j, k
-        double kappa, r_sqr, rc_sqr, coslon, l_5, cospsi, kphi
-        double result
-    r_sqr = radius**2
-    result = 0
-    for i in range(2):
-        coslon = cos(lon - lonc[i])
-        for j in range(2):
-            kphi = coslat*sinlatc[j] - sinlat*coslatc[j]*coslon
-            cospsi = sinlat*sinlatc[j] + coslat*coslatc[j]*coslon
-            for k in range(2):
-                rc_sqr = rc[k]**2
-                l_5 = (r_sqr + rc_sqr - 2*radius*rc[k]*cospsi)**2.5
-                kappa = rc_sqr*coslatc[j]
-                result += kappa*3*rc[k]*kphi*(rc[k]*cospsi - radius)/l_5
-    return result*scale*density
-
-
-@cython.boundscheck(False)
-@cython.wraparound(False)
-@cython.cdivision(True)
-cdef inline double kernelxz_variable(
-    double lon, double sinlat, double coslat, double radius, double scale,
-    object density, double[::1] lonc, double[::1] sinlatc, double[::1] coslatc,
-    double[::1] rc):
-    cdef:
-        unsigned int i, j, k
-        double kappa, r_sqr, rc_sqr, coslon, l_5, cospsi, kphi
-        double result, dens
-    r_sqr = radius**2
-    result = 0
-    for i in range(2):
-        coslon = cos(lon - lonc[i])
-        for j in range(2):
-            kphi = coslat*sinlatc[j] - sinlat*coslatc[j]*coslon
-            cospsi = sinlat*sinlatc[j] + coslat*coslatc[j]*coslon
-            for k in range(2):
-                rc_sqr = rc[k]**2
-                l_5 = (r_sqr + rc_sqr - 2*radius*rc[k]*cospsi)**2.5
-                kappa = rc_sqr*coslatc[j]
-                dens = density(rc[k] - MEAN_EARTH_RADIUS)
-                result += dens*kappa*3*rc[k]*kphi*(rc[k]*cospsi - radius)/l_5
-    return result*scale
-
-
-@cython.boundscheck(False)
-@cython.wraparound(False)
-@cython.cdivision(True)
-def gyy(
-    numpy.ndarray[double, ndim=1] bounds,
-    object density,
-    double ratio,
-    int STACK_SIZE,
-    numpy.ndarray[double, ndim=1] lons,
-    numpy.ndarray[double, ndim=1] sinlats,
-    numpy.ndarray[double, ndim=1] coslats,
-    numpy.ndarray[double, ndim=1] radii,
-    numpy.ndarray[double, ndim=1] result):
-    """
-    Calculate this gravity field of a tesseroid at given locations.
-    """
-    cdef int error
-    if callable(density):
-        error = rediscretizer(bounds, density, ratio, STACK_SIZE, lons,
-                              sinlats, coslats, radii, result,
-                              kernelyy_variable)
-    else:
-        error = rediscretizer(bounds, density, ratio, STACK_SIZE, lons,
-                              sinlats, coslats, radii, result, kernelyy)
-    return error
-
-
-@cython.boundscheck(False)
-@cython.wraparound(False)
-@cython.cdivision(True)
-cdef inline double kernelyy(
-    double lon, double sinlat, double coslat, double radius, double scale,
-    object density, double[::1] lonc, double[::1] sinlatc, double[::1] coslatc,
-    double[::1] rc):
-    cdef:
-        unsigned int i, j, k
-        double kappa, r_sqr, rc_sqr, coslon, sinlon, l_sqr, cospsi, deltay
-        double result
-    r_sqr = radius**2
-    result = 0
-    for i in range(2):
-        sincos(lonc[i] - lon, &sinlon, &coslon)
-        for j in range(2):
-            cospsi = sinlat*sinlatc[j] + coslat*coslatc[j]*coslon
-            for k in range(2):
-                rc_sqr = rc[k]**2
-                l_sqr = r_sqr + rc_sqr - 2*radius*rc[k]*cospsi
-                kappa = rc_sqr*coslatc[j]
-                deltay = rc[k]*coslatc[j]*sinlon
-                result += kappa*(3*(deltay**2) - l_sqr)/(l_sqr**2.5)
-    return result*scale*density
-
-
-@cython.boundscheck(False)
-@cython.wraparound(False)
-@cython.cdivision(True)
-cdef inline double kernelyy_variable(
-    double lon, double sinlat, double coslat, double radius, double scale,
-    object density, double[::1] lonc, double[::1] sinlatc, double[::1] coslatc,
-    double[::1] rc):
-    cdef:
-        unsigned int i, j, k
-        double kappa, r_sqr, rc_sqr, coslon, sinlon, l_sqr, cospsi, deltay
-        double result, dens
-    r_sqr = radius**2
-    result = 0
-    for i in range(2):
-        sincos(lonc[i] - lon, &sinlon, &coslon)
-        for j in range(2):
-            cospsi = sinlat*sinlatc[j] + coslat*coslatc[j]*coslon
-            for k in range(2):
-                rc_sqr = rc[k]**2
-                l_sqr = r_sqr + rc_sqr - 2*radius*rc[k]*cospsi
-                kappa = rc_sqr*coslatc[j]
-                deltay = rc[k]*coslatc[j]*sinlon
-                dens = density(rc[k] - MEAN_EARTH_RADIUS)
-                result += dens*kappa*(3*(deltay**2) - l_sqr)/(l_sqr**2.5)
-    return result*scale
-
-
-@cython.boundscheck(False)
-@cython.wraparound(False)
-@cython.cdivision(True)
-def gyz(
-    numpy.ndarray[double, ndim=1] bounds,
-    object density,
-    double ratio,
-    int STACK_SIZE,
-    numpy.ndarray[double, ndim=1] lons,
-    numpy.ndarray[double, ndim=1] sinlats,
-    numpy.ndarray[double, ndim=1] coslats,
-    numpy.ndarray[double, ndim=1] radii,
-    numpy.ndarray[double, ndim=1] result):
-    """
-    Calculate this gravity field of a tesseroid at given locations.
-    """
-    cdef int error
-    if callable(density):
-        error = rediscretizer(bounds, density, ratio, STACK_SIZE, lons,
-                              sinlats, coslats, radii, result,
-                              kernelyz_variable)
-    else:
-        error = rediscretizer(bounds, density, ratio, STACK_SIZE, lons,
-                              sinlats, coslats, radii, result, kernelyz)
-    return error
-
-
-@cython.boundscheck(False)
-@cython.wraparound(False)
-@cython.cdivision(True)
-cdef inline double kernelyz(
-    double lon, double sinlat, double coslat, double radius, double scale,
-    object density, double[::1] lonc, double[::1] sinlatc, double[::1] coslatc,
-    double[::1] rc):
-    cdef:
-        unsigned int i, j, k
-        double kappa, r_sqr, rc_sqr, coslon, sinlon, l_sqr, cospsi, deltay
-        double deltaz, result
-    r_sqr = radius**2
-    result = 0
-    for i in range(2):
-        sincos(lonc[i] - lon, &sinlon, &coslon)
-        for j in range(2):
-            cospsi = sinlat*sinlatc[j] + coslat*coslatc[j]*coslon
-            for k in range(2):
-                rc_sqr = rc[k]**2
-                l_sqr = r_sqr + rc_sqr - 2*radius*rc[k]*cospsi
-                kappa = rc_sqr*coslatc[j]
-                deltay = rc[k]*coslatc[j]*sinlon
-                deltaz = rc[k]*cospsi - radius
-                result += kappa*3.*deltay*deltaz/(l_sqr**2.5)
-    return result*scale*density
-
-
-@cython.boundscheck(False)
-@cython.wraparound(False)
-@cython.cdivision(True)
-cdef inline double kernelyz_variable(
-    double lon, double sinlat, double coslat, double radius, double scale,
-    object density, double[::1] lonc, double[::1] sinlatc, double[::1] coslatc,
-    double[::1] rc):
-    cdef:
-        unsigned int i, j, k
-        double kappa, r_sqr, rc_sqr, coslon, sinlon, l_sqr, cospsi, deltay
-        double deltaz, result, dens
-    r_sqr = radius**2
-    result = 0
-    for i in range(2):
-        sincos(lonc[i] - lon, &sinlon, &coslon)
-        for j in range(2):
-            cospsi = sinlat*sinlatc[j] + coslat*coslatc[j]*coslon
-            for k in range(2):
-                rc_sqr = rc[k]**2
-                l_sqr = r_sqr + rc_sqr - 2*radius*rc[k]*cospsi
-                kappa = rc_sqr*coslatc[j]
-                deltay = rc[k]*coslatc[j]*sinlon
-                deltaz = rc[k]*cospsi - radius
-                dens = density(rc[k] - MEAN_EARTH_RADIUS)
-                result += dens*kappa*3.*deltay*deltaz/(l_sqr**2.5)
-    return result*scale
-
-
-@cython.boundscheck(False)
-@cython.wraparound(False)
-@cython.cdivision(True)
-def gzz(
-    numpy.ndarray[double, ndim=1] bounds,
-    object density,
-    double ratio,
-    int STACK_SIZE,
-    numpy.ndarray[double, ndim=1] lons,
-    numpy.ndarray[double, ndim=1] sinlats,
-    numpy.ndarray[double, ndim=1] coslats,
-    numpy.ndarray[double, ndim=1] radii,
-    numpy.ndarray[double, ndim=1] result):
-    """
-    Calculate this gravity field of a tesseroid at given locations.
-    """
-    cdef int error
-    if callable(density):
-        error = rediscretizer(bounds, density, ratio, STACK_SIZE, lons,
-                              sinlats, coslats, radii, result,
-                              kernelzz_variable)
-    else:
-        error = rediscretizer(bounds, density, ratio, STACK_SIZE, lons,
-                              sinlats, coslats, radii, result, kernelzz)
-    return error
-
-
-@cython.boundscheck(False)
-@cython.wraparound(False)
-@cython.cdivision(True)
-cdef inline double kernelzz(
-    double lon, double sinlat, double coslat, double radius, double scale,
-    object density, double[::1] lonc, double[::1] sinlatc, double[::1] coslatc,
-    double[::1] rc):
-    cdef:
-        unsigned int i, j, k
-        double kappa, r_sqr, coslon, rc_sqr, l_sqr, l_5, cospsi, deltaz
-        double result
-    r_sqr = radius**2
-    result = 0
-    for i in range(2):
-        coslon = cos(lon - lonc[i])
-        for j in range(2):
-            cospsi = sinlat*sinlatc[j] + coslat*coslatc[j]*coslon
-            for k in range(2):
-                rc_sqr = rc[k]**2
-                l_sqr = r_sqr + rc_sqr - 2*radius*rc[k]*cospsi
-                l_5 = l_sqr**2.5
-                kappa = rc_sqr*coslatc[j]
-                deltaz = rc[k]*cospsi - radius
-                result += kappa*(3*deltaz**2 - l_sqr)/l_5
-    return result*scale*density
-
-
-@cython.boundscheck(False)
-@cython.wraparound(False)
-@cython.cdivision(True)
-cdef inline double kernelzz_variable(
-    double lon, double sinlat, double coslat, double radius, double scale,
-    object density, double[::1] lonc, double[::1] sinlatc, double[::1] coslatc,
-    double[::1] rc):
-    cdef:
-        unsigned int i, j, k
-        double kappa, r_sqr, coslon, rc_sqr, l_sqr, l_5, cospsi, deltaz
-        double result, dens
-    r_sqr = radius**2
-    result = 0
-    for i in range(2):
-        coslon = cos(lon - lonc[i])
-        for j in range(2):
-            cospsi = sinlat*sinlatc[j] + coslat*coslatc[j]*coslon
-            for k in range(2):
-                rc_sqr = rc[k]**2
-                l_sqr = r_sqr + rc_sqr - 2*radius*rc[k]*cospsi
-                l_5 = l_sqr**2.5
-                kappa = rc_sqr*coslatc[j]
-                deltaz = rc[k]*cospsi - radius
-                dens = density(rc[k] - MEAN_EARTH_RADIUS)
-                result += dens*kappa*(3*deltaz**2 - l_sqr)/l_5
     return result*scale
