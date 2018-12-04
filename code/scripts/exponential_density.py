@@ -5,7 +5,6 @@ from fatiando.constants import G, MEAN_EARTH_RADIUS, SI2MGAL, SI2EOTVOS
 from fatiando.mesher import TesseroidMesh
 from fatiando import gridder
 import matplotlib.pyplot as plt
-import matplotlib.lines as mlines
 # This is our custom tesseroid code
 from tesseroid_density import tesseroid
 
@@ -189,16 +188,11 @@ for grid_name in grids:
                 differences_per_b.append(differences)
             differences_per_b = np.array(differences_per_b)
             differences_per_b = np.max(differences_per_b, axis=0)
-            ax.plot(delta_values, differences_per_b, "-o", color=color)
+            label = "b={}".format(b_factor)
+            ax.plot(delta_values, differences_per_b, "-o", color=color, label=label)
 
         # Add threshold line
         ax.plot([1e-3, 1e1], [1e-1, 1e-1], '--', color='k', linewidth=0.5)
-
-        # Legend creation
-        labels = ["b={}".format(b_factor) for b_factor in b_factors]
-        lines = [mlines.Line2D([], [], color=colors[b_factor], marker=".", label=label)
-                 for b_factor, label in zip(b_factors, labels)]
-        plt.legend(handles=lines)
 
         # Add field annotation on each axe
         ax.text(0.5, 0.87, field_title, fontsize=11,
