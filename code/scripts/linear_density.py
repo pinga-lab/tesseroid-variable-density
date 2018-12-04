@@ -5,7 +5,6 @@ from fatiando.constants import G, MEAN_EARTH_RADIUS, SI2MGAL, SI2EOTVOS
 from fatiando.mesher import TesseroidMesh
 from fatiando import gridder
 import matplotlib.pyplot as plt
-import matplotlib.lines as mlines
 # This is our custom tesseroid code
 from tesseroid_density import tesseroid
 
@@ -100,41 +99,47 @@ for field in fields:
 
 # Plot Results
 # ------------
-titles = '$V$ $g_z$'.split()
+# Plot one line per thickness using the maximum difference value for each case
+field_titles = dict(zip(fields, '$V$ $g_z$'.split()))
+grid_titles = {"pole": "Pole",
+               "equator": "Equator",
+               "global": "Global",
+               "260km": "Satellite"}
 colors = dict(zip(thicknesses, plt.cm.viridis(np.linspace(0, 0.9, len(thicknesses)))))
-markers = dict(zip([model.size for model in models], ["o-", "^-", "s-", "D-"]))
 
 for grid_name in grids:
 
     fig, axes = plt.subplots(nrows=len(fields), ncols=1, sharex=True)
     fig.set_size_inches((5, 5))
     fig.subplots_adjust(hspace=0)
+    grid_title = grid_titles[grid_name]
 
-    for ax, field, title in zip(axes, fields, titles):
-        for model in models:
-            thickness = model.bounds[4] - model.bounds[5]
+    for ax, field in zip(axes, fields):
+        field_title = field_titles[field]
+        for thickness in thicknesses:
+            differences_per_thickness = []
             color = colors[thickness]
-            fname = "{}-{}-{}-{}.npz".format(field, grid_name, int(thickness),
-                                             model.size)
-            diff_file = np.load(os.path.join(result_dir, fname))
-            D_values, differences = diff_file["D_values"], diff_file["differences"]
-            ax.plot(D_values, differences, markers[model.size], color=color,
-                    linewidth=1, markersize=5, alpha=0.6)
+            for model in models:
+                if model.bounds[4] - model.bounds[5] == thickness:
+                    fname = "{}-{}-{}-{}.npz".format(field, grid_name, int(thickness),
+                                                     model.size)
+                    diff_file = np.load(os.path.join(result_dir, fname))
+                    D_values = diff_file["D_values"]
+                    differences = diff_file["differences"]
+                    differences_per_thickness.append(differences)
+            differences_per_thickness = np.array(differences_per_thickness)
+            differences_per_thickness = np.max(differences_per_thickness, axis=0)
+            if thickness < 1e3:
+                label = "{:.0f} m".format(thickness)
+            else:
+                label = "{:.0f} km".format(thickness*1e-3)
+            ax.plot(D_values, differences_per_thickness, '-o', color=color, label=label)
 
         # Add threshold line
         ax.plot([0, 10], [1e-1, 1e-1], '--', color='k', linewidth=0.5)
 
-        # Legend creation
-        labels = ["{}m".format(int(thickness))
-                  for thickness in thicknesses if thickness < 1e3]
-        labels += ["{}km".format(int(thickness * 1e-3))
-                   for thickness in thicknesses if thickness >= 1e3]
-        lines = [mlines.Line2D([], [], color=colors[thickness], marker=".", label=label)
-                 for thickness, label in zip(thicknesses, labels)]
-        plt.legend(handles=lines)
-
         # Add field annotation on each axe
-        ax.text(0.5, 0.87, title, fontsize=11,
+        ax.text(0.5, 0.87, field_title, fontsize=11,
                 horizontalalignment='center',
                 verticalalignment='center',
                 bbox={'facecolor': 'w',
@@ -154,5 +159,5 @@ for grid_name in grids:
     ax.set_xlim(0, 5.5)
     ax.set_xticks(np.arange(0, 6, 1))
     ax.legend()
-    axes[0].set_title(grid_name)
+    axes[0].set_title(grid_title)
     plt.show()
