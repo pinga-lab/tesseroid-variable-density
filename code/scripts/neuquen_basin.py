@@ -79,10 +79,15 @@ grid = {'lat': lat,
         'area': area}
 
 
+# Common variables between computations
+# -------------------------------------
+density_top, density_bottom = -412, -275
+max_height, min_depth = basin.top.max(), basin.bottom.min()
+
+
 # Compute gravitational effect of the basin with homogeneous density
 # ------------------------------------------------------------------
 # Compute the mean density contrast of the basin and add it to the model
-density_top, density_bottom = -412, -275
 mean_density = (density_top + density_bottom) / 2
 basin.addprop("density", [mean_density for i in range(basin.size)])
 
@@ -102,7 +107,6 @@ for field in fields:
 
 # Compute gravitational effect of the basin with linear density
 # -------------------------------------------------------------
-max_height, min_depth = basin.top.max(), basin.bottom.min()
 slope = (density_top - density_bottom) / (max_height - min_depth)
 constant_term = density_top - slope * max_height
 
@@ -125,11 +129,43 @@ for field in fields:
              height=grid["height"], shape=grid["shape"])
 
 
+# Compute gravitational effect of the basin with exponential density
+# ------------------------------------------------------------------
+b_factor = 10
+thickness = max_height - min_depth
+denominator = np.exp(- min_depth * b_factor / thickness) - \
+              np.exp(- max_height * b_factor / thickness)
+amplitude = (density_bottom - density_top) / denominator
+constant_term = (
+    density_top * np.exp(-min_depth * b_factor / thickness) -
+    density_bottom * np.exp(-max_height * b_factor / thickness)
+    ) / denominator
+
+# Define density function
+def density_exponential(h):
+    return amplitude * np.exp(-h * b_factor / thickness) + constant_term
+
+basin.addprop("density", [linear_density for i in range(basin.size)])
+
+fields = "potential gz".split()
+for field in fields:
+    fname = "exponential-{}.npz".format(field)
+    if os.path.isfile(os.path.join(result_dir, fname)):
+        continue
+    result = getattr(tesseroid, field)(grid["lon"],
+                                       grid["lat"],
+                                       grid["height"],
+                                       basin)
+    np.savez(os.path.join(result_dir, fname),
+             result=result, lon=grid["lon"], lat=grid["lat"],
+             height=grid["height"], shape=grid["shape"])
+
+
 # Plot Results
 # ------------
 labels = {"potential": "J/kg", "gz": "mGal"}
 titles = {"potential": r"$V$", "gz": r"$g_{z}$"}
-densities = ["homogeneous", "linear"]
+densities = ["homogeneous", "linear", "exponential"]
 
 for density in densities:
     fig, axes = plt.subplots(1, 2, figsize=(15, 7))
