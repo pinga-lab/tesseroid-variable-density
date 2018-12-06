@@ -9,11 +9,11 @@ import matplotlib.pyplot as plt
 from tesseroid_density import tesseroid
 
 
-def shell_sine_density(height, top, bottom, A, k):
+def shell_sine_density(height, top, bottom, A, k, constant_density):
     """
     Analytical solution for a spherical shell with density:
 
-    rho(r') = A sin(k (r' - R))
+    rho(r') = A sin(k (r' - R)) + C
 
     Where R is the MEAN_EARTH_RADIUS
     """
@@ -25,7 +25,8 @@ def shell_sine_density(height, top, bottom, A, k):
         2 * k * r2 * np.sin(k * (r2 - MEAN_EARTH_RADIUS)) -
         (2 - k**2 * r1**2) * np.cos(k * (r1 - MEAN_EARTH_RADIUS)) -
         2 * k * r1 * np.sin(k * (r1 - MEAN_EARTH_RADIUS))
-    )
+        ) + \
+        4 / 3. * np.pi * G * constant_density * (r2**3 - r1**3) / r
     data = {'potential': potential,
             'gx': 0,
             'gy': 0,
@@ -64,15 +65,14 @@ grids = {"pole": gridder.regular((89, 90, 0, 1), (11, 11), z=0),
          "global": gridder.regular((-90, 90, 0, 360), (19, 13), z=0),
          "260km": gridder.regular((-90, 90, 0, 360), (19, 13), z=260e3),
          }
-grids = {"global": gridder.regular((-90, 90, 0, 360), (19, 13), z=0)}
 
 
 # Configure comparisons
 # ---------------------
 fields = 'potential gz'.split()
 max_density = 3300.
-b_factors = np.arange(10., 40., 10)
-delta_values = np.logspace(-3, 1, 9)
+b_factors = [1, 2, 5, 10]
+delta_values = np.logspace(-4, 0, 5)
 
 
 # Plot Densities
@@ -83,11 +83,11 @@ colors = dict(zip(b_factors, plt.cm.viridis(np.linspace(0, 0.9, len(b_factors)))
 for b_factor in b_factors:
 
     # Compute the k factor, i.e. the frequency for the sine function
-    k_factor = b_factor / thickness
+    k_factor = 2 * np.pi * b_factor / thickness
 
     # Define density function
     def density_sine(height):
-        return max_density * np.sin(k_factor * height)
+        return max_density * np.sin(k_factor * height) + max_density
 
     heights = np.linspace(bottom, top, 101)
     plt.plot(heights, density_sine(heights), color=colors[b_factor],
@@ -108,11 +108,11 @@ for field in fields:
         for b_factor in b_factors:
 
             # Compute the k factor, i.e. the frequency for the sine function
-            k_factor = b_factor / thickness
+            k_factor = 2 * np.pi * b_factor / thickness
 
             # Define density function
             def density_sine(height):
-                return max_density * np.sin(k_factor * height)
+                return max_density * np.sin(k_factor * height) + max_density
 
             # Append density function to every tesseroid of the model
             model.addprop(
@@ -130,7 +130,7 @@ for field in fields:
                     )
                 lats, lons, heights = grid
                 analytical = shell_sine_density(heights[0], top, bottom,
-                                                max_density, k_factor)
+                                                max_density, k_factor, max_density)
                 differences = []
                 for delta in delta_values:
                     result = getattr(tesseroid, field)(lons, lats, heights, model,
