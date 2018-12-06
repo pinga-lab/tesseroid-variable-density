@@ -177,7 +177,7 @@ for grid_name in grids:
             ax.plot(delta_values, differences_per_b, "-o", color=color)
 
         # Add threshold line
-        ax.plot([1e-3, 1e1], [1e-1, 1e-1], '--', color='k', linewidth=0.5)
+        ax.plot([1e-4, 1e0], [1e-1, 1e-1], '--', color='k', linewidth=0.5)
 
         # Add field annotation on each axe
         ax.text(0.5, 0.87, field_title, fontsize=11,
@@ -198,7 +198,7 @@ for grid_name in grids:
         ax.set_axisbelow(True)
     ax = axes[-1]
     ax.set_xlabel(r"$\delta$")
-    ax.set_xlim(1e-3, 1e1)
+    ax.set_xlim(1e-4, 1e0)
     # ax.set_xticks(np.arange(0, 6, 1))
     ax.legend()
     axes[0].set_title(grid_title)
