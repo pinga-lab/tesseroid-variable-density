@@ -186,8 +186,7 @@ for density in densities:
 
         cb = bm.contourf(x.reshape(shape), y.reshape(shape),
                          result["result"].reshape(shape), 100)
-        bm.contour(x.reshape(shape), y.reshape(shape),
-                   result["result"].reshape(shape),
+        bm.contour(x.reshape(shape), y.reshape(shape), result["result"].reshape(shape),
                    5, colors='k', linewidths=0.7)
         bm.drawcountries()
         bm.drawstates()
@@ -200,3 +199,83 @@ for density in densities:
         ax.set_title(titles[field])
 
     plt.show()
+
+
+# Plot differences
+# ----------------
+labels = {"potential": "J/kg", "gz": "mGal"}
+titles = {"potential": r"$V$", "gz": r"$g_{z}$"}
+
+# Linear and Homogeneous
+fig, axes = plt.subplots(1, 2, figsize=(15, 7))
+axes = axes.ravel()
+for field, ax in zip(fields, axes):
+
+    bm = Basemap(projection='merc',
+                 llcrnrlon=grid["area"][2],
+                 llcrnrlat=grid["area"][0],
+                 urcrnrlon=grid["area"][3],
+                 urcrnrlat=grid["area"][1],
+                 resolution='l', ax=ax)
+
+    linear = np.load(os.path.join(result_dir, "linear-{}.npz".format(field)))
+    homogeneous = np.load(os.path.join(result_dir,
+                                       "homogeneous-{}.npz".format(field)))
+
+    x, y = bm(linear["lon"], linear["lat"])
+    shape = linear["shape"]
+    differences = linear["result"] - homogeneous["result"]
+    vmax = np.abs(differences).max()
+
+    cb = bm.contourf(x.reshape(shape), y.reshape(shape), differences.reshape(shape),
+                     100, vmax=vmax, vmin=-vmax, cmap="RdBu_r")
+    bm.contour(x.reshape(shape), y.reshape(shape), differences.reshape(shape),
+               5, colors='k', linewidths=0.7)
+    bm.drawcountries()
+    bm.drawstates()
+    bm.drawcoastlines()
+    bm.drawmeridians(np.arange(-80, -50, 2),
+                     labels=[False, False, False, True])
+    bm.drawparallels(np.arange(-50, -30, 2),
+                     labels=[True, False, False, False])
+    plt.colorbar(cb, ax=ax, label=labels[field])
+    ax.set_title(titles[field])
+
+plt.show()
+
+# Exponential and Homogeneous
+fig, axes = plt.subplots(1, 2, figsize=(15, 7))
+axes = axes.ravel()
+for field, ax in zip(fields, axes):
+
+    bm = Basemap(projection='merc',
+                 llcrnrlon=grid["area"][2],
+                 llcrnrlat=grid["area"][0],
+                 urcrnrlon=grid["area"][3],
+                 urcrnrlat=grid["area"][1],
+                 resolution='l', ax=ax)
+
+    exponential = np.load(os.path.join(result_dir, "exponential-{}.npz".format(field)))
+    homogeneous = np.load(os.path.join(result_dir,
+                                       "homogeneous-{}.npz".format(field)))
+
+    x, y = bm(exponential["lon"], exponential["lat"])
+    shape = exponential["shape"]
+    differences = exponential["result"] - homogeneous["result"]
+    vmax = np.abs(differences).max()
+
+    cb = bm.contourf(x.reshape(shape), y.reshape(shape), differences.reshape(shape),
+                     100, vmax=vmax, vmin=-vmax, cmap="RdBu_r")
+    bm.contour(x.reshape(shape), y.reshape(shape), differences.reshape(shape),
+               5, colors='k', linewidths=0.7)
+    bm.drawcountries()
+    bm.drawstates()
+    bm.drawcoastlines()
+    bm.drawmeridians(np.arange(-80, -50, 2),
+                     labels=[False, False, False, True])
+    bm.drawparallels(np.arange(-50, -30, 2),
+                     labels=[True, False, False, False])
+    plt.colorbar(cb, ax=ax, label=labels[field])
+    ax.set_title(titles[field])
+
+plt.show()
