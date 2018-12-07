@@ -214,7 +214,7 @@ for grid_name in grids:
     ax = axes[-1]
     ax.set_xlabel(r"$\delta$")
     ax.set_xlim(1e-3, 1e1)
-    # ax.set_xticks(np.arange(0, 6, 1))
+    ax = axes[0]
     ax.legend()
-    axes[0].set_title(grid_title)
-    plt.show()
+    ax.set_title(grid_title)
+plt.show()
