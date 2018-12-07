@@ -160,4 +160,67 @@ for grid_name in grids:
     ax.set_xticks(np.arange(0, 6, 1))
     ax.legend()
     axes[0].set_title(grid_title)
-    plt.show()
+
+
+# Plot single plot: one line per grid
+# -----------------------------------
+figure_fname = os.path.join(script_path, "../../manuscript/figures/linear-density.pdf")
+field_titles = dict(zip(fields, '$V$ $g_z$'.split()))
+grid_titles = {"pole": "Pole",
+               "equator": "Equator",
+               "global": "Global",
+               "260km": "Satellite"}
+colors = dict(zip(grids.keys(), plt.cm.viridis(np.linspace(0, 0.9, len(grids.keys())))))
+markers = dict(zip(grids.keys(), ["o", "^", "s", "d"]))
+
+fig, axes = plt.subplots(nrows=len(fields), ncols=1, sharex=True)
+fig.set_size_inches((5, 5))
+fig.subplots_adjust(hspace=0)
+grid_title = grid_titles[grid_name]
+
+for ax, field in zip(axes, fields):
+    field_title = field_titles[field]
+
+    for grid_name in grids:
+        color = colors[grid_name]
+        differences_per_grid = []
+        for model in models:
+            fname = "{}-{}-{}-{}.npz".format(field, grid_name, int(thickness),
+                                             model.size)
+            diff_file = np.load(os.path.join(result_dir, fname))
+            D_values = diff_file["D_values"]
+            differences = diff_file["differences"]
+            differences_per_grid.append(differences)
+        differences_per_grid = np.array(differences_per_grid)
+        differences_per_grid = np.max(differences_per_grid, axis=0)
+        ax.plot(D_values, differences_per_grid, '-o', color=color,
+                label=grid_titles[grid_name], marker=markers[grid_name])
+
+    # Add threshold line
+    ax.plot([0, 10], [1e-1, 1e-1], '--', color='k', linewidth=0.5)
+
+    # Add field annotation on each axe
+    ax.text(0.5, 0.87, field_title, fontsize=11,
+            horizontalalignment='center',
+            verticalalignment='center',
+            bbox={'facecolor': 'w',
+                  'edgecolor': '#9b9b9b',
+                  'linewidth': 0.5, 'pad': 5,
+                  'boxstyle': 'circle, pad=0.4'},
+            transform=ax.transAxes)
+
+    # Configure axes
+    ax.set_yscale('log')
+    ax.set_yticks(ax.get_yticks()[2:-2])
+    ax.set_ylabel('Difference (%)')
+    ax.grid(True, linewidth=0.5, color='#aeaeae')
+    ax.set_axisbelow(True)
+ax = axes[-1]
+ax.set_xlabel(r"D")
+ax.set_xlim(0, 5.5)
+ax.set_xticks(np.arange(0, 6, 1))
+ax.legend()
+plt.tight_layout()
+plt.savefig(figure_fname, dpi=300)
+
+plt.show()
