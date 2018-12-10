@@ -160,6 +160,8 @@ plt.show()
 
 # Plot Results
 # ------------
+figure_fname = os.path.join(script_path,
+                            "../../manuscript/figures/exponential-density.pdf")
 field_titles = dict(zip(fields, '$V$ $g_z$'.split()))
 grid_titles = {"pole": "Pole",
                "equator": "Equator",
@@ -251,5 +253,5 @@ for grid_name in grids:
         axes[0].legend(loc=0, prop={"size": 8})
 
 outer_grid.tight_layout(fig)
-plt.savefig("exponential_results.pdf", dpi=300)
+plt.savefig(figure_fname, dpi=300)
 plt.show()
