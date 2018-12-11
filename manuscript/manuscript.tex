@@ -196,6 +196,8 @@ Thus, the integrals for the gravitational fields are slightly modified to
 \label{eq:tesseroid-pot}
 \end{equation}
 
+\noindent and
+
 \begin{equation}
     g_{\alpha}(r,\phi,\lambda) = G
     \int\limits_{\lambda_1}^{\lambda_2}
@@ -206,31 +208,9 @@ Thus, the integrals for the gravitational fields are slightly modified to
 \label{eq:tesseroid-grav}
 \end{equation}
 
-\noindent and
-
-\begin{equation}
-    g_{\alpha\beta}(r,\phi,\lambda) = G
-    \int\limits_{\lambda_1}^{\lambda_2}
-    \int\limits_{\phi_1}^{\phi_2}
-    \int\limits_{r_1}^{r_2}
-    \rho(r') I_{\alpha\beta} \, \kappa \, dr' d\phi' d\lambda' ,
-    \label{eq:tesseroid-tensor}
-\end{equation}
-
-\noindent in which
-
-\begin{equation}
-    I_{\alpha\beta} =
-    \left(
-        \frac{3\Delta_{\alpha} \Delta_{\beta}}{\ell^5} -
-        \frac{\delta_{\alpha\beta}}{\ell^3}
-    \right) ,
-    \label{eq:tesseroid-tensor-kernel}
-\end{equation}
-
-\noindent $\alpha, \beta \in \{x, y, z\}$, $\delta_{\alpha\beta}$ is Kronecker's delta,
-$G = 6.674\times10^{-11}\, \text{m$^3$kg$^{-1}$s$^{-1}$}$ is the gravitational constant
-and
+\noindent in which $\alpha, \beta \in \{x, y, z\}$, $\delta_{\alpha\beta}$ is
+Kronecker's delta, $G = 6.674\times10^{-11}\, \text{m$^3$kg$^{-1}$s$^{-1}$}$ is the
+gravitational constant and
 
 \begin{equation}
     \Delta_x = r'[\cos\phi\sin\phi' - \sin\phi\cos\phi'
@@ -258,9 +238,9 @@ and
 \subsection{Gauss-Legendre Quadrature integration}
 
 Applying a $N$th order GLQ, we can approximate each integral in equations
-\ref{eq:tesseroid-pot}, \ref{eq:tesseroid-grav} and \ref{eq:tesseroid-tensor} by a
-weighted sum of the integration kernel evaluated on the roots of an $N$th order Legendre
-polynomial \citep[p.~390]{Hildebrand1987}.
+\ref{eq:tesseroid-pot} and \ref{eq:tesseroid-grav} by a weighted sum of the integration
+kernel evaluated on the roots of an $N$th order Legendre polynomial
+\citep[p.~390]{Hildebrand1987}.
 Unlike the homogeneous density case, the radial density function $\rho(r)$ must also be
 included in the integration and evaluated on the Legendre polynomial roots (i.e.,
 quadrature nodes).
@@ -309,7 +289,12 @@ quadrature nodes).
 integration kernels, $(r_i, \phi_j, \lambda_k)$ are the quadrature nodes, and
 $W_i^r$, $W_j^\phi$, $W_k^\lambda$ are the quadrature weights.
 The GLQ nodes and weights can be calculated as \citet[p.~391]{Hildebrand1987} (see
-\citet{Uieda2016} for nodes and weights definitions on similar notation as this paper).
+\citet{Uieda2016} for nodes and weights definitions on similar notation used on previous
+equations).
+
+It's worth noting that a GLQ is equivalent to approximate the tesseroid by $N^r \times
+N^\phi \times N^\lambda$ point masses located on the quadrature nodes
+\citep{Ku1977, Li2011, Uieda2016}.
 
 
 \subsection{Two Dimensional Adaptive Discretization}
@@ -331,7 +316,7 @@ of point masses is produced where it is needed more.
 \citet{Uieda2016} developed a modified version of this algorithm that speeds the
 computation of the distances.
 Both algorithms (the original one from \citet{Li2011} and the modified
-version of \citet{Uieda2016}) performs tesseroid subdivisions in the latitudinal,
+version of \citet{Uieda2016}) perform tesseroid subdivisions in the latitudinal,
 longitudinal and radial directions, thus we can define them as three dimensional
 adaptive discretization algorithms.
 On the other hand, \citet{Lin2018} proposed a two dimensional discretization algorithm
@@ -340,14 +325,24 @@ Removing a dimension from the splitting makes the computation more efficient, wh
 keeping an acceptable accuracy on the gravitational fields \citep{Lin2018}.
 
 Here we will use a two dimensional version of the adaptive discretization algorithm
-developed by \citet{Uieda2016}.
+developed by \citet{Uieda2016}: the distances from the tesseroid and the computation
+point are computed as \citet{Uieda2016} do, but the tesseroid will only be split on the
+longitudinal and latitudinal directions.
 What follows is a summary of the algorithm and the reader is referred to
 \citet{Uieda2016} for a detailed description.
 
 Lets consider a computation point located at $(r, \phi, \lambda)$ and an arbitrary
-tesseroid with its geometric centre at $(r_t, \phi_t, \lambda_t)$.
-We can define its longitudinal ($L_\lambda$) and latitudinal ($L_\phi$) dimensions as
-follows:
+tesseroid defined by the boundaries $r_1$, $r_2$, $\phi_1$, $\phi_2$, $\lambda_1$ and
+$\lambda_2$, which geometric centre is located at $(r_t, \phi_t, \lambda_t)$, where
+
+\begin{equation}
+    r_t = \frac{r_2 + r_1}{2}, \quad
+    \phi_t = \frac{\phi_2 + \phi_1}{2}, \quad
+    \lambda_t = \frac{\lambda_2 + \lambda_1}{2}.
+\end{equation}
+
+We can define the longitudinal ($L_\lambda$) and latitudinal ($L_\phi$) dimensions of
+the tesseroid as follows:
 
 \begin{equation}
     L_\lambda = r_2 \arccos(\sin^2\phi_t +
@@ -395,8 +390,9 @@ the offending dimensions.
 Repeat steps 1-3 for all smaller tesseroids until none are left.
 
 \textit{Final step}:
-By the end of the algorithm, the running total will be the gravitational effect of the
-tesseroid.
+By the end of the algorithm, a second-order GLQ will be applied on each small tesseroid
+to compute the gravitational field they generate, and the sum of these results will be
+the gravitational effect of the original tesseroid.
 
 Notice that the distance-size ratio $D$ determines how many
 times the tesseroids will be divided.
@@ -408,10 +404,11 @@ analytical solution for a spherical shell.
 \citet{Uieda2016} used a shell with homogeneous density to determine optimal values of
 $D$.
 Here, we will repeat the numerical experiment using analytical expressions for shells
-with density varying according to exponential and linear functions of $r$.
+with density varying according to certain functions of $r$.
 This numerical experiment will also show that the two dimensional adaptive
-discretization algorithm is as accurate as the original three dimensional version,
-though it reduces the number of tesseroid subdivisions and thus the computation time.
+discretization algorithm can achieve the same accuracy as the original three dimensional
+version, though it reduces the number of tesseroid subdivisions and thus the computation
+time.
 
 
 \subsection{Density-based Discretization Algorithm}
