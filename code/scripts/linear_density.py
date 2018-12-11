@@ -64,13 +64,13 @@ D_values = np.arange(0.5, 5.5, 0.5)
 for field in fields:
     for model in models:
         top, bottom = model.bounds[4], model.bounds[5]
-        slope = -(3300 - 2670) / (top - bottom)
-        constant_term = (3300 - 2670) * MEAN_EARTH_RADIUS + 2670
+        slope = (2670 - 3300) / (top - bottom)
+        constant_term = 2670 - slope * (top + MEAN_EARTH_RADIUS)
 
         # Define density function
         def density_linear(height):
             r = height + MEAN_EARTH_RADIUS
-            return slope*r + constant_term
+            return slope * r + constant_term
 
         model.addprop("density", [density_linear for i in range(model.size)])
 
