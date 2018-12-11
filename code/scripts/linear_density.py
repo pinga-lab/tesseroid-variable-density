@@ -164,7 +164,8 @@ for grid_name in grids:
 
 # Plot single plot: one line per grid
 # -----------------------------------
-figure_fname = os.path.join(script_path, "../../manuscript/figures/linear-density.pdf")
+figure_fname = os.path.join(script_path,
+                            "../../manuscript/figures/linear-density-diffs.pdf")
 field_titles = dict(zip(fields, '$V$ $g_z$'.split()))
 grid_titles = {"pole": "Pole",
                "equator": "Equator",
