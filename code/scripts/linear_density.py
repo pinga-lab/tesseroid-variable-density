@@ -5,6 +5,7 @@ from fatiando.constants import G, MEAN_EARTH_RADIUS, SI2MGAL, SI2EOTVOS
 from fatiando.mesher import TesseroidMesh
 from fatiando import gridder
 import matplotlib.pyplot as plt
+from matplotlib.gridspec import GridSpec, GridSpecFromSubplotSpec
 # This is our custom tesseroid code
 from tesseroid_density import tesseroid
 
@@ -99,26 +100,63 @@ for field in fields:
 
 # Plot Results
 # ------------
-# Plot one line per thickness using the maximum difference value for each case
+figure_fname = os.path.join(script_path,
+                            "../../manuscript/figures/linear-density-diffs.pdf")
 field_titles = dict(zip(fields, '$V$ $g_z$'.split()))
 grid_titles = {"pole": "Pole",
                "equator": "Equator",
                "global": "Global",
                "260km": "Satellite"}
 colors = dict(zip(thicknesses, plt.cm.viridis(np.linspace(0, 0.9, len(thicknesses)))))
+markers = dict(zip(thicknesses, ["o", "^", "s", "d", "x"]))
 
+# Create outer grid
+fig = plt.figure(figsize=(7, 8))
+outer_grid = GridSpec(ncols=2, nrows=2, wspace=0.001, hspace=0.1)
+
+# Create grid specs for each grid
+grid_specs = dict(
+                  zip(
+                      grids.keys(),
+                      [GridSpecFromSubplotSpec(ncols=1, nrows=2,
+                                               subplot_spec=outer_grid[j, i],
+                                               hspace=0)
+                       for j in range(2)
+                       for i in range(2)]
+                     )
+                 )
+positions = dict(zip(grids.keys(), [[j, i] for j in range(2) for i in range(2)]))
+
+# Plot for each grid
 for grid_name in grids:
 
-    fig, axes = plt.subplots(nrows=len(fields), ncols=1, sharex=True)
-    fig.set_size_inches((5, 5))
-    fig.subplots_adjust(hspace=0)
+    # Choose gridspec and create axes
+    gs = grid_specs[grid_name]
+    position = positions[grid_name]
+    axes = [plt.subplot(gs[0, 0])]
+    axes.append(plt.subplot(gs[1, 0], sharex=axes[0]))
+    plt.setp(axes[0].get_xticklabels(), visible=False)
+    # Remove xticks if the axes in in the middle of the figure
+    if position[0] == 0:
+        plt.setp(axes[1].get_xticklabels(), visible=False)
+    else:
+        axes[1].set_xlabel(r"$D$")
+    # Move ticks and labels to the right if the axes are on the second column
+    if position[1] == 1:
+        for ax in axes:
+            ax.yaxis.tick_right()
+            ax.yaxis.set_label_position("right")
+    # Add title to axes
     grid_title = grid_titles[grid_name]
+    axes[0].set_title(grid_titles[grid_name])
 
+    # Plot
     for ax, field in zip(axes, fields):
         field_title = field_titles[field]
         for thickness in thicknesses:
             differences_per_thickness = []
             color = colors[thickness]
+            marker = markers[thickness]
             for model in models:
                 if model.bounds[4] - model.bounds[5] == thickness:
                     fname = "{}-{}-{}-{}.npz".format(field, grid_name, int(thickness),
@@ -133,10 +171,11 @@ for grid_name in grids:
                 label = "{:.0f} m".format(thickness)
             else:
                 label = "{:.0f} km".format(thickness*1e-3)
-            ax.plot(D_values, differences_per_thickness, '-o', color=color, label=label)
+            ax.plot(D_values, differences_per_thickness, marker=marker, color=color,
+                    label=label)
 
         # Add threshold line
-        ax.plot([0, 10], [1e-1, 1e-1], '--', color='k', linewidth=0.5)
+        ax.plot([0.5, 5], [1e-1, 1e-1], '--', color='k', linewidth=0.5)
 
         # Add field annotation on each axe
         ax.text(0.5, 0.87, field_title, fontsize=11,
@@ -148,80 +187,19 @@ for grid_name in grids:
                       'boxstyle': 'circle, pad=0.4'},
                 transform=ax.transAxes)
 
+
+
         # Configure axes
         ax.set_yscale('log')
         ax.set_yticks(ax.get_yticks()[2:-2])
         ax.set_ylabel('Difference (%)')
         ax.grid(True, linewidth=0.5, color='#aeaeae')
-        ax.set_axisbelow(True)
-    ax = axes[-1]
-    ax.set_xlabel(r"D")
-    ax.set_xlim(0, 5.5)
-    ax.set_xticks(np.arange(0, 6, 1))
-    ax.legend()
-    axes[0].set_title(grid_title)
+        ax.set_xticks(np.arange(0, 6, 1))
 
+    # Add legend
+    if position == [0, 0]:
+        axes[0].legend(loc=0, prop={"size": 8})
 
-# Plot single plot: one line per grid
-# -----------------------------------
-figure_fname = os.path.join(script_path,
-                            "../../manuscript/figures/linear-density-diffs.pdf")
-field_titles = dict(zip(fields, '$V$ $g_z$'.split()))
-grid_titles = {"pole": "Pole",
-               "equator": "Equator",
-               "global": "Global",
-               "260km": "Satellite"}
-colors = dict(zip(grids.keys(), plt.cm.viridis(np.linspace(0, 0.9, len(grids.keys())))))
-markers = dict(zip(grids.keys(), ["o", "^", "s", "d"]))
-
-fig, axes = plt.subplots(nrows=len(fields), ncols=1, sharex=True)
-fig.set_size_inches((5, 5))
-fig.subplots_adjust(hspace=0)
-grid_title = grid_titles[grid_name]
-
-for ax, field in zip(axes, fields):
-    field_title = field_titles[field]
-
-    for grid_name in grids:
-        color = colors[grid_name]
-        differences_per_grid = []
-        for model in models:
-            fname = "{}-{}-{}-{}.npz".format(field, grid_name, int(thickness),
-                                             model.size)
-            diff_file = np.load(os.path.join(result_dir, fname))
-            D_values = diff_file["D_values"]
-            differences = diff_file["differences"]
-            differences_per_grid.append(differences)
-        differences_per_grid = np.array(differences_per_grid)
-        differences_per_grid = np.max(differences_per_grid, axis=0)
-        ax.plot(D_values, differences_per_grid, '-o', color=color,
-                label=grid_titles[grid_name], marker=markers[grid_name])
-
-    # Add threshold line
-    ax.plot([0, 10], [1e-1, 1e-1], '--', color='k', linewidth=0.5)
-
-    # Add field annotation on each axe
-    ax.text(0.5, 0.87, field_title, fontsize=11,
-            horizontalalignment='center',
-            verticalalignment='center',
-            bbox={'facecolor': 'w',
-                  'edgecolor': '#9b9b9b',
-                  'linewidth': 0.5, 'pad': 5,
-                  'boxstyle': 'circle, pad=0.4'},
-            transform=ax.transAxes)
-
-    # Configure axes
-    ax.set_yscale('log')
-    ax.set_yticks(ax.get_yticks()[2:-2])
-    ax.set_ylabel('Difference (%)')
-    ax.grid(True, linewidth=0.5, color='#aeaeae')
-    ax.set_axisbelow(True)
-ax = axes[-1]
-ax.set_xlabel(r"D")
-ax.set_xlim(0, 5.5)
-ax.set_xticks(np.arange(0, 6, 1))
-ax.legend()
-plt.tight_layout()
+outer_grid.tight_layout(fig)
 plt.savefig(figure_fname, dpi=300)
-
 plt.show()
