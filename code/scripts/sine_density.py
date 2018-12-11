@@ -5,6 +5,7 @@ from fatiando.constants import G, MEAN_EARTH_RADIUS, SI2MGAL, SI2EOTVOS
 from fatiando.mesher import TesseroidMesh
 from fatiando import gridder
 import matplotlib.pyplot as plt
+from matplotlib.gridspec import GridSpec, GridSpecFromSubplotSpec
 # This is our custom tesseroid code
 from tesseroid_density import tesseroid
 
@@ -75,29 +76,6 @@ b_factors = [1, 2, 5, 10]
 delta_values = np.logspace(-4, 0, 5)
 
 
-# Plot Densities
-# --------------
-bottom, top = 0, 1
-thickness = top - bottom
-colors = dict(zip(b_factors, plt.cm.viridis(np.linspace(0, 0.9, len(b_factors)))))
-for b_factor in b_factors:
-
-    # Compute the k factor, i.e. the frequency for the sine function
-    k_factor = 2 * np.pi * b_factor / thickness
-
-    # Define density function
-    def density_sine(height):
-        return max_density * np.sin(k_factor * height) + max_density
-
-    heights = np.linspace(bottom, top, 101)
-    plt.plot(heights, density_sine(heights), color=colors[b_factor],
-             label="b={}".format(b_factor))
-plt.ylabel(r"Density [kg/m$^3$]")
-plt.xticks([bottom, top], ["Inner Radius", "Outer Radius"])
-plt.legend()
-plt.show()
-
-
 # Compute differences
 # -------------------
 for field in fields:
@@ -143,8 +121,33 @@ for field in fields:
                          delta_values=delta_values, differences=differences)
 
 
+# Plot Densities
+# --------------
+bottom, top = 0, 1
+thickness = top - bottom
+colors = dict(zip(b_factors, plt.cm.viridis(np.linspace(0, 0.9, len(b_factors)))))
+for b_factor in b_factors:
+
+    # Compute the k factor, i.e. the frequency for the sine function
+    k_factor = 2 * np.pi * b_factor / thickness
+
+    # Define density function
+    def density_sine(height):
+        return max_density * np.sin(k_factor * height) + max_density
+
+    heights = np.linspace(bottom, top, 101)
+    plt.plot(heights, density_sine(heights), color=colors[b_factor],
+             label="b={}".format(b_factor))
+plt.ylabel(r"Density [kg/m$^3$]")
+plt.xticks([bottom, top], ["Inner Radius", "Outer Radius"])
+plt.legend()
+plt.show()
+
+
 # Plot Results
 # ------------
+figure_fname = os.path.join(script_path,
+                            "../../manuscript/figures/sine-density.pdf")
 field_titles = dict(zip(fields, '$V$ $g_z$'.split()))
 grid_titles = {"pole": "Pole",
                "equator": "Equator",
@@ -152,13 +155,47 @@ grid_titles = {"pole": "Pole",
                "260km": "Satellite"}
 colors = dict(zip(b_factors, plt.cm.viridis(np.linspace(0, 0.9, len(b_factors)))))
 
+# Create outer grid
+fig = plt.figure(figsize=(7, 8))
+outer_grid = GridSpec(ncols=2, nrows=2, wspace=0.001, hspace=0.1)
+
+# Create grid specs for each grid
+grid_specs = dict(
+                  zip(
+                      grids.keys(),
+                      [GridSpecFromSubplotSpec(ncols=1, nrows=2,
+                                               subplot_spec=outer_grid[j, i],
+                                               hspace=0)
+                       for j in range(2)
+                       for i in range(2)]
+                     )
+                 )
+positions = dict(zip(grids.keys(), [[j, i] for j in range(2) for i in range(2)]))
+
+# Plot for each grid
 for grid_name in grids:
 
-    fig, axes = plt.subplots(nrows=len(fields), ncols=1, sharex=True)
-    fig.set_size_inches((5, 5))
-    fig.subplots_adjust(hspace=0)
+    # Choose gridspec and create axes
+    gs = grid_specs[grid_name]
+    position = positions[grid_name]
+    axes = [plt.subplot(gs[0, 0])]
+    axes.append(plt.subplot(gs[1, 0], sharex=axes[0]))
+    plt.setp(axes[0].get_xticklabels(), visible=False)
+    # Remove xticks if the axes in in the middle of the figure
+    if position[0] == 0:
+        plt.setp(axes[1].get_xticklabels(), visible=False)
+    else:
+        axes[1].set_xlabel(r"$\delta$")
+    # Move ticks and labels to the right if the axes are on the second column
+    if position[1] == 1:
+        for ax in axes:
+            ax.yaxis.tick_right()
+            ax.yaxis.set_label_position("right")
+    # Add title to axes
     grid_title = grid_titles[grid_name]
+    axes[0].set_title(grid_titles[grid_name])
 
+    # Plot
     for ax, field in zip(axes, fields):
         field_title = field_titles[field]
         for b_factor in b_factors:
@@ -174,7 +211,8 @@ for grid_name in grids:
                 differences_per_b.append(differences)
             differences_per_b = np.array(differences_per_b)
             differences_per_b = np.max(differences_per_b, axis=0)
-            ax.plot(delta_values, differences_per_b, "-o", color=color)
+            label = "b={}".format(b_factor)
+            ax.plot(delta_values, differences_per_b, "-o", color=color, label=label)
 
         # Add threshold line
         ax.plot([1e-4, 1e0], [1e-1, 1e-1], '--', color='k', linewidth=0.5)
@@ -195,11 +233,11 @@ for grid_name in grids:
         ax.set_yticks(ax.get_yticks()[2:-2])
         ax.set_ylabel('Difference (%)')
         ax.grid(True, linewidth=0.5, color='#aeaeae')
-        ax.set_axisbelow(True)
-    ax = axes[-1]
-    ax.set_xlabel(r"$\delta$")
-    ax.set_xlim(1e-4, 1e0)
-    # ax.set_xticks(np.arange(0, 6, 1))
-    ax.legend()
-    axes[0].set_title(grid_title)
-    plt.show()
+
+    # Add legend
+    if position == [0, 0]:
+        axes[0].legend(loc=0, prop={"size": 8})
+
+outer_grid.tight_layout(fig)
+plt.savefig(figure_fname, dpi=300)
+plt.show()
