@@ -154,13 +154,6 @@ def _check_tesseroid(tesseroid, dens):
     # Check if the dimensions given are valid
     assert w <= e and s <= n and top >= bottom, \
         "Invalid tesseroid dimensions {}".format(tesseroid.get_bounds())
-    # Check if the tesseroid has volume > 0
-    if (e - w <= 1e-6) or (n - s <= 1e-6) or (top - bottom <= 1e-3):
-        msg = ("Encountered tesseroid with dimensions smaller than the " +
-               "numerical threshold (1e-6 degrees or 1e-3 m). " +
-               "Ignoring this tesseroid.")
-        warnings.warn(msg, RuntimeWarning)
-        return None
     if dens is not None:
         density = dens
     else:
@@ -217,8 +210,8 @@ def _forward_model(args):
     lon, sinlat, coslat, radius = _convert_coords(lon, lat, height)
     func = getattr(_tesseroid, field)
     warning_msg = (
-        "Stopped dividing a tesseroid because it's dimensions would be " +
-        "below the minimum numerical threshold (1e-6 degrees or 1e-3 m). " +
+        "Stopped dividing a tesseroid because it's horizontal dimensions would be " +
+        "below the minimum numerical threshold (1e-6 degrees). " +
         "Will compute without division. Cannot guarantee the accuracy of " +
         "the solution.")
     for tesseroid in model:
@@ -279,15 +272,6 @@ def _density_based_discretization(bounds, density, delta):
 
         if divider is None:
             subset.append(np.array([w, e, s, n, top, bottom]))
-            continue
-
-        if abs(top - divider) < 1e-3 or abs(divider - bottom) < 1e-3:
-            subset.append(np.array([w, e, s, n, top, bottom]))
-            msg = ("Encountered tesseroid with dimensions smaller " +
-                   "than the numerical threshold (1e-3 m) on " +
-                   "density-based discretization. " +
-                   "Ignoring this tesseroid.")
-            warnings.warn(msg, RuntimeWarning)
             continue
 
         size_ratio = (top - bottom)/tesseroid_size
