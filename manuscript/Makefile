@@ -45,7 +45,7 @@ LATEX_FLAGS  = -halt-on-error -output-directory $(OUTPUT)/
 ### Standard PDF Viewers
 UNAME := $(shell uname)
 ifeq ($(UNAME), Linux)
-PDFVIEWER = evince
+PDFVIEWER = xdg-open
 endif
 ifeq ($(UNAME), Darwin)
 PDFVIEWER = open
