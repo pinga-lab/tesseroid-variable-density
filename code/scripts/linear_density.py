@@ -198,7 +198,7 @@ for grid_name in grids:
 
     # Add legend
     if position == [0, 0]:
-        axes[0].legend(loc=0, prop={"size": 8})
+        axes[0].legend(loc=1, prop={"size": 8})
 
 outer_grid.tight_layout(fig)
 plt.savefig(figure_fname, dpi=300)
