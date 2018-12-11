@@ -90,7 +90,7 @@ for field in fields:
 
             # Define density function
             def density_sine(height):
-                return max_density * np.sin(k_factor * height) + max_density
+                return max_density / 2 * np.sin(k_factor * height) + max_density / 2
 
             # Append density function to every tesseroid of the model
             model.addprop(
@@ -108,7 +108,7 @@ for field in fields:
                     )
                 lats, lons, heights = grid
                 analytical = shell_sine_density(heights[0], top, bottom,
-                                                max_density, k_factor, max_density)
+                                                max_density/2, k_factor, max_density/2)
                 differences = []
                 for delta in delta_values:
                     result = getattr(tesseroid, field)(lons, lats, heights, model,
@@ -126,28 +126,36 @@ for field in fields:
 bottom, top = 0, 1
 thickness = top - bottom
 colors = dict(zip(b_factors, plt.cm.viridis(np.linspace(0, 0.9, len(b_factors)))))
-for b_factor in b_factors:
+
+figure_fname = os.path.join(script_path,
+                            "../../manuscript/figures/sine-densities.pdf")
+fig, axes = plt.subplots(len(b_factors), 1, figsize=(6, 6), sharex=True)
+for b_factor, ax in zip(b_factors, axes):
 
     # Compute the k factor, i.e. the frequency for the sine function
     k_factor = 2 * np.pi * b_factor / thickness
 
     # Define density function
     def density_sine(height):
-        return max_density * np.sin(k_factor * height) + max_density
+        return max_density / 2 * np.sin(k_factor * height) + max_density / 2
 
-    heights = np.linspace(bottom, top, 101)
-    plt.plot(heights, density_sine(heights), color=colors[b_factor],
-             label="b={}".format(b_factor))
-plt.ylabel(r"Density [kg/m$^3$]")
-plt.xticks([bottom, top], ["Inner Radius", "Outer Radius"])
-plt.legend()
+    heights = np.linspace(bottom, top, 1001)
+    ax.plot(heights, density_sine(heights), color=colors[b_factor],
+            label="b={}".format(b_factor))
+    ax.set_xticks([bottom, top])
+    ax.set_xticklabels(["Inner Radius", "Outer Radius"])
+    ax.legend(loc=1)
+fig.text(0, 0.5, r"Density [kg/m$^3$]", va='center', rotation='vertical')
+plt.tight_layout(pad=1.8)
+fig.subplots_adjust(hspace=0)
+plt.savefig(figure_fname, dpi=300)
 plt.show()
 
 
 # Plot Results
 # ------------
 figure_fname = os.path.join(script_path,
-                            "../../manuscript/figures/sine-density.pdf")
+                            "../../manuscript/figures/sine-density-diffs.pdf")
 field_titles = dict(zip(fields, '$V$ $g_z$'.split()))
 grid_titles = {"pole": "Pole",
                "equator": "Equator",
