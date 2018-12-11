@@ -136,6 +136,10 @@ for field in fields:
 bottom, top = 0, 1
 thickness = top - bottom
 colors = dict(zip(b_factors, plt.cm.viridis(np.linspace(0, 0.9, len(b_factors)))))
+
+fig, ax = plt.subplots(figsize=(6, 4))
+figure_fname = os.path.join(script_path,
+                            "../../manuscript/figures/exponential-densities.pdf")
 for b_factor in b_factors:
     denominator = np.exp(- bottom * b_factor / thickness) - \
                   np.exp(- top * b_factor / thickness)
@@ -150,18 +154,21 @@ for b_factor in b_factors:
         return amplitude*np.exp(-height * b_factor / thickness) + constant_term
 
     heights = np.linspace(bottom, top, 101)
-    plt.plot(heights, density_exponential(heights), color=colors[b_factor],
-             label="b={}".format(b_factor))
-plt.ylabel(r"Density [kg/m$^3$]")
-plt.xticks([bottom, top], ["Inner Radius", "Outer Radius"])
-plt.legend()
+    ax.plot(heights, density_exponential(heights), color=colors[b_factor],
+            label="b={}".format(b_factor))
+ax.set_ylabel(r"Density [kg/m$^3$]")
+ax.set_xticks([bottom, top])
+ax.set_xticklabels(["Radius", "Outer Radius"])
+ax.legend()
+plt.tight_layout()
+plt.savefig(figure_fname, dpi=300)
 plt.show()
 
 
 # Plot Results
 # ------------
 figure_fname = os.path.join(script_path,
-                            "../../manuscript/figures/exponential-density.pdf")
+                            "../../manuscript/figures/exponential-density-diffs.pdf")
 field_titles = dict(zip(fields, '$V$ $g_z$'.split()))
 grid_titles = {"pole": "Pole",
                "equator": "Equator",
