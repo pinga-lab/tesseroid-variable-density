@@ -100,8 +100,7 @@ from fatiando.constants import SI2MGAL, MEAN_EARTH_RADIUS, G
 RATIO_V = 1
 RATIO_G = 2.5
 STACK_SIZE = 200
-DELTA_V = 0.2
-DELTA_G = 0.2
+DELTA = 1e-2
 
 
 def _check_input(lon, lat, height, model, ratio, njobs, pool):
@@ -342,7 +341,7 @@ def _split_arrays(arrays, extra_args, nparts):
 
 
 def potential(lon, lat, height, model, dens=None, ratio=RATIO_V,
-              njobs=1, pool=None, delta=DELTA_V):
+              njobs=1, pool=None, delta=DELTA):
     """
     Calculate the gravitational potential due to a tesseroid model.
 
@@ -400,7 +399,7 @@ def potential(lon, lat, height, model, dens=None, ratio=RATIO_V,
 
 
 def gx(lon, lat, height, model, dens=None, ratio=RATIO_G,
-       njobs=1, pool=None, delta=DELTA_G):
+       njobs=1, pool=None, delta=DELTA):
     """
     Calculate the North component of the gravitational attraction.
 
@@ -458,7 +457,7 @@ def gx(lon, lat, height, model, dens=None, ratio=RATIO_G,
 
 
 def gy(lon, lat, height, model, dens=None, ratio=RATIO_G,
-       njobs=1, pool=None, delta=DELTA_G):
+       njobs=1, pool=None, delta=DELTA):
     """
     Calculate the East component of the gravitational attraction.
 
@@ -516,7 +515,7 @@ def gy(lon, lat, height, model, dens=None, ratio=RATIO_G,
 
 
 def gz(lon, lat, height, model, dens=None, ratio=RATIO_G,
-       njobs=1, pool=None, delta=DELTA_G):
+       njobs=1, pool=None, delta=DELTA):
     """
     Calculate the radial component of the gravitational attraction.
 
