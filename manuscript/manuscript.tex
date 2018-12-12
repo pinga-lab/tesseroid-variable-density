@@ -812,32 +812,51 @@ On exponential density analysis we will use values of $b$ equal to 1, 2, 5, 10, 
 and 100, in order to cover different kind of exponential density variations, from smooth
 to sharp.
 
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{figures/exponential-densities.pdf}
+\caption{
+    Exponential density functions assigned to each spherical shell in the $D$ and
+    $\delta$ ratios determination.
+    Each density function corresponds to a different value of $b$ on
+    Eq.~\ref{eq:density-exp}.
+}
+\label{fig:exp-densities}
+\end{figure}
+
+
 \subsubsection{$D$-$\delta$ space exploration}
 
 We aim to find a combination of the $D$ and $\delta$ that produces a numerical error
 lower than the 0.1\% threshold while minimizing computation time.
 We use a grid search method and compute the numerical error for every ($D$, $\delta$)
-pair belonging to a grid on the $D$-$\delta$ space (Fig. \ref{fig:grid-search}).
-Because this is a time consuming computation, we limit the analysis to a shell of 35 km
-thickness and $b = 1\ \text{km}$ (Eq. \ref{eq:density-exp}), which yields a
-sharp density variation within the shell.
-For optimum algorithm performance, we search for the smallest possible value of $D$ and
-the highest possible value of $\delta$.
+pair belonging to a grid on the $D$-$\delta$ space (Fig.~\ref{fig:grid-search}).
+For optimum algorithm performance, we search for the ($D$, $\delta$) pair that minimize
+the number of splittings while keeping a numerical error under the 0.1\% threshold,
+i.e.~the smallest possible value of $D$ and the highest possible value of $\delta$.
 
 We compute the relative difference between the numerical and analytical results for the
-gravitational potential ($V$), the vertical component of its gradient ($g_z$), and the
-$g_{zz}$ component of the Marussi tensor.
-The results are shown in Fig. \ref{fig:grid-search}, in which points inside the dotted
+gravitational potential ($V$) and the vertical component of its gradient ($g_z$) on the
+computation grids detailed in Table~\ref{tab:grids} and using shell models with the same
+thicknesses as the linear density case.
+Because this is a time consuming computation, we limit the analysis only to the second
+collection of tesseroids in Table~\ref{tab:tess-collections}.
+For the sake of brevity, we compute the maximum differences between the results
+involving each computation grid, shell thickness and value of the $b$ factor.
+The results are shown in Fig.~\ref{fig:grid-search}, in which points inside the dotted
 lines are the ones that present a numerical error lower than the 0.1\% threshold.
 Also shown in Fig. \ref{fig:grid-search} are the $D$ values determined for the linear
 density function in the previous section ($D_\text{linear}$).
 The values of $D_\text{linear}$ are within the 0.1\% threshold and are the optimum
 values of $D$ for $V$ and $g_z$.
-The results for $g_{zz}$ are in agreement with those obtained for the linear density
-function in the case of a thick shell (Fig. \ref{fig:D-linear}).
-Thus, we also choose the conservative value of $D=8$ as the optimum value for $g_{zz}$.
 These results indicate that the values of $D_\text{linear}$ can be safely extrapolated
 to the exponential case.
+
+The two dimensional adaptive discretization and the density-based algorithms are
+independent of each other: the first one splits the tesseroid only in the latitudinal
+and longitudinal directions, while the latter only does it in the radial direction.
+This leads to the fact that the value of $\delta$ needed to limit the numerical error
+due to the density variation is independent of the value of $D$.
 
 \begin{figure}
 \centering
