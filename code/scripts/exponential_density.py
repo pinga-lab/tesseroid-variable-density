@@ -1,5 +1,6 @@
 from __future__ import division, print_function
 import os
+import warnings
 import numpy as np
 from fatiando.constants import G, MEAN_EARTH_RADIUS, SI2MGAL, SI2EOTVOS
 from fatiando.mesher import TesseroidMesh
@@ -131,13 +132,25 @@ for field in fields:
                          delta_values=delta_values, differences=differences)
 
 
+# Configure LaTeX style for plots
+# -------------------------------
+try:
+    plt.rcParams['text.usetex'] = True
+    plt.rcParams['font.family'] = 'serif'
+    plt.rcParams['font.serif'] = 'Computer Modern Roman'
+    plt.rcParams['xtick.major.size'] = 2
+    plt.rcParams['ytick.major.size'] = 2
+except Exception as e:
+    warnings.warn("Couldn't configure LaTeX style for plots:" + str(e))
+
+
 # Plot Densities
 # --------------
 bottom, top = 0, 1
 thickness = top - bottom
 colors = dict(zip(b_factors, plt.cm.viridis(np.linspace(0, 0.9, len(b_factors)))))
 
-fig, ax = plt.subplots(figsize=(6, 4))
+fig, ax = plt.subplots(figsize=(3.33, 2.5))
 figure_fname = os.path.join(script_path,
                             "../../manuscript/figures/exponential-densities.pdf")
 for b_factor in b_factors:
@@ -177,7 +190,7 @@ grid_titles = {"pole": "Pole",
 colors = dict(zip(b_factors, plt.cm.viridis(np.linspace(0, 0.9, len(b_factors)))))
 
 # Create outer grid
-fig = plt.figure(figsize=(7, 8))
+fig = plt.figure(figsize=(6.66, 8))
 outer_grid = GridSpec(ncols=2, nrows=2, wspace=0.001, hspace=0.1)
 
 # Create grid specs for each grid
@@ -252,7 +265,7 @@ for grid_name in grids:
         ax.set_xscale('log')
         ax.set_yscale('log')
         ax.set_yticks(ax.get_yticks()[2:-2])
-        ax.set_ylabel('Difference (%)')
+        ax.set_ylabel(r'Difference (\%)')
         ax.grid(True, linewidth=0.5, color='#aeaeae')
 
     # Add legend
