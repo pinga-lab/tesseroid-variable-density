@@ -175,7 +175,7 @@ for grid_name in grids:
                     label=label)
 
         # Add threshold line
-        ax.plot([0.5, 5], [1e-1, 1e-1], '--', color='k', linewidth=0.5)
+        ax.plot([0, 6], [1e-1, 1e-1], '--', color='k', linewidth=0.5)
 
         # Add field annotation on each axe
         ax.text(0.5, 0.87, field_title, fontsize=11,
@@ -187,14 +187,13 @@ for grid_name in grids:
                       'boxstyle': 'circle, pad=0.4'},
                 transform=ax.transAxes)
 
-
-
         # Configure axes
         ax.set_yscale('log')
         ax.set_yticks(ax.get_yticks()[2:-2])
         ax.set_ylabel('Difference (%)')
         ax.grid(True, linewidth=0.5, color='#aeaeae')
         ax.set_xticks(np.arange(0, 6, 1))
+        ax.set_xlim(0.3, 5.2)
 
     # Add legend
     if position == [0, 0]:
