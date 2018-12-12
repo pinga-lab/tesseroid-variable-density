@@ -158,7 +158,7 @@ for b_factor in b_factors:
             label="b={}".format(b_factor))
 ax.set_ylabel(r"Density [kg/m$^3$]")
 ax.set_xticks([bottom, top])
-ax.set_xticklabels(["Radius", "Outer Radius"])
+ax.set_xticklabels(["Inner Radius", "Outer Radius"])
 ax.legend()
 plt.tight_layout()
 plt.savefig(figure_fname, dpi=300)
