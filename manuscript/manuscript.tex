@@ -628,7 +628,7 @@ numerical error lower than 0.1\% of the spherical shell values.
     equal to the mean Earth radius (6378.137 km) and the inner radius determined by the
     following thicknesses: 100m, 1km, 10km, 100km and 1000km.
 }
-\label{tab:tess-models}
+\label{tab:tess-collections}
 \begin{tabular}{cccccc}
     Radial & Latitudinal & Longitudinal  & Total tesseroids & $L_\phi$ & $L_\lambda$
     \\ \hline
@@ -689,8 +689,8 @@ We choose  different values of shell thickness (100m, 1km, 10km, 100km and 1000k
 order to account for different computation scenarios.
 Furthermore, we propose different tesseroids collections to build the shell model by
 regularly splitting it along the longitudinal and latitudinal directions.
-Each collection, described in Table~\ref{tab:tess-models}, is composed by a different
-number of tesseroids, i.e. with tesseroids of different sizes.
+Each collection, described in Table~\ref{tab:tess-collections}, is composed by
+a different number of tesseroids, i.e. with tesseroids of different sizes.
 Finally, for each collection we build a shell model with the thicknesses
 previously described, giving a total of 20 different shell models.
 
@@ -711,7 +711,7 @@ The comparison will be carried out by computing the maximum absolute difference 
 the analytical solution and the numerical result on each point of the computation grid.
 
 We assign a density that varies linearly with $r$ (Eq.~\ref{eq:density-linear}) to each
-shell, which assumes the values of $\rho_\text{in} = 3300$~kg/m$^3$ and
+shell model, which assumes the values of $\rho_\text{in} = 3300$~kg/m$^3$ and
 $\rho_\text{out} = 2670$~kg/m$^3$ on the inner and outer radii, respectively.
 So, the constants $a$ and $b$ from Eq.~\ref{eq:density-linear} must be
 
@@ -725,10 +725,10 @@ So, the constants $a$ and $b$ from Eq.~\ref{eq:density-linear} must be
 \end{equation}
 
 \noindent
-where $R_\text{out}$ and $R_text{in}$ are the outer and inner radii of the shell,
+where $R_\text{out}$ and $R_\text{in}$ are the outer and inner radii of the shell,
 respectively.
-For every shell defined in Table~\ref{tab:tess-models}, the outer radius will be equal
-to the mean Earth radius (6378.137 km).
+Because the outer radius of every spherical shell model will be equal to the mean Earth
+radius, $R_\text{out} = 6378.137$km.
 
 \begin{figure*}
 \centering
@@ -750,25 +750,27 @@ to the mean Earth radius (6378.137 km).
 \end{figure*}
 
 We compute the gravitational potential ($V$) and the vertical component of the gradient
-($g_z$) that each shell model detailed on Table~\ref{tab:tess-models} generates on each
-grid defined in Table~\ref{tab:grids}.
+($g_z$) that each shell model generates on each grid defined in Table~\ref{tab:grids}.
 Other components of the gradient are equal to zero outside of the shell due to the
 rotational symmetry and are thus omitted from the analysis.
 The computations are repeated for values of $D$ ranging from 0.5 to 5 with a step of
 0.5.
-The differences are shown in Fig. \ref{fig:D-linear} as relative to the spherical shell
-values.
-We omit the differences for $g_{xx}$ and $g_{yy}$ because they are equivalent to the
-ones obtained for $g_{zz}$.
+Then we calculate the absolute difference between these results and the analytical
+solution, taking only the maximum absolute difference on each computation grid.
+This differences are shown in Fig.~\ref{fig:D-linear}.
+In order to simplify the visualization of the results, only the maximum
+differences corresponding to tesseroids collections with equal thickness are shown
+in the Figure, obtaining one curve for every shell thickness.
 Finally, we set the optimal value of $D$ as the minimum value at which the corresponding
 error of the numerical approximation is lower than 0.1\%.
 
 We observe from Fig. \ref{fig:D-linear} that the relative errors for the
 potential and the $g_z$ component fall below the 0.1\% threshold at
-$D=1$ and $D=2$, respectively, for both shell thicknesses.
-On the other hand, $g_{zz}$ displays a noticeable
-difference between the thin and the thick shell: the first one needs a
-value of $D$ equal to 8 while the later only a $D$ of 3.
+$D=1$ and $D=2.5$, respectively, for every shell model and computation grid.
+These results also show that there's no meaningful dependency between the accuracy of
+the method and the thickness of the shell, the collection of tesseroids used to build
+it or the height of the computation grid (the results for the Satellite grid and the
+Global grid are very similar).
 
 \subsection{Exponential Density}
 
