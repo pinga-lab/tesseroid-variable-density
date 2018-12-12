@@ -610,23 +610,23 @@ an arbitrary density function in depth (Eq. \ref{eq:shell-pot}), and obtained th
 expressions in case of linear and exponential density (see Appendix \ref{sec:shell}).
 
 We perform comparisons between the analytical solutions for the spherical shell and the
-numerical integration results for linear and exponential density functions.
+numerical integration results for linear, exponential and trigonometric density
+functions.
 From these results, we generalize default values for $D$ and $\delta$ that ensure a
 numerical error lower than 0.1\% of the spherical shell values.
 
 \begin{table}
 \caption{
-    Description of the tesseroid models used to build a spherical shell and characterize
-    the accuracy of the numerical integration.
-    The first three columns describe the shapes of the tesseroid models: each one
+    Description of the tesseroid collections used to build a spherical shell and
+    characterize the accuracy of the numerical integration.
+    The first three columns describe the shapes of the tesseroid collections: each one
     specifies the number of tesseroids on the corresponding dimension (radial,
     latitudinal, longitudinal).
     The last two columns specify the latitudinal and longitudinal size of each
     tesseroid that compose the spherical shell model.
-    The outer radius of the shell is equal to the mean Earth radius, while the inner
-    radius is defined based on its thickness.
-    For each shape, we define several spherical shell models with the following
-    thicknesses: 100m, 1km, 10km, 100km and 1000km.
+    For each collection, we define four spherical shell models with an outer radius
+    equal to the mean Earth radius (6378.137 km) and the inner radius determined by the
+    following thicknesses: 100m, 1km, 10km, 100km and 1000km.
 }
 \label{tab:tess-models}
 \begin{tabular}{cccccc}
@@ -680,11 +680,19 @@ guarantee an acceptable accuracy while ignoring the value of $\delta$.
 
 In order to compare the numerical results with the analytical solution we
 must build spherical shell models made of tesseroids.
-We propose the ones detailed on Table~\ref{tab:tess-models}: the outer radius of each
-shell is equal to the mean Earth radius (6378.137 km) while the inner radius is
-determined based on its thickness.
-We cover spherical shells composed by tesseroid of different sizes and shells with
-thicknesses of 100m, 1km, 10km, 100km and 1000km.
+These shell models are determined by their inner and outer radii and by the collection
+of tesseroids used to build the shell.
+For this analysis we have chosen to set the outer radii of every shell model equal to
+the mean Earth radius (6378.137 km), while the inner radius is determined by the desired
+thickness of the shell.
+We choose  different values of shell thickness (100m, 1km, 10km, 100km and 1000km) in
+order to account for different computation scenarios.
+Furthermore, we propose different tesseroids collections to build the shell model by
+regularly splitting it along the longitudinal and latitudinal directions.
+Each collection, described in Table~\ref{tab:tess-models}, is composed by a different
+number of tesseroids, i.e. with tesseroids of different sizes.
+Finally, for each collection we build a shell model with the thicknesses
+previously described, giving a total of 20 different shell models.
 
 The comparison between the numerical results and the analytical solution could be
 naively compared on a single computation point due to the rotation symmetry of the
