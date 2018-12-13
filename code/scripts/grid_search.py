@@ -184,12 +184,12 @@ for field, ax in zip(fields, axes):
     plt.colorbar(cm, label=r"Differences (\%)", ax=ax)
 
     # Bellow error points contour
-    D_step = abs((D_grid.max() - D_grid.min())/(D_grid.shape[1] - 1))
-    delta_factor = abs(delta_grid.max()/delta_grid.min())**(1/(delta_grid.shape[0] - 1))
-    min_D = np.min(D_grid[differences <= 0.1]) - D_step/2
+    D_step = (D_values.max() - D_values.min()) / D_values.size
+    delta_factor = (delta_values.max()/delta_values.min())**(1/(delta_values.size - 1))
+    min_D = np.min(D_grid[total_differences <= 0.1]) - D_step/2
     max_D = D_grid.max() + D_step/8
     min_delta = delta_grid.min()*(delta_factor**(-0.125))
-    max_delta = np.max(delta_grid[differences <= 0.1])*(delta_factor**0.5)
+    max_delta = np.max(delta_grid[total_differences <= 0.1])*(delta_factor**0.5)
     ax.plot([min_D, min_D, max_D], [min_delta, max_delta, max_delta], '--', color='C7')
 
     # Add field title
