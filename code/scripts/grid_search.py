@@ -219,7 +219,7 @@ for field, ax in zip(fields, axes):
         label = labels[i]
         label = label.replace("$", "")
         if float(label) == D_linear[field]:
-            labels[i] = r"$D_\text{linear}$"
+            labels[i] = r"$D_\mathrm{linear}$"
     ax.set_xticklabels(labels)
 
 plt.tight_layout(pad=0.5, h_pad=0, w_pad=0)
