@@ -929,9 +929,9 @@ density tesseroids.
 Having chosen values of $D$ equal to the ones obtained for the linear density case, we
 are free to explore the integration error as a function of $\delta$ in more detail and
 how it varies for different values of $b$ (Eq.~\ref{eq:density-exp}).
-Now we perform the error calculations for the every grid detailed in
-Table~\ref{tab:grids} and for the 20 spherical shells models detailed in
-Table~\ref{tab:tess-collections}.
+Now we perform the error calculations for values of delta ranging from $10^{-3}$ to
+$10^{1}$, for every grid detailed in Table~\ref{tab:grids} and for the 20 spherical
+shells models detailed in Table~\ref{tab:tess-collections}.
 The calculations are repeated for different values of $b$ (1, 2, 5, 10, 30, 100) to
 examine the error variation with the sharpness of the density function.
 Because larger $\delta$ values result in fewer tesseroid divisions,
@@ -949,6 +949,44 @@ These results also show that there is no significant relation between the $b$
 value and the numerical error, proving that the density-based discretization algorithm
 is capable of limiting the error due to the density variation regardless the variation
 of the exponential density.
+
+
+\subsection{Trigonometric Density}
+
+So far we have tested the density-based discretization algorithm against linear and
+exponential density functions.
+Nevertheless, this new algorithm is well suited to accurately reproduce the
+gravitational fields of tesseroids with more complex continuous functions, like
+non-monotonic or with one or more inflection points.
+Although such density functions are very rare (or maybe even non-existent) between
+geological structures, we want to subject the density-based algorithm to such cases in
+order to show that it can solve more complex situations other than linear and
+exponential functions.
+
+We will consider spherical shells with a trigonometric density defined as follows:
+
+\begin{equation}
+    \rho(r') = A \sin \left( 2 \pi b \frac{r' - R}{T} \right) + A,
+    \label{eq:sine-density}
+\end{equation}
+
+\noindent where $A$ is a constant, $T$ is the thickness of the shell, $R$ is the mean
+Earth radius and $b$ is a dimensionless constant that regulates how many periods of the
+trigonometric function are included inside the inner and outer radii.
+For this analysis we will use values of $b$ equal to 1, 2, 5 and 10
+(Fig.~\ref{fig:sine-densities}).
+We shift the sine function in order to prevent near zero values of the potential and the
+$g_z$.
+
+We compute the relative difference between the numerical and analytical results for the
+gravitational potential ($V$) and the $g_z$ of spherical shells with this kind of
+sinusoidal density function.
+The analytical solution for the potential $V$ can be found on Appendix~\ref{sec:shell}.
+The gravitational fields are computed on every grid detailed in Table~\ref{tab:grids}
+and making use of the spherical shells defined on Table~\ref{tab:tess-collections}.
+Each shell is assigned with different sinusoidal density functions by changing the
+values of $b$ in Eq.~\ref{eq:sine-density} (Fig.~\ref{fig:sine-densities}).
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -1234,6 +1272,28 @@ is
     & \left( R_1^2 k^2 + 2 R_1 k + 2 \right) e^{- k (R_1 - R)} - \\
     & \left( R_2^2 k^2 + 2 R_2 k + 2 \right) e^{- k (R_2 - R)}
     \Big].
+    \end{split}
+\end{equation}
+
+
+\subsection{Sinusoidal density}
+
+For an sinusoidal density function
+
+\begin{equation}
+    \rho(r') = A \sin ( k (r' - R)),
+\end{equation}
+
+\noindent
+where $A$, $k$ and $R$ are constants, the gravitational potential on any external point
+is
+
+\begin{equation}
+    \begin{split}
+    V_\text{sine}(r) = \frac{4\pi G}{r} \frac{A}{k^3} \Big[
+    & (2 - k^2 R_2^2) \cos(k(R_2 - R)) + 2 k R_2 \sin(k(R_2 - R)) -
+    & (2 - k^2 R_1^2) \cos(k(R_1 - R)) - 2 k R_1 \sin(k(R_1 - R))
+        \Big]
     \end{split}
 \end{equation}
 
