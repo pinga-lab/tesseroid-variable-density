@@ -22,7 +22,7 @@
 \author[S.R. Soler, A. Pesce, L. Uieda and M.E. Gimenez]{
     Santiago R. Soler$^{1,2}$, Agustina Pesce$^{1,2}$, Leonardo Uieda$^3$ and
     Mario E. Gimenez$^{1,2}$ \\
-    $^1$CONICET, Argentina. e-mail: santiago.r.soler@gmail.com\\
+    $^1$CONICET, Argentina.~e-mail: santiago.r.soler@gmail.com\\
     $^2$Instituto Geofísico Sismológico Volponi, Universidad Nacional de
     San Juan, Argentina\\
     $^3$Department of Earth Sciences, SOEST, University of Hawai‘i at
@@ -71,7 +71,7 @@ The lithosphere's density variation with depth has been studied for close to a
 century.
 Over this time period,
 several density-depth relations have been proposed for different rock types
-\citep[e.g.,][]{Maxant1980, Rao1986, Rao1993, Rao1994}.
+\citep[e.g.][]{Maxant1980, Rao1986, Rao1993, Rao1994}.
 Furthermore, depth-variable densities have been used in forward and
 inverse gravity modelling, mostly applied to sedimentary basins
 \citep{Cordell1973, Rao1986, Cowie1990, Rao1993, Rao1994, Zhang2001,
@@ -140,7 +140,7 @@ tesseroid gravitational fields computation by applying different discretizations
 algorithms to each one of them.
 From this analysis they develop a combined method:
 for computation points near the tesseroid they apply a GLQ numerical integration with
-a two dimensional adaptive discretization algorithm, i.e. only in the horizontal
+a two dimensional adaptive discretization algorithm, i.e.~only in the horizontal
 dimension. But, if the computation point is farther than a certain truncation distance,
 then a second order Taylor series approximation is applied along with the regular
 subdivision developed by \citet{Grombein2013}.
@@ -237,13 +237,13 @@ gravitational constant and
 
 \subsection{Gauss-Legendre Quadrature integration}
 
-Applying a $N$th order GLQ, we can approximate each integral in equations
-\ref{eq:tesseroid-pot} and \ref{eq:tesseroid-grav} by a weighted sum of the integration
-kernel evaluated on the roots of an $N$th order Legendre polynomial
+Applying a $N$th order GLQ, we can approximate each integral in
+equations~\ref{eq:tesseroid-pot} and~\ref{eq:tesseroid-grav} by a weighted sum of the
+integration kernel evaluated on the roots of an $N$th order Legendre polynomial
 \citep[p.~390]{Hildebrand1987}.
 Unlike the homogeneous density case, the radial density function $\rho(r)$ must also be
-included in the integration and evaluated on the Legendre polynomial roots (i.e.,
-quadrature nodes).
+included in the integration and evaluated on the Legendre polynomial roots
+(i.e.~quadrature nodes).
 
 \iftwocol{
 \begin{equation}
@@ -375,17 +375,17 @@ between the computation point and the geometric centre of the tesseroid
 
 \begin{equation}
     \cos\psi_t =
-        \sin\phi\sin\phi_t + \cos\phi\cos\phi_t\cos(\lambda - \lambda_t) .
+        \sin\phi\sin\phi_t + \cos\phi\cos\phi_t\cos(\lambda - \lambda_t).
 \end{equation}
 
 \textit{Step 2}:
-If none of the dimensions of the tesseroid fail inequality
-\ref{eq:condition}, then compute the gravitational effect of the tesseroid using a
-second-order GLQ (Eq. \ref{eq:glq-var-dens}).
+If none of the dimensions of the tesseroid fail inequality~\ref{eq:condition}, then
+compute the gravitational effect of the tesseroid using a second-order GLQ
+(Eq.~\ref{eq:glq-var-dens}).
 Add the computed effect to a running total.
 
 \textit{Step 3}:
-If any dimension fails inequality \ref{eq:condition}, split the tesseroid in half along
+If any dimension fails inequality~\ref{eq:condition}, split the tesseroid in half along
 the offending dimensions.
 Repeat steps 1-3 for all smaller tesseroids until none are left.
 
@@ -423,14 +423,14 @@ time.
     (a) the normalised density function $\rho_n(r')$ (blue), current boundaries of the
     tesseroid (orange dots), and the linear density function $\rho_l(r')$ (orange line).
     The dashed red line represents the maximum density difference $\Delta \rho (r')$ at
-    which the tesseroid would be divided (assuming that the inequality
-    \ref{eq:delta-density} is not satisfied).
+    which the tesseroid would be divided (assuming that the
+    inequality~\ref{eq:delta-density} is not satisfied).
     (b) second iteration of the algorithm with a new linear density function and maximum
     density difference. The tesseroid would be divided at the depth indicated by the
     dashed red line.
     (c) third iteration of the algorithm.
     (d) final output of the density-based discretization, assuming that all four new
-    tesseroids satisfy inequality \ref{eq:delta-density}.
+    tesseroids satisfy inequality~\ref{eq:delta-density}.
 }
 \label{fig:density-discretization-algorithm}
 \end{figure*}
@@ -471,7 +471,7 @@ In case the density function is constant, both maximum and minimum densities wil
 equal and the density-based discretization algorithm will not be applied.
 
 The algorithm is comprised of the following steps
-(Fig. \ref{fig:density-discretization-algorithm}):
+(Fig.~\ref{fig:density-discretization-algorithm}):
 
 \textit{Step 1}:
 Define a linear function $\rho_l(r')$ that assumes
@@ -518,14 +518,14 @@ in which $L_r$ is the radial dimension of the tesseroid being considered for div
 $\delta$ is a positive constant henceforth called the \textit{delta ratio}.
 
 \textit{Step 5}:
-If inequality \ref{eq:delta-density} is not satisfied, then the tesseroid is split in
-two parts at the radius $r_\text{max}$ at which the maximum absolute difference (Eq.
-\ref{eq:density-abs-diff}) takes place.
+If inequality~\ref{eq:delta-density} is not satisfied, then the tesseroid is split in
+two parts at the radius $r_\text{max}$ at which the maximum absolute difference
+(Eq.~\ref{eq:density-abs-diff}) takes place.
 
 \textit{Step 6}:
 Repeat steps 1-6 for each smaller tesseroid produced in step 5.
 
-Once all smaller tesseroids satisfy Eq. \ref{eq:delta-density},
+Once all smaller tesseroids satisfy Eq.~\ref{eq:delta-density},
 each one is subjected to the two dimensional adaptive
 discretization algorithm described earlier to calculate their gravitational effects.
 
@@ -606,8 +606,8 @@ have the same density function of radius as our tesseroid model.
 \citet{Lin2018} show the analytical solution of the gravitational potential generated by
 a spherical shell with linear density in the radial coordinate.
 We derive an expression for such gravitational potential in case the spherical shell has
-an arbitrary density function in depth (Eq. \ref{eq:shell-pot}), and obtained the
-expressions in case of linear and exponential density (see Appendix \ref{sec:shell}).
+an arbitrary density function in depth (Eq.~\ref{eq:shell-pot}), and obtained the
+expressions in case of linear and exponential density (see Appendix~\ref{sec:shell}).
 
 We perform comparisons between the analytical solutions for the spherical shell and the
 numerical integration results for linear, exponential and trigonometric density
@@ -667,11 +667,11 @@ A spherical shell with a linear density function given by
 \end{equation}
 
 \noindent
-has an analytical solution given by Eq. \ref{eq:shell-pot-linear}.
+has an analytical solution given by Eq.~\ref{eq:shell-pot-linear}.
 
-The absolute density difference defined on equation
-\ref{eq:density-abs-diff} will always be zero for the linear density case.
-As a result, the inequality \ref{eq:delta-density} will always be satisfied and no
+The absolute density difference defined on equation~\ref{eq:density-abs-diff} will
+always be zero for the linear density case.
+As a result, the inequality~\ref{eq:delta-density} will always be satisfied and no
 divisions will ever be performed.
 Therefore, the two dimensional adaptive discretization algorithm is the
 only mechanism that controls the accuracy of the numerical integration.
@@ -690,7 +690,7 @@ order to account for different computation scenarios.
 Furthermore, we propose different tesseroids collections to build the shell model by
 regularly splitting it along the longitudinal and latitudinal directions.
 Each collection, described in Table~\ref{tab:tess-collections}, is composed by
-a different number of tesseroids, i.e. with tesseroids of different sizes.
+a different number of tesseroids, i.e.~with tesseroids of different sizes.
 Finally, for each collection we build a shell model with the thicknesses
 previously described, giving a total of 20 different shell models.
 
@@ -736,7 +736,7 @@ radius, $R_\text{out} = 6378.137$km.
 \caption{
     Differences between the gravitational fields generated by each tesseroid shell model
     and the analytical solution.
-    Each model has a linear density function (Eq. \ref{eq:density-linear}).
+    Each model has a linear density function (Eq.~\ref{eq:density-linear}).
     The computations were performed on the four grids described in
     Table~\ref{tab:grids} and using 20 shell models built with the tesseroids
     collections detailed in Table~\ref{tab:tess-collections} and five different
@@ -766,7 +766,7 @@ in the Figure, obtaining one curve for every shell thickness.
 Finally, we set the optimal value of $D$ as the minimum value at which the corresponding
 error of the numerical approximation is lower than 0.1\%.
 
-We observe from Fig. \ref{fig:D-linear} that the relative errors for the
+We observe from Fig.~\ref{fig:D-linear} that the relative errors for the
 potential and the $g_z$ component fall below the 0.1\% threshold at
 $D=1$ and $D=2.5$, respectively, for every shell model and computation grid.
 These results also show that there's no meaningful dependency between the accuracy of
@@ -851,7 +851,7 @@ For the sake of brevity, we compute the maximum differences between the results
 involving each computation grid, shell thickness and value of the $b$ factor.
 The results are shown in Fig.~\ref{fig:grid-search}, in which points inside the dotted
 lines are the ones that present a numerical error lower than the 0.1\% threshold.
-Also shown in Fig. \ref{fig:grid-search} are the $D$ values determined for the linear
+Also shown in Fig.~\ref{fig:grid-search} are the $D$ values determined for the linear
 density function in the previous section ($D_\text{linear}$).
 The values of $D_\text{linear}$ are within the 0.1\% threshold and are the optimum
 values of $D$ for $V$ and $g_z$.
@@ -878,10 +878,9 @@ due to the density variation is independent of the value of $D$.
     The percentage difference values were obtained from the comparison
     between the analytical solution and the numerical approximation of
     the gravitational fields ($V$, $g_z$ and $g_{zz}$) generated by a
-    spherical shell with an exponential density function (Eq. \ref{eq:density-exp}).
-    These comparisons were carried out on the ``Big Grid'' (Table
-    \ref{tab:grids}), with a spherical shell of
-    35km of thickness, and density function with $b$ of 1km.
+    spherical shell with an exponential density function (Eq.~\ref{eq:density-exp}).
+    These comparisons were carried out on the ``Big Grid'' (Table~\ref{tab:grids}), with
+    a spherical shell of 35km of thickness, and density function with $b$ of 1km.
     The points inside the dashed line are the ones that present an
     error lower than 0.1\%.
     }
@@ -898,9 +897,9 @@ due to the density variation is independent of the value of $D$.
     Numerical error for different exponential density functions and values of the delta
     ratio.
     The top panels show the exponential density functions for different values of $b$
-    (Eq. \ref{eq:density-exp}).
+    (Eq.~\ref{eq:density-exp}).
     The error computations were performed on the ``Big Grid'' configuration described in
-    Table \ref{tab:grids}, with fixed values of the distance-size ratio
+    Table~\ref{tab:grids}, with fixed values of the distance-size ratio
     $D$ obtained for the linear density case ($D=1, 2, 8$ for the
     potential, gradient components, and Marussi tensor components, respectively).
     The difference is reported as a percentage of the shell values.
@@ -910,16 +909,16 @@ due to the density variation is independent of the value of $D$.
 
 Having chosen values of $D$ equal to the linear density case, we are free to explore the
 integration error as a function of $\delta$ in more detail and how it varies for
-different values of $b$ (Eq. \ref{eq:density-exp}).
-We perform the error calculations for the ``Big Grid'' configuration (Table
-\ref{tab:grids}) for two spherical shell models with 1km and 35km thickness.
+different values of $b$ (Eq.~\ref{eq:density-exp}).
+We perform the error calculations for the ``Big Grid'' configuration
+(Table~\ref{tab:grids}) for two spherical shell models with 1km and 35km thickness.
 The calculations are repeated for different values of $b$ to examine the error variation
 with the sharpness of the density function.
 Because larger $\delta$ values result in fewer tesseroid divisions,
 our intention is to find the highest value of $\delta$ whose numerical error is bellow
 the $0.1\%$ threshold.
 
-Fig. \ref{fig:delta-exponential} shows the density functions and the resulting relative
+Fig.~\ref{fig:delta-exponential} shows the density functions and the resulting relative
 differences ($V$, $g_z$, and $g_{zz}$) for different values of $b$ and thickness of the
 shell and tesseroid model.
 The relative difference for $V$ and $g_z$ falls below the 0.1\% threshold for
@@ -938,7 +937,7 @@ We applied the new algorithms and optimal values of $D$ and $\delta$ determined
 previously to calculate the gravitational effects of the Neuqu\'en Basin:
 a sedimentary basin
 located to the east of the Andes, between 32$^\circ$S and 40$^\circ$S latitude
-(Fig. \ref{fig:neuquen-basin}a).
+(Fig.~\ref{fig:neuquen-basin}a).
 The basin includes continental and marine siliciclastics, carbonates, and evaporites
 accumulated over the Jurassic and the Cretaceous constituting a stratigraphic record up
 to 5000m of depth \citep{Howell2005}.
@@ -962,7 +961,7 @@ to 5000m of depth \citep{Howell2005}.
 
 The thickness of the sediment pack was digitized from \citet{Heine2007} on a regular
 grid with a resolution of 0.05$^\circ$ on both longitude and latitude directions
-(Fig. \ref{fig:neuquen-basin}b).
+(Fig.~\ref{fig:neuquen-basin}b).
 We created a tesseroid model of the sediment pack by placing a
 $0.05^\circ \times 0.05^\circ$ tesseroid on each node of the grid.
 The top of each tesseroid was fixed at 0 m depth and the bottom at corresponding
@@ -971,21 +970,19 @@ thickness of the basin.
 We must also define a density function for the tesseroid model.
 \citet{Sigismondi2012} measured a minimum and maximum density contrast for
 the Neuqu\'en basin of -412kg/m$^3$ and -275kg/m$^3$, respectively.
-We have chosen an exponential density variation (Eq. \ref{eq:density-exp}) that assumes
+We have chosen an exponential density variation (Eq.~\ref{eq:density-exp}) that assumes
 the minimum value on the top surface and the maximum at 5858m depth (the thickest part
 of the basin), with a value of $b$ equal to 2km.
-This density function can be seen on Fig. \ref{fig:neuquen-basin}c.
+This density function can be seen on Fig.~\ref{fig:neuquen-basin}c.
 
 Finally, we computed the gravitational potential $V$, gradient components $g_x$,
 $g_y$ and $g_z$, and the Marussi tensor components $g_{xx}$, $g_{xy}$,
 $g_{xz}$, $g_{yy}$, and $g_{zz}$ on a computation grid of $159\times163$ nodes
 ($0.05^\circ$ spacing on both longitude and latitude) at a 50km height over the
 reference ellipsoid.
-The resulting fields can be seen in Fig.
-\ref{fig:neuquen-basin}d-l.
-We have excluded the other components of the Marussi tensor from the Fig.
-\ref{fig:neuquen-basin},
-although they can be found in the online repository.
+The resulting fields can be seen in Fig.~\ref{fig:neuquen-basin}d-l.
+We have excluded the other components of the Marussi tensor from the
+Fig.~\ref{fig:neuquen-basin}, although they can be found in the online repository.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1067,14 +1064,14 @@ which this work would not have been possible.
     The computation point $Q$ is located on the $z$ axis at a distance $r$ from
     the origin of the coordinates system.
     For our purposes we will assume that $Q$ is outside of the shell,
-    i.e. $r > R_2$.
+    i.e.~$r > R_2$.
 }
 \label{fig:spherical-shell}
 \end{figure}
 
 Consider a spherical shell with inner radius $R_1$ and outer radius $R_2$,
 whose density is a function $\rho(r')$ of the radial coordinate
-(Fig. \ref{fig:spherical-shell}).
+(Fig.~\ref{fig:spherical-shell}).
 The gravitational potential generated by the shell on an arbitrary external
 point $Q$ can be written as follows:
 
@@ -1087,10 +1084,10 @@ point $Q$ can be written as follows:
     dr' d\phi' d\lambda',
 \end{equation}
 
-\noindent where $\ell$ is defined in equation \ref{eq:ell}.
+\noindent where $\ell$ is defined in equation~\ref{eq:ell}.
 
 For $Q$ located along the $z$ axis (i.e., $\phi=90^\circ$) at a distance $r$ from the
-origin, equation \ref{eq:ell} simplifies to:
+origin, equation~\ref{eq:ell} simplifies to:
 
 \begin{equation}
     \ell = \sqrt{r'^2 + r^2 - 2 r r' \sin\phi'}.
@@ -1136,7 +1133,7 @@ obtained the following expression for the potential:
 }
 
 Because the computation point $Q$ is outside of the shell, $r > r'$ and the square roots
-in equation \ref{eq:shell-pot-sqrts} simplify to
+in equation~\ref{eq:shell-pot-sqrts} simplify to
 
 \begin{equation}
     \sqrt{r^2 + r'^2 + 2rr'} = |r + r'| = r + r',
@@ -1172,7 +1169,7 @@ Following \citet{Grombein2013}:
     g_{zz}(r) = \frac{2V_\text{sh}(r)}{r^2}.
 \end{equation}
 
-From Eq. \ref{eq:shell-pot} we can obtain expressions of the gravitational potential for
+From Eq.~\ref{eq:shell-pot} we can obtain expressions of the gravitational potential for
 different density functions.
 
 \subsection{Linear density}
