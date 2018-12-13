@@ -65,17 +65,19 @@ fields = 'potential gz'.split()
 D_values = np.arange(0.5, 5.5, 0.5)
 for field in fields:
     for model in models:
+        # Define density function
         top, bottom = model.bounds[4], model.bounds[5]
         slope = (2670 - 3300) / (top - bottom)
         constant_term = 2670 - slope * (top + MEAN_EARTH_RADIUS)
 
-        # Define density function
         def density_linear(height):
             r = height + MEAN_EARTH_RADIUS
             return slope * r + constant_term
 
+        # Append density function to every tesseroid of the model
         model.addprop("density", [density_linear for i in range(model.size)])
 
+        # Compute differences
         for grid_name, grid in grids.items():
             fname = "{}-{}-{}-{}.npz".format(field, grid_name, int(top - bottom),
                                              model.size)
@@ -95,6 +97,8 @@ for field in fields:
                 diff = 100 * np.max(diff)
                 differences.append(diff)
             differences = np.array(differences)
+
+            # Save results to file
             np.savez(os.path.join(result_dir, fname),
                      D_values=D_values, differences=differences)
 
