@@ -845,12 +845,13 @@ i.e.~the smallest possible value of $D$ and the highest possible value of $\delt
 
 We compute the relative difference between the numerical and analytical results for the
 gravitational potential ($V$) and the vertical component of its gradient ($g_z$) on the
-computation grids detailed in Table~\ref{tab:grids} and using shell models with the same
-thicknesses as the linear density case.
-Because this is a time consuming computation, we limit the analysis only to the second
-collection of tesseroids in Table~\ref{tab:tess-collections}.
+computation grids detailed in Table~\ref{tab:grids}.
+Because this is a time consuming computation, we limit the analysis only to five
+spherical shell models made out of the second tesseroid collection from
+Table~\ref{tab:tess-collections} with the five different thicknesses, and only one value
+of $b$ equal to 30 (Fig.~\ref{fig:exp-densities}).
 For the sake of brevity, we compute the maximum differences between the results
-involving each computation grid, shell thickness and value of the $b$ factor.
+involving each shell thickness.
 The results are shown in Fig.~\ref{fig:grid-search}, in which points inside the dotted
 lines are the ones that present a numerical error lower than the 0.1\% threshold.
 Also shown in Fig.~\ref{fig:grid-search} are the $D$ values determined for the linear
@@ -868,14 +869,15 @@ This leads to the fact that the value of $\delta$ needed to limit the numerical 
 due to the density variation is independent of the value of $D$ and vice versa.
 That's why the optimal distance-size ratios for the exponential density case is the same
 as the ones for the linear density case.
+
 Because the grid search was limited to specific values of $b$ and used only one grid, we
-will determine the optimal value of $\delta$ for exponential density on the next
-subsection.
+will determine the optimal value of $\delta$ for exponential density tesseroids on the
+next subsection.
 
 \begin{figure}
 \centering
 \iftwocol{
-\includegraphics[width=0.9\linewidth]
+\includegraphics[width=\linewidth]
     {figures/grid-search.pdf}
 }{
 \includegraphics[width=0.5\linewidth]
