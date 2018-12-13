@@ -1,5 +1,6 @@
 from __future__ import division, print_function
 import os
+import warnings
 import numpy as np
 from fatiando.constants import G, MEAN_EARTH_RADIUS, SI2MGAL, SI2EOTVOS
 from fatiando.mesher import TesseroidMesh
@@ -67,47 +68,17 @@ models = [
 
 # Define computation grids
 # ------------------------
-grids = {"pole": gridder.regular((89, 90, 0, 1), (11, 11), z=0),
-         "equator": gridder.regular((0, 1, 0, 1), (11, 11), z=0),
-         "global": gridder.regular((-90, 90, 0, 360), (19, 13), z=0),
-         "260km": gridder.regular((-90, 90, 0, 360), (19, 13), z=260e3),
-         }
+grid_name = "global"
+grid = gridder.regular((-90, 90, 0, 360), (19, 13), z=0)
 
 
 # Configure comparisons
 # ---------------------
 fields = 'potential gz'.split()
 density_bottom, density_top = 3300, 2670
-b_factors = [1, 2, 5, 10, 30, 100]
+b_factor = 30
 delta_values = np.logspace(-3, 1, 5)
 D_values = np.arange(0.5, 4.5, 0.5)
-
-
-# Plot Densities
-# --------------
-bottom, top = 0, 1
-thickness = top - bottom
-colors = dict(zip(b_factors, plt.cm.viridis(np.linspace(0, 0.9, len(b_factors)))))
-for b_factor in b_factors:
-    denominator = np.exp(- bottom * b_factor / thickness) - \
-                  np.exp(- top * b_factor / thickness)
-    amplitude = (density_bottom - density_top) / denominator
-    constant_term = (
-        density_top * np.exp(-bottom * b_factor / thickness) -
-        density_bottom * np.exp(-top * b_factor / thickness)
-        ) / denominator
-
-    # Define density function
-    def density_exponential(height):
-        return amplitude*np.exp(-height * b_factor / thickness) + constant_term
-
-    heights = np.linspace(bottom, top, 101)
-    plt.plot(heights, density_exponential(heights), color=colors[b_factor],
-             label="b={}".format(b_factor))
-plt.ylabel(r"Density [kg/m$^3$]")
-plt.xticks([bottom, top], ["Inner Radius", "Outer Radius"])
-plt.legend()
-plt.show()
 
 
 # Compute differences
@@ -117,85 +88,140 @@ for field in fields:
         top, bottom = model.bounds[4], model.bounds[5]
         thickness = top - bottom
 
-        for b_factor in b_factors:
-            denominator = np.exp(- bottom * b_factor / thickness) - \
-                          np.exp(- top * b_factor / thickness)
-            amplitude = (density_bottom - density_top) / denominator
-            constant_term = (
-                density_top * np.exp(-bottom * b_factor / thickness) -
-                density_bottom * np.exp(-top * b_factor / thickness)
-                ) / denominator
+        # Define density function
+        denominator = np.exp(- bottom * b_factor / thickness) - \
+            np.exp(- top * b_factor / thickness)
+        amplitude = (density_bottom - density_top) / denominator
+        constant_term = (
+            density_top * np.exp(-bottom * b_factor / thickness) -
+            density_bottom * np.exp(-top * b_factor / thickness)
+            ) / denominator
 
-            # Define density function
-            def density_exponential(height):
-                return amplitude*np.exp(-height * b_factor / thickness) + constant_term
+        def density_exponential(height):
+            return amplitude*np.exp(-height * b_factor / thickness) + constant_term
 
-            # Append density function to every tesseroid of the model
-            model.addprop(
-                "density",
-                [density_exponential for i in range(model.size)]
+        # Append density function to every tesseroid of the model
+        model.addprop(
+            "density",
+            [density_exponential for i in range(model.size)]
+        )
+
+        # Check if result file exists
+        fname = "{}-{}-{}-{}.npz".format(field, grid_name, int(thickness),
+                                         int(b_factor))
+        if os.path.isfile(os.path.join(result_dir, fname)):
+            continue
+        print("Thickness: {} Field: {} Grid: {} b: {}".format(
+            int(thickness), field, grid_name, b_factor)
             )
 
-            for grid_name, grid in grids.items():
-                fname = "{}-{}-{}-{}.npz".format(field, grid_name, int(thickness),
-                                                 int(b_factor))
-                if os.path.isfile(os.path.join(result_dir, fname)):
-                    continue
-                print("Thickness: {} Field: {} Grid: {} b: {}".format(
-                    int(thickness), field, grid_name, b_factor)
-                    )
-                lats, lons, heights = grid
-                analytical = shell_exponential_density(heights[0], top, bottom,
-                                                       amplitude, b_factor,
-                                                       constant_term)
-                differences = []
-                for delta in delta_values:
-                    for D_ratio in D_values:
-                        result = getattr(tesseroid, field)(lons, lats, heights, model,
-                                                           delta=delta, ratio=D_ratio)
-                        diff = np.abs((result - analytical[field]) / analytical[field])
-                        diff = 100 * np.max(diff)
-                        differences.append(diff)
-                D_grid, delta_grid = np.meshgrid(D_values, delta_values)
-                differences = np.array(differences)
-                differences = differences.reshape(D_grid.shape)
-                np.savez(os.path.join(result_dir, fname),
-                         delta_grid=delta_grid, D_grid=D_grid,
-                         differences=differences)
+        # Compute differences
+        lats, lons, heights = grid
+        analytical = shell_exponential_density(heights[0], top, bottom,
+                                               amplitude, b_factor,
+                                               constant_term)
+        differences = []
+        for delta in delta_values:
+            for D_ratio in D_values:
+                result = getattr(tesseroid, field)(lons, lats, heights, model,
+                                                   delta=delta, ratio=D_ratio)
+                diff = np.abs((result - analytical[field]) / analytical[field])
+                diff = 100 * np.max(diff)
+                differences.append(diff)
+        D_grid, delta_grid = np.meshgrid(D_values, delta_values)
+        differences = np.array(differences)
+        differences = differences.reshape(D_grid.shape)
+        np.savez(os.path.join(result_dir, fname),
+                 delta_grid=delta_grid, D_grid=D_grid,
+                 differences=differences)
+
+
+# Configure LaTeX style for plots
+# -------------------------------
+try:
+    plt.rcParams['text.usetex'] = True
+    plt.rcParams['font.family'] = 'serif'
+    plt.rcParams['font.serif'] = 'Computer Modern Roman'
+    plt.rcParams['xtick.major.size'] = 2
+    plt.rcParams['ytick.major.size'] = 2
+except Exception as e:
+    warnings.warn("Couldn't configure LaTeX style for plots:" + str(e))
 
 
 # Plot Results
 # ------------
-fig, axes = plt.subplots(2, 1, sharex=True)
+figure_fname = os.path.join(script_path, "../../manuscript/figures/grid-search.pdf")
+field_titles = dict(zip(fields, '$V$ $g_z$'.split()))
+D_linear = dict(zip(fields, (1, 2.5)))
+fig, axes = plt.subplots(2, 1, figsize=(3.33, 3.8))
 for field, ax in zip(fields, axes):
     total_differences = []
 
-    for grid_name in grids.keys():
-        for model in models:
-            top, bottom = model.bounds[4], model.bounds[5]
-            thickness = top - bottom
-            for b_factor in b_factors:
-                fname = "{}-{}-{}-{}.npz".format(field, grid_name, int(thickness),
-                                                 int(b_factor))
-                data = np.load(os.path.join(result_dir, fname))
-                D_grid, delta_grid = data["D_grid"], data["delta_grid"]
-                differences = data["differences"]
-                total_differences.append(differences)
+    for model in models:
+        top, bottom = model.bounds[4], model.bounds[5]
+        thickness = top - bottom
+        fname = "{}-{}-{}-{}.npz".format(field, grid_name, int(thickness),
+                                         int(b_factor))
+        data = np.load(os.path.join(result_dir, fname))
+        D_grid, delta_grid = data["D_grid"], data["delta_grid"]
+        differences = data["differences"]
+        total_differences.append(differences)
 
     total_differences = np.array(total_differences)
     total_differences = np.max(total_differences, axis=0)
 
     # Plot bigger points if error <= 1e-1
-    size = 50
-    sizes = size * np.ones_like(total_differences)
-    sizes[total_differences <= 1e-1] *= 3
+    sizes = 50
+    plot_size = False
+    if plot_size:
+        sizes *= np.ones_like(total_differences)
+        sizes[total_differences <= 1e-1] *= 3
     cm = ax.scatter(D_grid.ravel(), delta_grid.ravel(),
                     c=total_differences.ravel(), s=sizes,
                     norm=matplotlib.colors.LogNorm())
 
-    plt.colorbar(cm, label="Differences (%)", ax=ax)
-    ax.set_yscale('log')
-    ax.set_ylim(1e-4, 1e2)
-    ax.set_aspect(6)
+    # Add colorbar
+    plt.colorbar(cm, label=r"Differences (\%)", ax=ax)
 
+    # Bellow error points contour
+    D_step = abs((D_grid.max() - D_grid.min())/(D_grid.shape[1] - 1))
+    delta_factor = abs(delta_grid.max()/delta_grid.min())**(1/(delta_grid.shape[0] - 1))
+    min_D = np.min(D_grid[differences <= 0.1]) - D_step/2
+    max_D = D_grid.max() + D_step/8
+    min_delta = delta_grid.min()*(delta_factor**(-0.125))
+    max_delta = np.max(delta_grid[differences <= 0.1])*(delta_factor**0.5)
+    ax.plot([min_D, min_D, max_D], [min_delta, max_delta, max_delta], '--', color='C7')
+
+    # Add field title
+    ax.text(-0.22, 0.88, field_titles[field], fontsize=11,
+            horizontalalignment='center',
+            verticalalignment='center',
+            bbox={'facecolor': 'w',
+                  'edgecolor': '#9b9b9b',
+                  'linewidth': 0.5, 'pad': 5,
+                  'boxstyle': 'circle, pad=0.4'},
+            transform=ax.transAxes)
+
+    # Configure axes
+    ax.set_yscale('log')
+    ax.set_ylim(3.162e-4, 3.162e1)
+    if field == "potential":
+        ax.set_xticks(np.arange(1, 5, 1))
+    elif field == "gz":
+        ax.set_xticks(np.arange(0.5, 4.5, 1))
+        ax.set_xlabel(r"$D$")
+    ax.set_ylabel(r"$\delta$")
+
+    # Insert D_linear 1abel in axis ticks
+    fig.canvas.draw()
+    labels = [item.get_text() for item in ax.get_xticklabels()]
+    for i in range(len(labels)):
+        label = labels[i]
+        label = label.replace("$", "")
+        if float(label) == D_linear[field]:
+            labels[i] = r"$D_\text{linear}$"
+    ax.set_xticklabels(labels)
+
+plt.tight_layout(pad=0.5, h_pad=0, w_pad=0)
+plt.savefig(figure_fname, dpi=300)
 plt.show()
