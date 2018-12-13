@@ -126,7 +126,7 @@ colors = dict(zip(thicknesses, plt.cm.viridis(np.linspace(0, 0.9, len(thicknesse
 markers = dict(zip(thicknesses, ["o", "^", "s", "d", "x"]))
 
 # Create outer grid
-fig = plt.figure(figsize=(6.66, 8))
+fig = plt.figure(figsize=(6.66, 7))
 outer_grid = GridSpec(ncols=2, nrows=2, wspace=0.001, hspace=0.1)
 
 # Create grid specs for each grid

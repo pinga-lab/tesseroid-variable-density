@@ -190,7 +190,7 @@ grid_titles = {"pole": "Pole",
 colors = dict(zip(b_factors, plt.cm.viridis(np.linspace(0, 0.9, len(b_factors)))))
 
 # Create outer grid
-fig = plt.figure(figsize=(6.66, 8))
+fig = plt.figure(figsize=(6.66, 7))
 outer_grid = GridSpec(ncols=2, nrows=2, wspace=0.001, hspace=0.1)
 
 # Create grid specs for each grid
