@@ -624,9 +624,11 @@ numerical error lower than 0.1\% of the spherical shell values.
     latitudinal, longitudinal).
     The last two columns specify the latitudinal and longitudinal size of each
     tesseroid that compose the spherical shell model.
-    For each collection, we define four spherical shell models with an outer radius
+    For each collection, we define five spherical shell models with an outer radius
     equal to the mean Earth radius (6378.137 km) and the inner radius determined by the
     following thicknesses: 100m, 1km, 10km, 100km and 1000km.
+    This makes a total of 20 shell models combining tesseroids collections and
+    thicknesses.
 }
 \label{tab:tess-collections}
 \begin{tabular}{cccccc}
@@ -691,8 +693,8 @@ Furthermore, we propose different tesseroids collections to build the shell mode
 regularly splitting it along the longitudinal and latitudinal directions.
 Each collection, described in Table~\ref{tab:tess-collections}, is composed by
 a different number of tesseroids, i.e.~with tesseroids of different sizes.
-Finally, for each collection we build a shell model with the thicknesses
-previously described, giving a total of 20 different shell models.
+Finally, combining these collections and the thicknesses we obtain 20 different shell
+models.
 
 The comparison between the numerical results and the analytical solution could be
 naively compared on a single computation point due to the rotation symmetry of the
