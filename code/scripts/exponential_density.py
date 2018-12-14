@@ -249,7 +249,7 @@ for grid_name in grids:
             ax.plot(delta_values, differences_per_b, "-o", color=color, label=label)
 
         # Add threshold line
-        ax.plot([1e-3, 1e1], [1e-1, 1e-1], '--', color='k', linewidth=0.5)
+        ax.plot([1e-4, 1e2], [1e-1, 1e-1], '--', color='k', linewidth=0.5)
 
         # Add field annotation on each axe
         ax.text(0.5, 0.87, field_title, fontsize=11,
@@ -264,6 +264,7 @@ for grid_name in grids:
         # Configure axes
         ax.set_xscale('log')
         ax.set_yscale('log')
+        ax.set_xlim(6.31e-4, 1.58e1)
         ax.set_yticks(ax.get_yticks()[2:-2])
         ax.set_ylabel(r'Difference (\%)')
         ax.grid(True, linewidth=0.5, color='#aeaeae')

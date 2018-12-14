@@ -157,7 +157,19 @@ for b_factor, ax in zip(b_factors, axes):
             label="b={}".format(b_factor))
     ax.set_xticks([bottom, top])
     ax.set_xticklabels(["Inner Radius", "Outer Radius"])
-    ax.legend(loc=1)
+    # ax.legend(loc=1)
+
+    # Add field annotation on each axe
+    ax.text(0.85, 0.8, "b={}".format(b_factor),
+            fontsize=10,
+            horizontalalignment='center',
+            verticalalignment='center',
+            bbox={'facecolor': 'w',
+                  'edgecolor': '#9b9b9b',
+                  'alpha': 0.7,
+                  'linewidth': 0.5, 'pad': 5,
+                  'boxstyle': 'square, pad=0.4'},
+            transform=ax.transAxes)
 fig.text(0, 0.5, r"Density [kg/m$^3$]", va='center', rotation='vertical')
 plt.tight_layout(pad=1.8)
 fig.subplots_adjust(hspace=0)
@@ -236,7 +248,7 @@ for grid_name in grids:
             ax.plot(delta_values, differences_per_b, "-o", color=color, label=label)
 
         # Add threshold line
-        ax.plot([1e-4, 1e0], [1e-1, 1e-1], '--', color='k', linewidth=0.5)
+        ax.plot([1e-5, 1e1], [1e-1, 1e-1], '--', color='k', linewidth=0.5)
 
         # Add field annotation on each axe
         ax.text(0.5, 0.87, field_title, fontsize=11,
@@ -251,6 +263,7 @@ for grid_name in grids:
         # Configure axes
         ax.set_xscale('log')
         ax.set_yscale('log')
+        ax.set_xlim(6.31e-5, 1.58e0)
         ax.set_yticks(ax.get_yticks()[2:-2])
         ax.set_ylabel(r'Difference (\%)')
         ax.grid(True, linewidth=0.5, color='#aeaeae')
