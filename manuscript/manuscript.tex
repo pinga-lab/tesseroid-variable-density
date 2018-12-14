@@ -925,6 +925,9 @@ In order to improve the visualization of the results, each curve corresponds to 
 maximum difference between all shell models for the same value of $b$.
 The relative difference for $V$ and $g_z$ falls below the 0.1\% threshold
 for each computation grid, shell model and $b$ value if $\delta = 0.1$.
+This results imply that a value of $\delta=0.1$ is needed in order to
+achieve the 0.1\% accuracy threshold for both the potential and the $g_{z}$, every
+shell model, computation grid and value of $b$, in case of exponential density.
 These results also show that there is no significant relation between the $b$
 value and the numerical error, proving that the density-based discretization algorithm
 is capable of limiting the error due to the density variation regardless the variation
@@ -967,12 +970,6 @@ We fixed the distance-size ratio $D$ to the ones obtained for the linear density
 and explored values of $\delta$ ranging from $10^{-4}$ to $1$.
 The analytical solution for the potential $V$ can be found on Appendix~\ref{sec:shell}.
 
-Fig.~\ref{fig:sine-densities} shows the sinusoidal density functions assigned to every
-spherical shell and Fig.~\ref{fig:delta-sine} shows the resulting relative differences
-between the analytical and the numerical solutions.
-In order to improve the visualization of the results, each curve corresponds to the
-maximum difference between all shell models for the same value of $b$.
-
 \begin{figure}
 \centering
 \iftwocol{
@@ -1008,6 +1005,20 @@ maximum difference between all shell models for the same value of $b$.
     }
 \label{fig:delta-exponential}
 \end{figure*}
+
+Fig.~\ref{fig:sine-densities} shows the sinusoidal density functions assigned to every
+spherical shell and Fig.~\ref{fig:delta-sine} shows the resulting relative differences
+between the analytical and the numerical solutions.
+In order to improve the visualization of the results, each curve corresponds to the
+maximum difference between all shell models for the same value of $b$.
+For this kind of sinusoidal density, a value of $\delta=0.01$ is needed in order to
+achieve the 0.1\% accuracy threshold for both the potential and the $g_{z}$, every
+shell model, computation grid and value of $b$.
+This results also proof that even for a continuous density function with several local
+maximum and minimums and inflection points, the density-based discretization algorithm
+performs well on computing the gravitational fields that a tesseroid with such density
+generates.
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
