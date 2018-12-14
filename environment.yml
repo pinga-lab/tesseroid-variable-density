@@ -6,6 +6,7 @@ dependencies:
     - python=2.7
     - future=0.16.0
     - numpy=1.11.*
+    - pandas=0.18.1
     - scipy=0.19.1
     - sympy=1.1.1
     - matplotlib=2.1.0
