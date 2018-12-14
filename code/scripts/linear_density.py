@@ -42,11 +42,10 @@ if not os.path.isdir(result_dir):
 # Define Tesseroids models
 # ------------------------
 thicknesses = [100, 1e3, 1e4, 1e5, 1e6]
-shapes = [(1, 1, 2), (1, 6, 12), (1, 12, 24), (1, 18, 36)]
+shape = (1, 6, 12)
 models = [
     TesseroidMesh((0, 360, -90, 90, 0, -thickness), shape)
     for thickness in thicknesses
-    for shape in shapes
 ]
 
 
@@ -67,6 +66,7 @@ for field in fields:
     for model in models:
         # Define density function
         top, bottom = model.bounds[4], model.bounds[5]
+        thickness = top - bottom
         slope = (2670 - 3300) / (top - bottom)
         constant_term = 2670 - slope * (top + MEAN_EARTH_RADIUS)
 
@@ -79,8 +79,7 @@ for field in fields:
 
         # Compute differences
         for grid_name, grid in grids.items():
-            fname = "{}-{}-{}-{}.npz".format(field, grid_name, int(top - bottom),
-                                             model.size)
+            fname = "{}-{}-{}.npz".format(field, grid_name, int(thickness))
             if os.path.isfile(os.path.join(result_dir, fname)):
                 continue
             print("Thickness: {} Model size: {} Field: {} Grid: {}".format(
@@ -172,25 +171,19 @@ for grid_name in grid_names:
     # Plot
     for ax, field in zip(axes, fields):
         field_title = field_titles[field]
-        for thickness in thicknesses:
-            differences_per_thickness = []
+        for model in models:
+            thickness = model.bounds[4] - model.bounds[5]
             color = colors[thickness]
             marker = markers[thickness]
-            for model in models:
-                if model.bounds[4] - model.bounds[5] == thickness:
-                    fname = "{}-{}-{}-{}.npz".format(field, grid_name, int(thickness),
-                                                     model.size)
-                    diff_file = np.load(os.path.join(result_dir, fname))
-                    D_values = diff_file["D_values"]
-                    differences = diff_file["differences"]
-                    differences_per_thickness.append(differences)
-            differences_per_thickness = np.array(differences_per_thickness)
-            differences_per_thickness = np.max(differences_per_thickness, axis=0)
+            fname = "{}-{}-{}.npz".format(field, grid_name, int(thickness))
+            diff_file = np.load(os.path.join(result_dir, fname))
+            D_values = diff_file["D_values"]
+            differences = diff_file["differences"]
             if thickness < 1e3:
                 label = "{:.0f} m".format(thickness)
             else:
                 label = "{:.0f} km".format(thickness*1e-3)
-            ax.plot(D_values, differences_per_thickness, marker=marker, color=color,
+            ax.plot(D_values, differences, marker=marker, color=color,
                     label=label)
 
         # Add threshold line
