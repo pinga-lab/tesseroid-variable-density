@@ -617,27 +617,24 @@ numerical error lower than 0.1\% of the spherical shell values.
 
 \begin{table}
 \caption{
-    Description of the tesseroid collections used to build a spherical shell and
-    characterize the accuracy of the numerical integration.
-    The first three columns describe the shapes of the tesseroid collections: each one
-    specifies the number of tesseroids on the corresponding dimension (radial,
-    latitudinal, longitudinal).
+    Description of the tesseroid models used to build spherical shells and characterize
+    the accuracy of the numerical integration.
+    The first column indicates the thickness of the shell model and the next three
+    describe the shape of the tesseroid model: each one specifies the number of
+    tesseroids on the corresponding dimension (radial, latitudinal, longitudinal).
     The last two columns specify the latitudinal and longitudinal size of each
     tesseroid that compose the spherical shell model.
-    For each collection, we define five spherical shell models with an outer radius
-    equal to the mean Earth radius (6378.137 km) and the inner radius determined by the
-    following thicknesses: 100m, 1km, 10km, 100km and 1000km.
-    This makes a total of 20 shell models combining tesseroids collections and
-    thicknesses.
+    The outer radius of every shell model is equal to the mean Earth radius (6378.137
+    km), while the inner radius is determined by its thickness.
 }
-\label{tab:tess-collections}
+\label{tab:shell-models}
 \begin{tabular}{cccccc}
-    Radial & Latitudinal & Longitudinal  & Total tesseroids & $L_\phi$ & $L_\lambda$
-    \\ \hline
-    1 & 1  & 2  & 2   & 180$^\circ$ & 180$^\circ$ \\
-    1 & 6  & 12 & 72  &  30$^\circ$ &  30$^\circ$ \\
-    1 & 12 & 24 & 288 &  15$^\circ$ &  15$^\circ$ \\
-    1 & 18 & 36 & 648 &  10$^\circ$ &  10$^\circ$ \\
+    Thickness & Radial & Latitudinal & Longitudinal & $L_\phi$ & $L_\lambda$ \\ \hline
+    100m   & 1 & 6 & 12 & 30$^\circ$ & 30$^\circ$ \\
+    1km    & 1 & 6 & 12 & 30$^\circ$ & 30$^\circ$ \\
+    10km   & 1 & 6 & 12 & 30$^\circ$ & 30$^\circ$ \\
+    100km  & 1 & 6 & 12 & 30$^\circ$ & 30$^\circ$ \\
+    1000km & 1 & 6 & 12 & 30$^\circ$ & 30$^\circ$ \\
 \end{tabular}
 \end{table}
 
@@ -680,21 +677,14 @@ only mechanism that controls the accuracy of the numerical integration.
 For this reason, we will only determine the minimum value of $D$ needed in order to
 guarantee an acceptable accuracy while ignoring the value of $\delta$.
 
-In order to compare the numerical results with the analytical solution we
-must build spherical shell models made of tesseroids.
-These shell models are determined by their inner and outer radii and by the collection
-of tesseroids used to build the shell.
-For this analysis we have chosen to set the outer radii of every shell model equal to
-the mean Earth radius (6378.137 km), while the inner radius is determined by the desired
-thickness of the shell.
-We choose  different values of shell thickness (100m, 1km, 10km, 100km and 1000km) in
-order to account for different computation scenarios.
-Furthermore, we propose different tesseroids collections to build the shell model by
-regularly splitting it along the longitudinal and latitudinal directions.
-Each collection, described in Table~\ref{tab:tess-collections}, is composed by
-a different number of tesseroids, i.e.~with tesseroids of different sizes.
-Finally, combining these collections and the thicknesses we obtain 20 different shell
-models.
+In order to compare the numerical results with the analytical solution we must build
+spherical shell models made of tesseroids: we choose to regularly split the spherical
+shell along the latitudinal and longitudinal directions obtaining a shell model made out
+of $30^\circ \times 30^\circ$ tesseroids.
+In order to cover different computation scenarios we use five spherical shells, each one
+with the outer radius equal to the mean Earth radius and the inner radius determined by
+the desired thickness (100m, 1km, 10km, 100km and 1000km).
+These shell models are detailed on Table~\ref{tab:shell-models}.
 
 The comparison between the numerical results and the analytical solution could be
 naively compared on a single computation point due to the rotation symmetry of the
@@ -707,7 +697,7 @@ an Equator grids, and a Global and Satellite grids.
 The former ones are regional scale grids located on the outer surface of the spherical
 shell, while the latter are global scale grids located at zero height (Global) and at
 the mean orbital height of the gravimetric satellite missions (Satellite).
-We define these grids in the spirit of span a broad scenario of gravitational field
+We define these grids in the spirit of spanning a broad scenario of gravitational field
 computations and ensure an acceptable accuracy on each one of them.
 The comparison will be carried out by computing the maximum absolute difference between
 the analytical solution and the numerical result on each point of the computation grid.
@@ -730,7 +720,7 @@ So, the constants $a$ and $b$ from Eq.~\ref{eq:density-linear} must be
 where $R_\text{out}$ and $R_\text{in}$ are the outer and inner radii of the shell,
 respectively.
 Because the outer radius of every spherical shell model will be equal to the mean Earth
-radius, $R_\text{out} = 6378.137$km.
+radius, $R_\text{out} = 6378.137 \text{km}$.
 
 \begin{figure*}
 \centering
@@ -739,12 +729,9 @@ radius, $R_\text{out} = 6378.137$km.
     Differences between the gravitational fields generated by each tesseroid shell model
     and the analytical solution.
     Each model has a linear density function (Eq.~\ref{eq:density-linear}).
-    The computations were performed on the four grids described in
-    Table~\ref{tab:grids} and using 20 shell models built with the tesseroids
-    collections detailed in Table~\ref{tab:tess-collections} and five different
-    thicknesses.
-    Each line represents the maximum absolute difference between every shell model with
-    a certain thickness.
+    The computations were performed on the four grids described in Table~\ref{tab:grids}
+    and using the shell models detailed in Table~\ref{tab:shell-models}.
+    Each line represents the maximum absolute difference between every shell model.
     Due to the linearity of the density function, the density-based discretization
     algorithm is not applied.
     Differences are reported as a percentage of the shell values.
@@ -754,7 +741,7 @@ radius, $R_\text{out} = 6378.137$km.
 \end{figure*}
 
 We compute the gravitational potential ($V$) and the vertical component of the gradient
-($g_z$) that each shell model generates on each grid defined in Table~\ref{tab:grids}.
+($g_z$) that each shell model generates on each computation grid.
 Other components of the gradient are equal to zero outside of the shell due to the
 rotational symmetry and are thus omitted from the analysis.
 The computations are repeated for values of $D$ ranging from 0.5 to 5 with a step of
@@ -762,9 +749,6 @@ The computations are repeated for values of $D$ ranging from 0.5 to 5 with a ste
 Then we calculate the absolute difference between these results and the analytical
 solution, taking only the maximum absolute difference on each computation grid.
 This differences are shown in Fig.~\ref{fig:D-linear}.
-In order to simplify the visualization of the results, only the maximum
-differences corresponding to tesseroids collections with equal thickness are shown
-in the Figure, obtaining one curve for every shell thickness.
 Finally, we set the optimal value of $D$ as the minimum value at which the corresponding
 error of the numerical approximation is lower than 0.1\%.
 
@@ -772,9 +756,8 @@ We observe from Fig.~\ref{fig:D-linear} that the relative errors for the
 potential and the $g_z$ component fall below the 0.1\% threshold at
 $D=1$ and $D=2.5$, respectively, for every shell model and computation grid.
 These results also show that there's no meaningful dependency between the accuracy of
-the method and the thickness of the shell, the collection of tesseroids used to build
-it or the height of the computation grid (the results for the Satellite grid and the
-Global grid are very similar).
+the method and the thickness of the shell or the height of the computation grid (the
+results for the Satellite grid and the Global grid are very similar).
 
 
 \subsection{Exponential Density}
@@ -846,12 +829,10 @@ i.e.~the smallest possible value of $D$ and the highest possible value of $\delt
 We compute the relative difference between the numerical and analytical results for the
 gravitational potential ($V$) and the vertical component of its gradient ($g_z$) on the
 computation grids detailed in Table~\ref{tab:grids}.
-Because this is a time consuming computation, we limit the analysis only to five
-spherical shell models made out of the second tesseroid collection from
-Table~\ref{tab:tess-collections} with the five different thicknesses, and only one value
-of $b$ equal to 30 (Fig.~\ref{fig:exp-densities}).
-For the sake of brevity, we compute the maximum differences between the results
-involving each shell thickness.
+Because this is a time consuming computation, we limit the analysis only to a single
+value of $b$ equal to 30 (Fig.~\ref{fig:exp-densities}).
+For the sake of brevity, we compute the maximum differences between the results for each
+shell model.
 The results are shown in Fig.~\ref{fig:grid-search}, in which points inside the dotted
 lines are the ones that present a numerical error lower than the 0.1\% threshold.
 Also shown in Fig.~\ref{fig:grid-search} are the $D$ values determined for the linear
@@ -890,15 +871,14 @@ density tesseroids.
     and $g_z$) generated by a spherical shell with an exponential density function
     (Eq.~\ref{eq:density-exp}).
     These comparisons were carried out on the ``Global'' grid (Table~\ref{tab:grids}),
-    with only five spherical shell models made out of the second tesseroid collection
-    from Table~\ref{tab:tess-collections} with the different thicknesses defined in the
-    same Table, and density function with $b = 30$.
+    with the spherical shell models detailed in Table~\ref{tab:shell-models}, and an
+    exponential density function with $b = 30$.
     The percentage difference values are obtained as the maximum difference
-    corresponding to each spherical shell model.
+    between every shell model.
     The points inside the dashed line are the ones that present an error lower than
     0.1\%.
     The $D$ value obtained for the linear density case for each gravitational field is
-    also shown.
+    also shown ($D_\text{linear}$).
     }
 \label{fig:grid-search}
 \end{figure}
@@ -914,14 +894,14 @@ density tesseroids.
     ratio.
     The percentage difference values were obtained from the comparison between the
     analytical solution and the numerical approximation of the gravitational fields ($V$
-    and $g_z$) generated by a spherical shell with an exponential density function and
+    and $g_z$) generated by the spherical shell with an exponential density function and
     different values of $b$ (Eq.~\ref{eq:density-exp}).
     These comparisons were carried out on every grid defined on Table~\ref{tab:grids},
-    making use of the 20 shell models detailed on Table~\ref{tab:tess-collections} and
+    making use of the shell models detailed on Table~\ref{tab:shell-models} and
     fixing the distance-size ratio $D$ to the values obtained for the linear density
     case.
-    The difference is reported as a percentage of the shell values.
-    Each curve corresponds to the maximum difference between every shell model.
+    Each curve corresponds to the maximum difference between every shell model with the
+    same value of $b$.
     }
 \label{fig:delta-exponential}
 \end{figure*}
@@ -930,10 +910,10 @@ Having chosen values of $D$ equal to the ones obtained for the linear density ca
 are free to explore the integration error as a function of $\delta$ in more detail and
 how it varies for different values of $b$ (Eq.~\ref{eq:density-exp}).
 Now we perform the error calculations for values of delta ranging from $10^{-3}$ to
-$10^{1}$, for every grid detailed in Table~\ref{tab:grids} and for the 20 spherical
-shells models detailed in Table~\ref{tab:tess-collections}.
-The calculations are repeated for different values of $b$ (1, 2, 5, 10, 30, 100) to
-examine the error variation with the sharpness of the density function.
+$10^{1}$, for every grid detailed in Table~\ref{tab:grids} and for the spherical shell
+models detailed in Table~\ref{tab:shell-models}.
+The calculations are repeated for distinct values of $b$ (1, 2, 5, 10, 30, 100) to
+examine the accuracy of the method for different sharpness of the density function.
 Because larger $\delta$ values result in fewer tesseroid divisions,
 our intention is to find the highest value of $\delta$ whose numerical error is bellow
 the $0.1\%$ threshold.
@@ -942,7 +922,7 @@ Fig.~\ref{fig:exp-densities} shows the density functions for each value of $b$ a
 Fig.~\ref{fig:delta-exponential} shows the resulting relative
 differences ($V$ and $g_z$).
 In order to improve the visualization of the results, each curve corresponds to the
-maximum difference between all shell models.
+maximum difference between all shell models for the same value of $b$.
 The relative difference for $V$ and $g_z$ falls below the 0.1\% threshold
 for each computation grid, shell model and $b$ value if $\delta = 0.1$.
 These results also show that there is no significant relation between the $b$
@@ -983,7 +963,7 @@ gravitational potential ($V$) and the $g_z$ of spherical shells with this kind o
 sinusoidal density function.
 The analytical solution for the potential $V$ can be found on Appendix~\ref{sec:shell}.
 The gravitational fields are computed on every grid detailed in Table~\ref{tab:grids}
-and making use of the spherical shells defined on Table~\ref{tab:tess-collections}.
+and making use of the spherical shells defined on Table~\ref{tab:shell-models}.
 Each shell is assigned with different sinusoidal density functions by changing the
 values of $b$ in Eq.~\ref{eq:sine-density} (Fig.~\ref{fig:sine-densities}).
 
