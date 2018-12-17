@@ -21,7 +21,6 @@ if not os.path.isdir(result_dir):
 
 # Load digital elevation map of Neuquen, Argentina
 # -----------------------------------------------
-script_path = os.path.dirname(os.path.abspath(__file__))
 data = np.load(os.path.join(script_path, "../../data/topography.npy"))
 lat, lon, topo = data[:, 0], data[:, 1], data[:, 2]
 shape = (571, 457)
@@ -52,11 +51,12 @@ sediments = {'lon': lon,
 # Create top and bottom of sediments layer
 # ----------------------------------------
 # Regrid dem to sediments regular grid
-topo = gridder.interp_at(topography["lat"], topography["lon"], topography["topo"],
-                         sediments["lat"], sediments["lon"],
-                         algorithm="linear")
-sediments["top"] = topo
-sediments["bottom"] = topo - sediments["thickness"]
+sediments_top = gridder.interp_at(topography["lat"], topography["lon"],
+                                  topography["topo"], sediments["lat"],
+                                  sediments["lon"], algorithm="linear")
+sediments_top[np.isnan(sediments["thickness"])] = np.nan
+sediments["top"] = sediments_top
+sediments["bottom"] = sediments_top - sediments["thickness"]
 
 
 # Create Tesseroids model of the sediments layer
@@ -110,8 +110,10 @@ for field in fields:
 slope = (density_top - density_bottom) / (max_height - min_depth)
 constant_term = density_top - slope * max_height
 
+
 def linear_density(h):
     return slope * h + constant_term
+
 
 basin.addprop("density", [linear_density for i in range(basin.size)])
 
@@ -131,7 +133,7 @@ for field in fields:
 
 # Compute gravitational effect of the basin with exponential density
 # ------------------------------------------------------------------
-b_factor = 10
+b_factor = 3
 thickness = max_height - min_depth
 denominator = np.exp(- min_depth * b_factor / thickness) - \
               np.exp(- max_height * b_factor / thickness)
@@ -141,11 +143,13 @@ constant_term = (
     density_bottom * np.exp(-max_height * b_factor / thickness)
     ) / denominator
 
+
 # Define density function
 def density_exponential(h):
     return amplitude * np.exp(-h * b_factor / thickness) + constant_term
 
-basin.addprop("density", [linear_density for i in range(basin.size)])
+
+basin.addprop("density", [density_exponential for i in range(basin.size)])
 
 fields = "potential gz".split()
 for field in fields:
