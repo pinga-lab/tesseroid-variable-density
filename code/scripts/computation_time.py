@@ -11,7 +11,7 @@ from tesseroid_density import tesseroid
 
 # Configure comparison
 # --------------------
-nruns = 1000
+nruns = 10000
 fields = "potential gz".split()
 
 
