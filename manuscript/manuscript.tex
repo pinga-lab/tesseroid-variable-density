@@ -772,29 +772,23 @@ values of $\rho_\text{out} = 2670$~kg/m$^3$ and $\rho_\text{in} = 3300$~kg/m$^3$
 outer and inner surfaces, respectively, defined as follows:
 
 \begin{equation}
-    \rho(r') = A e^{- \frac{b}{T} (r' - R)} + C,
+    \rho(r') = A e^{- \frac{b}{T} (r' - R_1)} + C,
     \label{eq:density-exp}
 \end{equation}
 
 \noindent where
 
 \begin{equation}
-    A = \frac{\rho_\text{in} - \rho_\text{out}}{D},
+    A = \frac{\rho_\text{in} - \rho_\text{out}}{1 - e^{-b}},
 \end{equation}
 
 \begin{equation}
-    C = \frac{1}{D}
-    \left[\rho_\text{out} \, e^{- \frac{b}{T} (R_1 - R)} -
-    \rho_\text{in} \, e^{- \frac{b}{T} (R_2 - R)} \right],
+    C = \rho_\text{in} - A,
 \end{equation}
 
-\begin{equation}
-    D = e^{- \frac{b}{T} (R_1 - R)} - e^{- \frac{b}{T} (R_2 - R)},
-\end{equation}
-
-\noindent $R$ is the mean Earth radius, $T$ is the thickness of the shell ($T = R_2
-- R_1$) and $b$ is a dimensionless constant that determines the variability of the
-function: a higher value of $b$ increases the maximum slope of the density function.
+\noindent $T$ is the thickness of the shell ($T = R_2 - R_1$) and $b$ is a dimensionless
+constant that determines the variability of the function: a higher value of $b$
+increases the maximum slope of the density function.
 On exponential density analysis we will use values of $b$ equal to 1, 2, 5, 10, 30
 and 100, in order to cover different kind of exponential density variations, from smooth
 to sharp (Fig.~\ref{fig:exp-densities}).
