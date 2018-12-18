@@ -82,7 +82,7 @@ grid = {'lat': lat,
 # Common variables between computations
 # -------------------------------------
 density_top, density_bottom = -412, -275
-max_height, min_depth = basin.top.max(), basin.bottom.min()
+top, bottom = basin.top.max(), basin.bottom.min()
 
 
 # Compute gravitational effect of the basin with homogeneous density
@@ -107,12 +107,9 @@ for field in fields:
 
 # Compute gravitational effect of the basin with linear density
 # -------------------------------------------------------------
-slope = (density_top - density_bottom) / (max_height - min_depth)
-constant_term = density_top - slope * max_height
-
-
 def linear_density(h):
-    return slope * h + constant_term
+    slope = (density_top - density_bottom) / (top - bottom)
+    return slope * (h - bottom) + density_bottom
 
 
 basin.addprop("density", [linear_density for i in range(basin.size)])
@@ -133,20 +130,12 @@ for field in fields:
 
 # Compute gravitational effect of the basin with exponential density
 # ------------------------------------------------------------------
-b_factor = 3
-thickness = max_height - min_depth
-denominator = np.exp(- min_depth * b_factor / thickness) - \
-              np.exp(- max_height * b_factor / thickness)
-amplitude = (density_bottom - density_top) / denominator
-constant_term = (
-    density_top * np.exp(-min_depth * b_factor / thickness) -
-    density_bottom * np.exp(-max_height * b_factor / thickness)
-    ) / denominator
-
-
-# Define density function
-def density_exponential(h):
-    return amplitude * np.exp(-h * b_factor / thickness) + constant_term
+def density_exponential(height):
+    b_factor = 3
+    thickness = top - bottom
+    A = (density_bottom - density_top) / (1 - np.exp(-b_factor))
+    C = density_bottom - A
+    return A * np.exp(-b_factor * (height - bottom) / thickness) + C
 
 
 basin.addprop("density", [density_exponential for i in range(basin.size)])
