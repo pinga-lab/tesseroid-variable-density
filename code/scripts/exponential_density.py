@@ -18,11 +18,11 @@ def shell_exponential_density(height, top, bottom, amplitude, b_factor, constant
     the radial coordinate `height + MEAN_EARTH_RADIUS` with an exponential density as:
 
     .. math :
-        \rho(r') = A e^{- b * (r' - R) / T} + C
+        \rho(r') = A e^{- b * (r' - R_1) / T} + C
 
     Where $r'$ is the radial coordinate where the density is going to be evaluated,
-    $A$ is the amplitude, $C$ the constant term, $T$ is the thickness of the tesseroid,
-    $b$ the b factor and $R$ the mean Earth radius.
+    $A$ is the amplitude, $C$ the constant term, $T$ is the thickness of the shell,
+    $b$ the b factor and $R_1$ the inner radius.
     """
     r = height + MEAN_EARTH_RADIUS
     r1 = bottom + MEAN_EARTH_RADIUS
@@ -31,8 +31,8 @@ def shell_exponential_density(height, top, bottom, amplitude, b_factor, constant
     k = b_factor / thickness
     potential = 4 * np.pi * G * amplitude / k**3 / r * \
         (
-         ((r1 * k)**2 + 2*r1*k + 2) * np.exp(-k * bottom) -
-         ((r2 * k)**2 + 2*r2*k + 2) * np.exp(-k * top)
+         ((r1 * k)**2 + 2*r1*k + 2) -
+         ((r2 * k)**2 + 2*r2*k + 2) * np.exp(-k * thickness)
         ) + \
         4 / 3. * np.pi * G * constant_term * (r2**3 - r1**3) / r
     data = {'potential': potential,
@@ -90,17 +90,12 @@ for field in fields:
         thickness = top - bottom
 
         for b_factor in b_factors:
-            denominator = np.exp(- bottom * b_factor / thickness) - \
-                          np.exp(- top * b_factor / thickness)
-            amplitude = (density_bottom - density_top) / denominator
-            constant_term = (
-                density_top * np.exp(-bottom * b_factor / thickness) -
-                density_bottom * np.exp(-top * b_factor / thickness)
-                ) / denominator
+            A = (density_bottom - density_top) / (1 - np.exp(-b_factor))
+            C = density_bottom - A
 
             # Define density function
             def density_exponential(height):
-                return amplitude*np.exp(-height * b_factor / thickness) + constant_term
+                return A * np.exp(-b_factor * (height - bottom) / thickness) + C
 
             # Append density function to every tesseroid of the model
             model.addprop(
@@ -118,8 +113,7 @@ for field in fields:
                     )
                 lats, lons, heights = grid
                 analytical = shell_exponential_density(heights[0], top, bottom,
-                                                       amplitude, b_factor,
-                                                       constant_term)
+                                                       A, b_factor, C)
                 differences = []
                 for delta in delta_values:
                     result = getattr(tesseroid, field)(lons, lats, heights, model,
@@ -154,17 +148,12 @@ fig, ax = plt.subplots(figsize=(3.33, 2.5))
 figure_fname = os.path.join(script_path,
                             "../../manuscript/figures/exponential-densities.pdf")
 for b_factor in b_factors:
-    denominator = np.exp(- bottom * b_factor / thickness) - \
-                  np.exp(- top * b_factor / thickness)
-    amplitude = (density_bottom - density_top) / denominator
-    constant_term = (
-        density_top * np.exp(-bottom * b_factor / thickness) -
-        density_bottom * np.exp(-top * b_factor / thickness)
-        ) / denominator
+    A = (density_bottom - density_top) / (1 - np.exp(-b_factor))
+    C = density_bottom - A
 
     # Define density function
     def density_exponential(height):
-        return amplitude*np.exp(-height * b_factor / thickness) + constant_term
+        return A * np.exp(-b_factor * (height - bottom) / thickness) + C
 
     heights = np.linspace(bottom, top, 101)
     ax.plot(heights, density_exponential(heights), color=colors[b_factor],
