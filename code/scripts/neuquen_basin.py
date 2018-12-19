@@ -58,6 +58,11 @@ sediments_top = gridder.interp_at(topography["lat"], topography["lon"],
                                   topography["topo"], sediments["lat"],
                                   sediments["lon"], algorithm="linear")
 sediments_top[np.isnan(sediments["thickness"])] = np.nan
+# Compute the median of the topography on basin points
+nans = np.isnan(sediments_top)
+sediments_top[~nans] = np.median(sediments_top[~nans])
+print("Top of sediments: {}m".format(sediments_top[~nans][0]))
+# Add top and bottom arrays to sediments dictionary
 sediments["top"] = sediments_top
 sediments["bottom"] = sediments_top - sediments["thickness"]
 
@@ -65,8 +70,8 @@ sediments["bottom"] = sediments_top - sediments["thickness"]
 # Create Tesseroids model of the sediments layer
 # ----------------------------------------------
 bottom, top = sediments["bottom"].copy(), sediments["top"].copy()
-top[np.isnan(top)] = 0
-bottom[np.isnan(bottom)] = 0
+top[nans] = 0
+bottom[nans] = 0
 basin = TesseroidModel(sediments['area'], top, bottom, sediments['shape'])
 
 
@@ -84,8 +89,11 @@ grid = {'lat': lat,
 
 # Common variables between computations
 # -------------------------------------
+# Define density values for the top and the bottom of the sediment layer
 density_top, density_bottom = -412, -275
-top, bottom = basin.top.max(), basin.bottom.min()
+# Define top and bottom variables as the maximum and minimum sediments'
+# height and depth, respectively
+top, bottom = basin.top[~nans].max(), basin.bottom[~nans].min()
 
 
 # Compute gravitational effect of the basin with homogeneous density
