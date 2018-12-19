@@ -175,6 +175,9 @@ try:
 except Exception as e:
     warnings.warn("Couldn't configure LaTeX style for plots:" + str(e))
 
+# Disable warnings
+warnings.filterwarnings("ignore")
+
 
 # --------------
 # Plot densities
