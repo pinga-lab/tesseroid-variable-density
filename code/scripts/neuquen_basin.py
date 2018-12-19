@@ -8,7 +8,6 @@ from matplotlib.patches import Rectangle
 from matplotlib.colors import LightSource
 from mpl_toolkits.basemap import Basemap
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes
-from matplotlib.gridspec import GridSpec
 from fatiando import gridder
 from tesseroid_density import tesseroid
 from tesseroid_model import TesseroidModel
@@ -211,13 +210,11 @@ config['parallels-right']['labels'] = [False, True, False, False]
 
 
 # Create outer grid
-fig = plt.figure(figsize=(6.66, 8))
-grid = GridSpec(ncols=2, nrows=2, wspace=0.001, hspace=0.1)
-
+fig, grid = plt.subplots(nrows=2, ncols=2, figsize=(6.66, 8))
 
 # Topography
 # ----------
-ax = plt.subplot(grid[0, 0])
+ax = grid[0, 0]
 bm.ax = ax
 ax.set_title("(a)", y=1.08, loc='left')
 ax.set_title("Neuquen Basin", y=1.08, loc="center")
@@ -277,15 +274,14 @@ axins.add_patch(rectangle)
 
 # Basin thickness
 # ---------------
-ax = plt.subplot(grid[0, 1])
+ax = grid[0, 1]
 bm.ax = ax
 ax.set_title("(b)", y=1.08, loc='left')
 ax.set_title("Basin Thickness", y=1.08, loc="center")
 x, y = bm(sediments['lon'], sediments['lat'])
-im = bm.contourf(x.reshape(sediments['shape']),
-                 y.reshape(sediments['shape']),
-                 sediments['thickness'].reshape(sediments['shape']),
-                 100)
+im = bm.pcolormesh(x.reshape(sediments['shape']),
+                   y.reshape(sediments['shape']),
+                   sediments['thickness'].reshape(sediments['shape']))
 bm.contour(x.reshape(sediments['shape']),
            y.reshape(sediments['shape']),
            sediments['thickness'].reshape(sediments['shape']),
@@ -313,7 +309,7 @@ grid_specs = {"potential": grid[1, 0], "gz": grid[1, 1]}
 
 density = "exponential"
 for field in fields:
-    ax = plt.subplot(grid_specs[field])
+    ax = grid_specs[field]
     bm.ax = ax
     ax.set_title(fig_titles[field], y=1.08, loc='left')
     ax.set_title(titles[field], y=1.08, loc='center')
@@ -322,8 +318,8 @@ for field in fields:
     result = np.load(os.path.join(result_dir, "{}-{}.npz".format(density, field)))
 
     shape = result["shape"]
-    im = bm.contourf(result["lon"].reshape(shape), result["lat"].reshape(shape),
-                     result["result"].reshape(shape), 100, latlon=True)
+    im = bm.pcolormesh(result["lon"].reshape(shape), result["lat"].reshape(shape),
+                       result["result"].reshape(shape), latlon=True)
     bm.contour(result["lon"].reshape(shape), result["lat"].reshape(shape),
                result["result"].reshape(shape), 5, colors='k', linewidths=0.7,
                latlon=True)
@@ -344,5 +340,8 @@ for field in fields:
     cbar.locator = tick_locator
     cbar.update_ticks()
 
-grid.tight_layout(fig)
+fig.tight_layout()
+figure_fname = os.path.join(script_path,
+                            "../../manuscript/figures/neuquen_basin.pdf")
+plt.savefig(figure_fname, dpi=300)
 plt.show()
