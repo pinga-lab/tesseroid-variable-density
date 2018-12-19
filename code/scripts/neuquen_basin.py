@@ -92,6 +92,7 @@ density_top, density_bottom = -412, -275
 # Define top and bottom variables as the maximum and minimum sediments'
 # height and depth, respectively
 top, bottom = basin.top[~nans].max(), basin.bottom[~nans].min()
+print("Top: {} Bottom: {}".format(top, bottom))
 
 
 # Compute gravitational effect of the basin with homogeneous density
