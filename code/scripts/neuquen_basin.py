@@ -276,7 +276,7 @@ ax.set_title("Basin Thickness", y=1.08, loc="center")
 x, y = bm(sediments['lon'], sediments['lat'])
 im = bm.pcolormesh(x.reshape(sediments['shape']),
                    y.reshape(sediments['shape']),
-                   sediments['thickness'].reshape(sediments['shape']))
+                   1e-3*sediments['thickness'].reshape(sediments['shape']))
 bm.contour(x.reshape(sediments['shape']),
            y.reshape(sediments['shape']),
            sediments['thickness'].reshape(sediments['shape']),
@@ -284,7 +284,7 @@ bm.contour(x.reshape(sediments['shape']),
 bm.drawcountries(**config['countries'])
 bm.drawstates(**config['states'])
 bm.drawcoastlines(**config['coastlines'])
-bm.drawparallels(**config['parallels-quiet'])
+bm.drawparallels(**config['parallels'])
 bm.drawmeridians(**config['meridians'])
 
 # Colorbar
