@@ -209,12 +209,12 @@ config['parallels-right'] = config['parallels'].copy()
 config['parallels-right']['labels'] = [False, True, False, False]
 
 
-# Create outer grid
-fig, grid = plt.subplots(nrows=2, ncols=2, figsize=(6.66, 8))
+# Initiate figure and subplots
+fig, axes = plt.subplots(nrows=2, ncols=2, figsize=(6.66, 8))
 
 # Topography
 # ----------
-ax = grid[0, 0]
+ax = axes[0, 0]
 bm.ax = ax
 ax.set_title("(a)", y=1.08, loc='left')
 ax.set_title("Neuquen Basin", y=1.08, loc="center")
@@ -274,7 +274,7 @@ axins.add_patch(rectangle)
 
 # Basin thickness
 # ---------------
-ax = grid[0, 1]
+ax = axes[0, 1]
 bm.ax = ax
 ax.set_title("(b)", y=1.08, loc='left')
 ax.set_title("Basin Thickness", y=1.08, loc="center")
@@ -305,11 +305,11 @@ cbar.update_ticks()
 labels = {"potential": "J/kg", "gz": "mGal"}
 titles = {"potential": r"$V$", "gz": r"$g_{z}$"}
 fig_titles = {"potential": "(c)", "gz": "(d)"}
-grid_specs = {"potential": grid[1, 0], "gz": grid[1, 1]}
+axes_dict = {"potential": axes[1, 0], "gz": axes[1, 1]}
 
 density = "exponential"
 for field in fields:
-    ax = grid_specs[field]
+    ax = axes_dict[field]
     bm.ax = ax
     ax.set_title(fig_titles[field], y=1.08, loc='left')
     ax.set_title(titles[field], y=1.08, loc='center')
