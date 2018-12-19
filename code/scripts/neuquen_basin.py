@@ -201,10 +201,10 @@ plt.show()
 # Create basemap and configuration
 # --------------------------------
 bm = Basemap(projection='merc',
-             llcrnrlon=topography["area"][2],
-             llcrnrlat=topography["area"][0],
-             urcrnrlon=topography["area"][3],
-             urcrnrlat=topography["area"][1],
+             llcrnrlon=grid["area"][2],
+             llcrnrlat=grid["area"][0],
+             urcrnrlon=grid["area"][3],
+             urcrnrlat=grid["area"][1],
              resolution='i')
 
 config = {'countries': dict(linewidth=0.5, color='k'),
