@@ -183,7 +183,6 @@ warnings.filterwarnings("ignore")
 # Plot densities
 # --------------
 heights = np.linspace(bottom, top, 101)
-fig, ax = plt.subplots(figsize=(3.33, 3))
 
 # Initialize figure and subplots
 try:
