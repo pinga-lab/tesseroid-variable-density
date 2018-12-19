@@ -3,7 +3,6 @@ import os
 import warnings
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib import ticker
 from matplotlib.patches import Rectangle
 from matplotlib.colors import LightSource
 from mpl_toolkits.basemap import Basemap
@@ -235,11 +234,7 @@ bm.imshow(rgb)
 # Proxy image for colorbar
 im = bm.imshow(1e-3*topography['topo'].reshape(shape), cmap=cmap)
 im.remove()
-cbar = bm.colorbar(im, location='bottom', pad="3%")
-tick_locator = ticker.MaxNLocator(nbins=5)
-cbar.locator = tick_locator
-cbar.update_ticks()
-cbar.ax.tick_params(labelsize=9)
+cbar = bm.colorbar(im)
 
 # Basemap configuration
 bm.drawcountries(**config['countries'])
@@ -293,11 +288,7 @@ bm.drawparallels(**config['parallels-quiet'])
 bm.drawmeridians(**config['meridians'])
 
 # Colorbar
-cbar = bm.colorbar(im, location='bottom', pad="3%")
-cbar.ax.tick_params(labelsize=9)
-tick_locator = ticker.MaxNLocator(nbins=5)
-cbar.locator = tick_locator
-cbar.update_ticks()
+cbar = bm.colorbar(im)
 
 
 # Results (exponential)
@@ -330,17 +321,11 @@ for field in fields:
     bm.drawcoastlines(**config['coastlines'])
     bm.drawparallels(**config['parallels'])
     bm.drawmeridians(**config['meridians'])
-    # bm.drawparallels(**config['parallels-quiet'])
-    # bm.drawmeridians(**config['meridians-quiet'])
 
     # Colorbar
-    cbar = bm.colorbar(im, location='bottom', pad="3%")
-    cbar.ax.tick_params(labelsize=9)
-    tick_locator = ticker.MaxNLocator(nbins=5)
-    cbar.locator = tick_locator
-    cbar.update_ticks()
+    cbar = bm.colorbar(im)
 
-fig.tight_layout()
+fig.tight_layout(h_pad=2)
 figure_fname = os.path.join(script_path,
                             "../../manuscript/figures/neuquen_basin.pdf")
 plt.savefig(figure_fname, dpi=300)
