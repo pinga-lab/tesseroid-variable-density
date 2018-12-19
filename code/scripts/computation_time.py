@@ -177,16 +177,17 @@ densities = 'Linear Exponential'.split()
 ax.set_xlabel("Computation height [m]")
 fig.text(0, 0.5, "Computation time ratio", va='center', rotation='vertical')
 fig.subplots_adjust(hspace=0.1)
-axes[0].legend()
+axes[0].legend(loc=6)
 for density, ax in zip(densities, axes):
     ax.grid()
     ax.set_xscale("log")
+    ax.set_xticks(np.logspace(0, 6, 7))
 
     # Add field annotation on each axe
     if density == "Linear":
-        yloc = 0.8
+        yloc = 0.7
     elif density == "Exponential":
-        yloc = 0.89
+        yloc = 0.2
     ax.text(0.5, yloc, density, fontsize=11,
             horizontalalignment='center',
             verticalalignment='center',
