@@ -105,7 +105,7 @@ if compute:
 
     # Compute gravitational fields for exp density tesseroid
     # ------------------------------------------------------
-    b_factor = 10
+    b_factor = 3
     density_top, density_bottom = 2670, 3300
     thickness = top - bottom
 
