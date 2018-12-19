@@ -348,7 +348,7 @@ for field in fields:
     # Colorbar
     cbar = bm.colorbar(im, label=units[field])
 
-fig.tight_layout(h_pad=2)
+fig.tight_layout(pad=1.3, h_pad=2)
 figure_fname = os.path.join(script_path,
                             "../../manuscript/figures/neuquen_basin.pdf")
 plt.savefig(figure_fname, dpi=300)
