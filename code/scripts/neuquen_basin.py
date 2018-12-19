@@ -243,10 +243,10 @@ config['parallels-right']['labels'] = [False, True, False, False]
 
 # Initiate figure and subplots
 try:
-    fig, axes = plt.subplots(nrows=2, ncols=2, figsize=(6.66, 8))
+    fig, axes = plt.subplots(nrows=2, ncols=2, figsize=(6.66, 7))
 except Exception:
     plt.switch_backend('agg')
-    fig, axes = plt.subplots(nrows=2, ncols=2, figsize=(6.66, 8))
+    fig, axes = plt.subplots(nrows=2, ncols=2, figsize=(6.66, 7))
 
 
 # Topography
@@ -363,7 +363,7 @@ for field in fields:
     # Colorbar
     cbar = bm.colorbar(im, label=units[field])
 
-fig.tight_layout(pad=1.3, h_pad=2)
+fig.tight_layout()
 figure_fname = os.path.join(script_path,
                             "../../manuscript/figures/neuquen-basin.pdf")
 plt.savefig(figure_fname, dpi=300)
@@ -376,7 +376,12 @@ except Exception:
 # ----------------
 # Plot differences
 # ----------------
-fig, axes = plt.subplots(nrows=2, ncols=2, figsize=(6.66, 8))
+# Initiate figure and subplots
+try:
+    fig, axes = plt.subplots(nrows=2, ncols=2, figsize=(6.66, 7))
+except Exception:
+    plt.switch_backend('agg')
+    fig, axes = plt.subplots(nrows=2, ncols=2, figsize=(6.66, 7))
 
 densities = ["homogeneous", "linear"]
 units = {"potential": "J/kg", "gz": "mGal"}
@@ -421,7 +426,7 @@ for i, density in enumerate(densities):
         # Colorbar
         cbar = bm.colorbar(im, label=units[field])
 
-fig.tight_layout(pad=1.3, h_pad=2)
+fig.tight_layout()
 figure_fname = os.path.join(script_path,
                             "../../manuscript/figures/neuquen-basin-diffs.pdf")
 plt.savefig(figure_fname, dpi=300)
