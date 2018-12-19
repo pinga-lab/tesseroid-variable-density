@@ -234,7 +234,7 @@ bm.imshow(rgb)
 # Proxy image for colorbar
 im = bm.imshow(1e-3*topography['topo'].reshape(shape), cmap=cmap)
 im.remove()
-cbar = bm.colorbar(im)
+cbar = bm.colorbar(im, label="km")
 
 # Basemap configuration
 bm.drawcountries(**config['countries'])
@@ -288,12 +288,12 @@ bm.drawparallels(**config['parallels-quiet'])
 bm.drawmeridians(**config['meridians'])
 
 # Colorbar
-cbar = bm.colorbar(im)
+cbar = bm.colorbar(im, label="km")
 
 
 # Results (exponential)
 # ---------------------
-labels = {"potential": "J/kg", "gz": "mGal"}
+units = {"potential": "J/kg", "gz": "mGal"}
 titles = {"potential": r"$V$", "gz": r"$g_{z}$"}
 fig_titles = {"potential": "(c)", "gz": "(d)"}
 axes_dict = {"potential": axes[1, 0], "gz": axes[1, 1]}
@@ -323,7 +323,7 @@ for field in fields:
     bm.drawmeridians(**config['meridians'])
 
     # Colorbar
-    cbar = bm.colorbar(im)
+    cbar = bm.colorbar(im, label=units[field])
 
 fig.tight_layout(h_pad=2)
 figure_fname = os.path.join(script_path,
