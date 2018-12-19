@@ -162,10 +162,7 @@ for field in fields:
              result=result, lon=grid["lon"], lat=grid["lat"],
              height=grid["height"], shape=grid["shape"])
 
-
-# ------------
-# Plot Results
-# ------------
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 # Configure LaTeX style for plots
 # -------------------------------
@@ -177,6 +174,29 @@ try:
     plt.rcParams['ytick.major.size'] = 2
 except Exception as e:
     warnings.warn("Couldn't configure LaTeX style for plots:" + str(e))
+
+
+# --------------
+# Plot densities
+# --------------
+heights = np.linspace(bottom, top, 101)
+fig, ax = plt.subplots(figsize=(3.33, 3))
+ax.plot(heights, linear_density(heights), label="Linear")
+ax.plot(heights, density_exponential(heights), label="Exponential")
+ax.set_xlabel("Height [m]")
+ax.set_ylabel(r"Density [kg/m$^3$]")
+ax.legend()
+ax.grid()
+fig.tight_layout()
+figure_fname = os.path.join(script_path,
+                            "../../manuscript/figures/neuquen_basin_densities.pdf")
+plt.savefig(figure_fname, dpi=300)
+plt.show()
+
+
+# ------------
+# Plot Results
+# ------------
 
 # Create basemap and configuration
 # --------------------------------
