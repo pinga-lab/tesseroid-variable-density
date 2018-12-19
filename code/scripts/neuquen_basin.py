@@ -353,3 +353,58 @@ figure_fname = os.path.join(script_path,
                             "../../manuscript/figures/neuquen_basin.pdf")
 plt.savefig(figure_fname, dpi=300)
 plt.show()
+
+
+# ----------------
+# Plot differences
+# ----------------
+fig, axes = plt.subplots(nrows=2, ncols=2, figsize=(6.66, 8))
+
+densities = ["homogeneous", "linear"]
+units = {"potential": "J/kg", "gz": "mGal"}
+titles = {"potential": r"$V$", "gz": r"$g_{z}$"}
+fig_titles = "(a) (b) (c) (d)".split()
+
+for i, density in enumerate(densities):
+    for j, field in enumerate(fields):
+        ax = axes[i, j]
+        bm.ax = ax
+        ax.set_title(fig_titles[2*i + j], y=1.08, loc='left')
+        ax.set_title(titles[field], y=1.08, loc='center')
+
+        # Plot result
+        exponential = np.load(
+            os.path.join(result_dir, "exponential-{}.npz".format(field))
+        )
+        other = np.load(
+            os.path.join(result_dir, "{}-{}.npz".format(density, field))
+        )
+        difference = exponential["result"] - other["result"]
+        vmax = np.abs(difference).max()
+
+        shape = exponential["shape"]
+        im = bm.pcolormesh(exponential["lon"].reshape(shape),
+                           exponential["lat"].reshape(shape),
+                           difference.reshape(shape),
+                           vmin=-vmax, vmax=vmax,
+                           cmap="RdBu_r", latlon=True)
+        bm.contour(exponential["lon"].reshape(shape),
+                   exponential["lat"].reshape(shape),
+                   difference.reshape(shape),
+                   5, colors='k', linewidths=0.7, latlon=True)
+
+        # Configure basemap
+        bm.drawcountries(**config['countries'])
+        bm.drawstates(**config['states'])
+        bm.drawcoastlines(**config['coastlines'])
+        bm.drawparallels(**config['parallels'])
+        bm.drawmeridians(**config['meridians'])
+
+        # Colorbar
+        cbar = bm.colorbar(im, label=units[field])
+
+fig.tight_layout(pad=1.3, h_pad=2)
+figure_fname = os.path.join(script_path,
+                            "../../manuscript/figures/neuquen_basin_diffs.pdf")
+plt.savefig(figure_fname, dpi=300)
+plt.show()
