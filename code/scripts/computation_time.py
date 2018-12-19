@@ -133,7 +133,7 @@ if compute:
                 start_time = time.time()
                 getattr(tesseroid, field)(lon, lat, height, model)
                 end_time = time.time()
-                times[run] = start_time - end_time
+                times[run] = end_time - start_time
             times = np.mean(times)
             df.at[height, "{}_{}".format(density, field)] = times
 
