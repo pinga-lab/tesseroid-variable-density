@@ -59,7 +59,6 @@ sediments_top[np.isnan(sediments["thickness"])] = np.nan
 # Compute the median of the topography on basin points
 nans = np.isnan(sediments_top)
 sediments_top[~nans] = np.median(sediments_top[~nans])
-print("Top of sediments: {}m".format(sediments_top[~nans][0]))
 # Add top and bottom arrays to sediments dictionary
 sediments["top"] = sediments_top
 sediments["bottom"] = sediments_top - sediments["thickness"]
@@ -92,7 +91,7 @@ density_top, density_bottom = -412, -275
 # Define top and bottom variables as the maximum and minimum sediments'
 # height and depth, respectively
 top, bottom = basin.top[~nans].max(), basin.bottom[~nans].min()
-print("Top: {} Bottom: {}".format(top, bottom))
+print("Top of sediments: {} \nBottom of sediments: {}".format(top, bottom))
 
 
 # Compute gravitational effect of the basin with homogeneous density
