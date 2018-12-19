@@ -1,6 +1,7 @@
 from __future__ import division, print_function
 import os
 import time
+import warnings
 import numpy as np
 import pandas as pd
 from fatiando.mesher import Tesseroid
@@ -143,14 +144,59 @@ if compute:
 
 # Plot relative computation times
 # -------------------------------
+# Load computation time differences
 df = pd.read_csv(csv_fname, index_col=0)
-fig, axes = plt.subplots(nrows=2, ncols=1)
+
+# Configure LaTeX style for plots
+try:
+    plt.rcParams['text.usetex'] = True
+    plt.rcParams['font.family'] = 'serif'
+    plt.rcParams['font.serif'] = 'Computer Modern Roman'
+    plt.rcParams['xtick.major.size'] = 2
+    plt.rcParams['ytick.major.size'] = 2
+except Exception as e:
+    warnings.warn("Couldn't configure LaTeX style for plots:" + str(e))
+
+# Initialize figure and subplots
+try:
+    fig, axes = plt.subplots(nrows=2, ncols=1, figsize=(3.33, 4), sharex=True)
+except Exception:
+    plt.switch_backend('agg')
+    fig, axes = plt.subplots(nrows=2, ncols=1, figsize=(3.33, 4), sharex=True)
+
+# Plot results
 ax = axes[0]
-ax.plot(df["linear_potential"] / df["constant_potential"], '-o')
-ax.plot(df["linear_gz"] / df["constant_gz"], '-o')
+ax.plot(df["linear_potential"] / df["constant_potential"], '-o', label=r"$V$")
+ax.plot(df["linear_gz"] / df["constant_gz"], '-o', label=r"$g_z$")
 ax = axes[1]
-ax.plot(df["exp_gz"] / df["constant_gz"], '-o')
-ax.plot(df["exp_potential"] / df["constant_potential"], '-o')
-for ax in axes:
+ax.plot(df["exp_gz"] / df["constant_gz"], '-o', label=r"$V$")
+ax.plot(df["exp_potential"] / df["constant_potential"], '-o', label=r"$g_z$")
+
+# Configure axes
+densities = 'Linear Exponential'.split()
+ax.set_xlabel("Computation height [m]")
+fig.text(0, 0.5, "Computation time ratio", va='center', rotation='vertical')
+fig.subplots_adjust(hspace=0.1)
+axes[0].legend()
+for density, ax in zip(densities, axes):
+    ax.grid()
     ax.set_xscale("log")
-plt.show()
+
+    # Add field annotation on each axe
+    if density == "Linear":
+        yloc = 0.8
+    elif density == "Exponential":
+        yloc = 0.89
+    ax.text(0.5, yloc, density, fontsize=11,
+            horizontalalignment='center',
+            verticalalignment='center',
+            bbox={'facecolor': 'w',
+                  'edgecolor': '#9b9b9b',
+                  'linewidth': 0.5, 'pad': 5,
+                  'boxstyle': 'square, pad=0.4'},
+            transform=ax.transAxes)
+
+try:
+    plt.show()
+except Exception:
+    pass
