@@ -184,6 +184,14 @@ warnings.filterwarnings("ignore")
 # --------------
 heights = np.linspace(bottom, top, 101)
 fig, ax = plt.subplots(figsize=(3.33, 3))
+
+# Initialize figure and subplots
+try:
+    fig, ax = plt.subplots(figsize=(3.33, 3))
+except Exception:
+    plt.switch_backend('agg')
+    fig, ax = plt.subplots(figsize=(3.33, 3))
+
 ax.plot(heights, linear_density(heights), label="Linear")
 ax.plot(heights, density_exponential(heights), label="Exponential")
 ax.set_xlabel("Height [m]")
@@ -194,7 +202,10 @@ fig.tight_layout()
 figure_fname = os.path.join(script_path,
                             "../../manuscript/figures/neuquen_basin_densities.pdf")
 plt.savefig(figure_fname, dpi=300)
-plt.show()
+try:
+    plt.show()
+except Exception:
+    pass
 
 
 # ------------
@@ -232,7 +243,12 @@ config['parallels-right']['labels'] = [False, True, False, False]
 
 
 # Initiate figure and subplots
-fig, axes = plt.subplots(nrows=2, ncols=2, figsize=(6.66, 8))
+try:
+    fig, axes = plt.subplots(nrows=2, ncols=2, figsize=(6.66, 8))
+except Exception:
+    plt.switch_backend('agg')
+    fig, axes = plt.subplots(nrows=2, ncols=2, figsize=(6.66, 8))
+
 
 # Topography
 # ----------
@@ -352,7 +368,10 @@ fig.tight_layout(pad=1.3, h_pad=2)
 figure_fname = os.path.join(script_path,
                             "../../manuscript/figures/neuquen_basin.pdf")
 plt.savefig(figure_fname, dpi=300)
-plt.show()
+try:
+    plt.show()
+except Exception:
+    pass
 
 
 # ----------------
@@ -407,4 +426,7 @@ fig.tight_layout(pad=1.3, h_pad=2)
 figure_fname = os.path.join(script_path,
                             "../../manuscript/figures/neuquen_basin_diffs.pdf")
 plt.savefig(figure_fname, dpi=300)
-plt.show()
+try:
+    plt.show()
+except Exception:
+    pass
