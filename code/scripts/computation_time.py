@@ -196,6 +196,10 @@ for density, ax in zip(densities, axes):
                   'boxstyle': 'square, pad=0.4'},
             transform=ax.transAxes)
 
+figure_fname = os.path.join(script_path,
+                            "../../manuscript/figures/computation-times.pdf")
+plt.savefig(figure_fname, dpi=300)
+
 try:
     plt.show()
 except Exception:
