@@ -25,7 +25,7 @@ model = [Tesseroid(w, e, s, n, top, bottom)]
 
 # Define computation points
 # -------------------------
-heights = np.array([0., 1e3, 1e4, 1e5, 1e6])
+heights = np.array([1e0, 1e1, 1e2, 1e3, 1e4, 1e5, 1e6])
 computation_points = [[np.array([0.]), np.array([0.]), np.array([height])]
                       for height in heights]
 
