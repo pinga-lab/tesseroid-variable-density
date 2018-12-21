@@ -314,7 +314,8 @@ ax.set_title("Basin Thickness", y=1.08, loc="center")
 x, y = bm(sediments['lon'], sediments['lat'])
 im = bm.pcolormesh(x.reshape(sediments['shape']),
                    y.reshape(sediments['shape']),
-                   1e-3*sediments['thickness'].reshape(sediments['shape']))
+                   1e-3*sediments['thickness'].reshape(sediments['shape']),
+                   rasterized=True)
 bm.contour(x.reshape(sediments['shape']),
            y.reshape(sediments['shape']),
            sediments['thickness'].reshape(sediments['shape']),
@@ -348,7 +349,7 @@ for field in fields:
 
     shape = result["shape"]
     im = bm.pcolormesh(result["lon"].reshape(shape), result["lat"].reshape(shape),
-                       result["result"].reshape(shape), latlon=True)
+                       result["result"].reshape(shape), rasterized=True, latlon=True)
     bm.contour(result["lon"].reshape(shape), result["lat"].reshape(shape),
                result["result"].reshape(shape), 5, colors='k', linewidths=0.7,
                latlon=True)
@@ -410,7 +411,7 @@ for i, density in enumerate(densities):
                            exponential["lat"].reshape(shape),
                            difference.reshape(shape),
                            vmin=-vmax, vmax=vmax,
-                           cmap="RdBu_r", latlon=True)
+                           cmap="RdBu_r", rasterized=True, latlon=True)
         bm.contour(exponential["lon"].reshape(shape),
                    exponential["lat"].reshape(shape),
                    difference.reshape(shape),
