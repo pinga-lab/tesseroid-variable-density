@@ -122,6 +122,14 @@ for field in fields:
                          delta_values=delta_values, differences=differences)
 
 
+# Check for DISPLAY variable for matplotlib
+# -----------------------------------------
+try:
+    os.environ["DISPLAY"]
+except Exception:
+    plt.switch_backend('agg')
+
+
 # Configure LaTeX style for plots
 # -------------------------------
 try:
