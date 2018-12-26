@@ -164,6 +164,14 @@ for field in fields:
 
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+# Check for DISPLAY variable for matplotlib
+# -----------------------------------------
+try:
+    os.environ["DISPLAY"]
+except Exception:
+    plt.switch_backend('agg')
+
+
 # Configure LaTeX style for plots
 # -------------------------------
 try:
@@ -185,11 +193,7 @@ warnings.filterwarnings("ignore")
 heights = np.linspace(bottom, top, 101)
 
 # Initialize figure and subplots
-try:
-    fig, ax = plt.subplots(figsize=(3.33, 3))
-except Exception:
-    plt.switch_backend('agg')
-    fig, ax = plt.subplots(figsize=(3.33, 3))
+fig, ax = plt.subplots(figsize=(3.33, 3))
 
 ax.plot(heights, linear_density(heights), label="Linear")
 ax.plot(heights, density_exponential(heights), label="Exponential")
@@ -201,10 +205,7 @@ fig.tight_layout()
 figure_fname = os.path.join(script_path,
                             "../../manuscript/figures/neuquen-basin-densities.pdf")
 plt.savefig(figure_fname, dpi=300)
-try:
-    plt.show()
-except Exception:
-    pass
+plt.show()
 
 
 # ------------
@@ -242,11 +243,7 @@ config['parallels-right']['labels'] = [False, True, False, False]
 
 
 # Initiate figure and subplots
-try:
-    fig, axes = plt.subplots(nrows=2, ncols=2, figsize=(6.66, 7))
-except Exception:
-    plt.switch_backend('agg')
-    fig, axes = plt.subplots(nrows=2, ncols=2, figsize=(6.66, 7))
+fig, axes = plt.subplots(nrows=2, ncols=2, figsize=(6.66, 7))
 
 
 # Topography
@@ -368,21 +365,14 @@ fig.tight_layout()
 figure_fname = os.path.join(script_path,
                             "../../manuscript/figures/neuquen-basin.pdf")
 plt.savefig(figure_fname, dpi=300)
-try:
-    plt.show()
-except Exception:
-    pass
+plt.show()
 
 
 # ----------------
 # Plot differences
 # ----------------
 # Initiate figure and subplots
-try:
-    fig, axes = plt.subplots(nrows=2, ncols=2, figsize=(6.66, 7))
-except Exception:
-    plt.switch_backend('agg')
-    fig, axes = plt.subplots(nrows=2, ncols=2, figsize=(6.66, 7))
+fig, axes = plt.subplots(nrows=2, ncols=2, figsize=(6.66, 7))
 
 densities = ["homogeneous", "linear"]
 units = {"potential": "J/kg", "gz": "mGal"}
@@ -431,7 +421,4 @@ fig.tight_layout()
 figure_fname = os.path.join(script_path,
                             "../../manuscript/figures/neuquen-basin-diffs.pdf")
 plt.savefig(figure_fname, dpi=300)
-try:
-    plt.show()
-except Exception:
-    pass
+plt.show()

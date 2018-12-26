@@ -64,6 +64,12 @@ while True:
 # Plot discretization steps
 # -------------------------
 
+# Check for DISPLAY variable for matplotlib
+try:
+    os.environ["DISPLAY"]
+except Exception:
+    plt.switch_backend('agg')
+
 # Configure LaTeX style for plots
 try:
     plt.rcParams['text.usetex'] = True

@@ -147,6 +147,12 @@ if compute:
 # Load computation time differences
 df = pd.read_csv(csv_fname, index_col=0)
 
+# Check for DISPLAY variable for matplotlib
+try:
+    os.environ["DISPLAY"]
+except Exception:
+    plt.switch_backend('agg')
+
 # Configure LaTeX style for plots
 try:
     plt.rcParams['text.usetex'] = True
@@ -158,11 +164,7 @@ except Exception as e:
     warnings.warn("Couldn't configure LaTeX style for plots:" + str(e))
 
 # Initialize figure and subplots
-try:
-    fig, axes = plt.subplots(nrows=2, ncols=1, figsize=(3.33, 4), sharex=True)
-except Exception:
-    plt.switch_backend('agg')
-    fig, axes = plt.subplots(nrows=2, ncols=1, figsize=(3.33, 4), sharex=True)
+fig, axes = plt.subplots(nrows=2, ncols=1, figsize=(3.33, 4), sharex=True)
 
 # Plot results
 ax = axes[0]
@@ -200,8 +202,4 @@ for density, ax in zip(densities, axes):
 figure_fname = os.path.join(script_path,
                             "../../manuscript/figures/computation-times.pdf")
 plt.savefig(figure_fname, dpi=300)
-
-try:
-    plt.show()
-except Exception:
-    pass
+plt.show()
