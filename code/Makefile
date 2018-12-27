@@ -8,24 +8,23 @@
 PACKAGE = tesseroid_density
 
 TESTDIR = tests
-RESDIR = notebooks/results
-DATADIR = ../data
-FIGDIR = ../manuscript/figures
-NBDIR = notebooks
+SCRIPTSDIR = scripts
+RESDIR = $(SCRIPTSDIR)/results
 
+SCRIPTS = $(SCRIPTSDIR)/computation_time.py             \
+          $(SCRIPTSDIR)/density-based-discretization.py \
+          $(SCRIPTSDIR)/exponential_density.py          \
+          $(SCRIPTSDIR)/grid_search.py                  \
+          $(SCRIPTSDIR)/linear_density.py               \
+          $(SCRIPTSDIR)/neuquen_basin.py                \
+          $(SCRIPTSDIR)/sine_density.py
 
-RESULTS_NB = $(NBDIR)/03-linear-density-test.ipynb \
-			 $(NBDIR)/grid-search-D-delta.ipynb \
-			 $(NBDIR)/exponential-density.ipynb
-
-RESULTS = $(RESDIR)/linear-slope/gzz-1.0e+03-thin-differences.npz \
-		  $(RESDIR)/grid-search/gzz-thick-differences.npz \
-		  $(RESDIR)/exponential-density/gzz-thick-differences.npz
-
-FIGSLIST = $(FIGDIR)/density-based-discretization-algorithm.pdf \
-		   $(FIGDIR)/speed-comparison.pdf $(FIGDIR)/linear-D.pdf \
-		   $(FIGDIR)/grid-search.pdf $(FIGDIR)/exponential-delta.pdf \
-		   $(FIGDIR)/neuquen-basin.pdf
+RESULTS = $(RESDIR)/linear           \
+		  $(RESDIR)/grid-search      \
+		  $(RESDIR)/exponential      \
+		  $(RESDIR)/sine             \
+		  $(RESDIR)/computation_time \
+		  $(RESDIR)/neuquen          \
 
 PYTEST_ARGS = --doctest-modules -v
 PYTEST_COV_ARGS = --cov-report=term-missing
@@ -34,7 +33,7 @@ PYTEST_COV_ARGS = --cov-report=term-missing
 # final execution order will be linear (from top to bottom). Running notebooks
 # like this helps ensure that the final results are not a product of a
 # non-linear execution order that can't be reproduced.
-RUN = bash run_notebook.sh
+RUN = python
 
 
 # TARGETS
@@ -43,16 +42,16 @@ RUN = bash run_notebook.sh
 help:
 	@echo "Commands:"
 	@echo ""
-	@echo "  all        runs 'build', 'test', and 'figures'"
-	@echo "  build      build and install the package"
-	@echo "  test       run the test suite (including doctests)"
-	@echo "  coverage   calculate test coverage"
-	@echo "  check      run all code quality checks (pep8, linter)"
-	@echo "  pep8       check for PEP8 style compliance"
-	@echo "  lint       run static analysis using pylint"
-	@echo "  clean      clean up the package build"
-	@echo "  results    execute all of the results generating notebooks"
-	@echo "  figures    execute all of the figure generating notebooks"
+	@echo "  all            runs 'build', 'test', and 'figures'"
+	@echo "  build          build and install the package"
+	@echo "  test           run the test suite (including doctests)"
+	@echo "  coverage       calculate test coverage"
+	@echo "  check          run all code quality checks (pep8, linter)"
+	@echo "  pep8           check for PEP8 style compliance"
+	@echo "  lint           run static analysis using pylint"
+	@echo "  clean          clean up the package build"
+	@echo "  results        execute all scripts (generating results)"
+	@echo "  figures        execute all scripts (not generating results)"
 	@echo ""
 
 
@@ -68,34 +67,19 @@ clean:
 all: build test figures
 
 
-# Generating results
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-# Main target for producing all results. Add results files as dependencies to
-# include them in the build.
-results: $(RESULTS)
-
-# Build a result file from a notebook and a data file.
-# Execution modifies a notebook, so the time stamp will be later than the
-# target. touch the target to make sure it's always newer than the dependency.
-$(RESULTS): $(RESULTS_NB)
-	$(foreach notebook, $(RESULTS_NB), $(RUN) $(notebook);)
-	$(foreach result, $(RESULTS), @touch $(result);)
-
-
 # Generating figures
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-# Main target for generating figures. Include figure files as dependencies to
-# include them in the build.
-figures: $(FIGSLIST)
+figures:
+	$(foreach script, $(SCRIPTS), $(RUN) $(script);)
 
 
-# Generate a figure file from a notebook and a results file.
-$(FIGSLIST): $(NBDIR)/08-plot-figures.ipynb
-	$(RUN) $<
-	@touch $@
+# Generating results
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+results:
+	$(foreach resultdir, $(RESULTS), rm -r $(resultdir);)
+	$(foreach script, $(SCRIPTS), $(RUN) $(script);)
 
 
 # Building and testing the code
