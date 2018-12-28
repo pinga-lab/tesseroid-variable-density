@@ -442,24 +442,21 @@ This experiment will also test whether the same values of $D$ determined by
 \end{figure*}
 
 The numerical integration of an arbitrary continuous density function introduces a new
-type of problem: the integration error from using only a few nodes to account for the
-variation of the density function.
-The three dimensional adaptive discretization may help
-to reduce this kind of error by adding more point masses in the radial direction.
-However, it does not take into account the density function when subdividing the
+type of problem: the integration error from using only a few quadrature nodes to account
+for the variation of the density function.
+The three dimensional adaptive discretization may help to reduce this kind of error by
+adding more point masses in the radial direction.
+However, it does not take into account the density function itself when dividing the
 tesseroid and hence it is not well suited to fully perform this task.
-The two dimensional adaptive discretization algorithm does not subdivide the tesseroid
-on the radial dimension, so it does not put any effort on lowering this new kind of
-error.
 
-We have developed a complementary discretization
-algorithm that takes into account the variations of the density function.
-This density-based discretization is applied prior to the adaptive discretization
-described in the previous section.
+We have developed a complementary discretization algorithm in the redial direction that
+takes into account the variations of the density function.
+This density-based discretization is applied prior to the two dimensional adaptive
+discretization described in the previous section.
 In short, the algorithm divides the tesseroid along the radial dimension at the
 depths at which the \emph{maximum density variations} take place.
 
-Consider an \emph{original} tesseroid with a continuous density given by the function
+Consider an \emph{original} tesseroid with a density given by the continuous function
 $\rho(r')$.
 Before the density-based discretization starts,
 we normalise the density function to the range $[0, 1]$ as follows
@@ -480,9 +477,8 @@ The algorithm is comprised of the following steps
 (Fig.~\ref{fig:density-discretization-algorithm}):
 
 \textit{Step 1}:
-Define a linear function $\rho_l(r')$ that assumes
-the same values as the normalised density $\rho_n(r')$ at the boundaries of the
-tesseroid ($r_1$ and $r_2$):
+Define a linear function $\rho_l(r')$ that assumes the same values as the normalised
+density function $\rho_n(r')$ at the boundaries of the tesseroid ($r_1$ and $r_2$):
 
 \begin{equation}
     \rho_l(r') =
@@ -527,13 +523,12 @@ $\delta$ is a positive constant henceforth called the \textit{delta ratio}.
 If inequality~\ref{eq:delta-density} is not satisfied, then the tesseroid is split in
 two parts at the radius $r_\text{max}$ at which the maximum absolute difference
 (Eq.~\ref{eq:density-abs-diff}) takes place.
+Repeat steps 1-5 for each smaller tesseroid produced in this step.
 
-\textit{Step 6}:
-Repeat steps 1-6 for each smaller tesseroid produced in step 5.
-
-Once all smaller tesseroids satisfy Eq.~\ref{eq:delta-density},
-each one is subjected to the two dimensional adaptive
-discretization algorithm described earlier to calculate their gravitational effects.
+\textit{Final step}:
+Once all smaller tesseroids satisfy inequality.~\ref{eq:delta-density}, each one is
+subjected to the two dimensional adaptive discretization algorithm described earlier to
+calculate their gravitational effects.
 
 On the first iteration, the ratio $L_r/L_r^\text{orig} = 1$ because the tesseroid being
 divided is the original one.
@@ -555,41 +550,44 @@ ensures an acceptable accuracy while minimising the computation time.
 
 \subsection{Algorithm summary}
 
-In summary, given any tesseroid with variable density in depth and an arbitrary
-external computation point, we propose the following steps to numerically
-compute the gravitational fields:
+In summary, given a tesseroid with density varying in depth according to an arbitrary
+continuous function, we propose the following steps to numerically compute its
+gravitational fields on an external point:
 
 \textit{Step 1:}
-Apply the density-based discretization algorithm.
-It subdivides the tesseroid only in the radial dimension, thus it will return a set of
-tesseroids with the same longitudinal and latitudinal dimensions as the original one but
-with different radial boundaries.
+Apply the density-based discretization algorithm to discretize the tesseroid in the
+radial dimension, producing a set of tesseroids with the same longitudinal and
+latitudinal dimensions as the original one but with different radial boundaries.
 
 \textit{Step 2:}
-Apply the two dimensional adaptive discretization algorithm on each tesseroid obtained
+Apply the two dimensional adaptive discretization algorithm for each tesseroid obtained
 in the previous step.
-If needed, it will subdivide each tesseroid only in the latitudinal and longitudinal
-direction, generating a set of smaller tesseroids that resemble the original one.
+If needed, the algorithm will divide each tesseroid in the latitudinal and longitudinal
+direction, generating a set of smaller tesseroids.
 
 \textit{Step 3:}
 Apply a second-order GLQ to numerically compute the gravitational fields
 (Eq.\ref{eq:glq-var-dens}) generated by each tesseroid obtained in the
 previous step.
-Then sum these results in order to obtain the gravitational field of the original
-tesseroid.
+The numerical integration includes the density function and can be applied
+without modification to any continuous function.
+The sum of these results is the gravitational field of the original tesseroid.
 
 
 \subsection{Software implementation}
 
 We have implemented the algorithms described in the previous sections in the Python
 programming language.
-The software is based on the pre-existing code for the homogeneous density tesseroid
-\citep{Uieda2016}, more specifically the implementation in the Python library Fatiando a
-Terra v0.5 \citep{Uieda2013}.
+The software is based on the Python implementation of \citet{Uieda2016} that is included
+in the Fatiando a Terra library v0.5 \citep{Uieda2013}.
 The more time consuming parts of the algorithm are written in the Cython language to
 achieve higher performance.
+We leverage the dynamic nature of the Python language to allow user-defined radial
+density functions as inputs to the software.
+Thus, our code can evaluate linear, exponential, polynomial, sinusoidal, cubic splines,
+or any other continuous density function without modification.
 This new code is freely available under the BSD 3-clause open-source license.
-It can be downloaded from the online repository
+It can be freely downloaded from the online repository
 \href{https://github.com/pinga-lab/tesseroid-variable-density}{github.com/pinga-lab/tesseroid-variable-density}.
 
 
