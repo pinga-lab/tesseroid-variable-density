@@ -184,6 +184,7 @@ grid_titles = {"pole": "Pole",
                "equator": "Equator",
                "global": "Global",
                "260km": "Satellite"}
+grid_names = ["pole", "equator", "global", "260km"]
 colors = dict(zip(b_factors, plt.cm.viridis(np.linspace(0, 0.9, len(b_factors)))))
 
 # Create outer grid
@@ -193,7 +194,7 @@ outer_grid = GridSpec(ncols=2, nrows=2, wspace=0.001, hspace=0.1)
 # Create grid specs for each grid
 grid_specs = dict(
                   zip(
-                      grids.keys(),
+                      grid_names,
                       [GridSpecFromSubplotSpec(ncols=1, nrows=2,
                                                subplot_spec=outer_grid[j, i],
                                                hspace=0)
@@ -201,10 +202,10 @@ grid_specs = dict(
                        for i in range(2)]
                      )
                  )
-positions = dict(zip(grids.keys(), [[j, i] for j in range(2) for i in range(2)]))
+positions = dict(zip(grid_names, [[j, i] for j in range(2) for i in range(2)]))
 
 # Plot for each grid
-for grid_name in grids:
+for grid_name in grid_names:
 
     # Choose gridspec and create axes
     gs = grid_specs[grid_name]
