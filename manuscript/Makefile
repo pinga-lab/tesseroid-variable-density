@@ -15,6 +15,7 @@
 # The name of the main .tex file to build.
 # Other files can be included into this one.
 PROJECT = manuscript
+R1 = $(PROJECT)-marked-R1
 
 # Folder with the Latex source files
 SRC = .
@@ -88,15 +89,20 @@ clean:
 $(OUTPUT)/:
 	mkdir -p $(OUTPUT)/
 
-$(OUTPUT)/$(PROJECT).aux: $(TEX_FILES) $(STY_FILES) $(CLS_FILES) $(FIGS_PDF_FILES) | $(OUTPUT)/
-	pdflatex $(LATEX_FLAGS) $(SRC)/$(PROJECT)
-	cp $@ .
-	# Copy the aux file next to the tex file for Vim completion purposes
-
-$(OUTPUT)/$(PROJECT).bbl: $(BIB_FILES) $(BST_FILES) | $(OUTPUT)/$(PROJECT).aux
+$(OUTPUT)/%.pdf: %.tex $(STY_FILES) $(CLS_FILES) $(FIGS_PDF_FILES) $(BIB_FILES) $(BST_FILES) | $(OUTPUT)/
+	pdflatex $(LATEX_FLAGS) $<
 	cp $(BIB_FILES) $(BST_FILES) $(OUTPUT)
-	cd $(OUTPUT) && bibtex $(PROJECT)
-	pdflatex $(LATEX_FLAGS) $(SRC)/$(PROJECT)
+	cd $(OUTPUT) && bibtex $(patsubst %.tex,%,$<)
+	pdflatex $(LATEX_FLAGS) $< 1>/dev/null
+	pdflatex $(LATEX_FLAGS) $< 1>/dev/null
+	# Copy the aux file next to the tex file for Vim completion purposes
+	cp $(OUTPUT)/*.aux .
 
-$(OUTPUT)/$(PROJECT).pdf: $(OUTPUT)/$(PROJECT).aux $(OUTPUT)/$(PROJECT).bbl
-	pdflatex $(LATEX_FLAGS) $(SRC)/$(PROJECT) 1>/dev/null
+
+# MAKE THE VERSION WITH MARKED DIFFERENCES
+###############################################################################
+
+r1: $(OUTPUT)/$(R1).pdf
+
+$(R1).tex: $(PROJECT).tex
+	git ldiff submitted $< > $@
