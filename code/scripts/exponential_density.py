@@ -268,7 +268,7 @@ for grid_name in grid_names:
         ax.grid(True, linewidth=0.5, color='#aeaeae')
 
     # Add legend
-    if position == [0, 0]:
+    if position == [0, 1]:
         axes[0].legend(loc=0, prop={"size": 8})
 
 outer_grid.tight_layout(fig)
