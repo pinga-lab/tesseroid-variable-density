@@ -325,49 +325,24 @@ tesseroid based on a ratio between the distance to the computation
 point and its dimensions.
 This algorithm produces a more efficient computation because an increased concentration
 of point masses is produced where it is needed more.
-\citet{Uieda2016} developed a modified version of this algorithm that speeds the
-computation of the distances.
-Both algorithms (the original one from \citet{Li2011} and the modified
-version of \citet{Uieda2016}) perform tesseroid subdivisions in the latitudinal,
-longitudinal and radial directions, thus we can define them as three dimensional
+\citet{Uieda2016} developed a modified version of this algorithm along with an efficient
+computational implementation.
+Both algorithms perform tesseroid subdivisions in the latitudinal,
+longitudinal and radial directions, thus we can define them as three-dimensional
 adaptive discretization algorithms.
 On the other hand, \citet{Lin2018} proposed a two dimensional discretization algorithm
 that subdivides the tesseroid only on the latitudinal and longitudinal directions.
-Removing a dimension from the splitting makes the computation more efficient, while
-keeping an acceptable accuracy on the gravitational fields \citep{Lin2018}.
+Removing a dimension from the discretization makes the computation more efficient by
+reducing the number of tesseroids in the model, while
+retaining an acceptable accuracy \citep{Lin2018}.
 
-Here we will use a two dimensional version of the adaptive discretization algorithm
-developed by \citet{Uieda2016}: the distances from the tesseroid and the computation
-point are computed as \citet{Uieda2016} do, but the tesseroid will only be split on the
-longitudinal and latitudinal directions.
+Here we will follow \citet{Lin2018} and use a two dimensional version of the adaptive
+discretization of \citet{Uieda2016}.
 What follows is a summary of the algorithm and the reader is referred to
 \citet{Uieda2016} for a detailed description.
 
-Lets consider a computation point located at $(r, \phi, \lambda)$ and an arbitrary
-tesseroid defined by the boundaries $r_1$, $r_2$, $\phi_1$, $\phi_2$, $\lambda_1$ and
-$\lambda_2$, which geometric centre is located at $(r_t, \phi_t, \lambda_t)$, where
-
-\begin{equation}
-    r_t = \frac{r_2 + r_1}{2}, \quad
-    \phi_t = \frac{\phi_2 + \phi_1}{2}, \quad
-    \lambda_t = \frac{\lambda_2 + \lambda_1}{2}.
-\end{equation}
-
-We can define the longitudinal ($L_\lambda$) and latitudinal ($L_\phi$) dimensions of
-the tesseroid as follows:
-
-\begin{equation}
-    L_\lambda = r_2 \arccos(\sin^2\phi_t +
-        \cos^2\phi_t\cos(\lambda_2 - \lambda_1)),
-    \label{eq:sizelon}
-\end{equation}
-
-\begin{equation}
-    L_\phi = r_2 \arccos(\sin\phi_2\sin\phi_1 + \cos\phi_2\cos\phi_1).
-\end{equation}
-
 \textit{Step 1}: Check that the tesseroid satisfies the following inequality for each
-dimension $L_i (i \in \{\lambda, \phi\})$ of the tesseroid:
+dimension $L_i\ (i \in \{\lambda, \phi\})$ of the tesseroid:
 
 \begin{equation}
     \frac{d}{L_i} \geq D,
@@ -375,7 +350,7 @@ dimension $L_i (i \in \{\lambda, \phi\})$ of the tesseroid:
 \end{equation}
 
 \noindent
-in which $D$ is a positive scalar called the distance-size ratio and $d$ is the distance
+in which $D$ is a positive scalar called the distance-size ratio, $d$ is the distance
 between the computation point and the geometric centre of the tesseroid
 
 \begin{equation}
@@ -390,6 +365,27 @@ between the computation point and the geometric centre of the tesseroid
         \sin\phi\sin\phi_t + \cos\phi\cos\phi_t\cos(\lambda - \lambda_t).
 \end{equation}
 
+\begin{equation}
+    r_t = \frac{r_2 + r_1}{2}, \quad
+    \phi_t = \frac{\phi_2 + \phi_1}{2}, \quad
+    \lambda_t = \frac{\lambda_2 + \lambda_1}{2}.
+\end{equation}
+\\
+\noindent
+and the dimensions of the tesseroid are defined as
+
+\begin{equation}
+    L_\lambda = r_2 \arccos(\sin^2\phi_t +
+        \cos^2\phi_t\cos(\lambda_2 - \lambda_1)),
+    \label{eq:sizelon}
+\end{equation}
+\\
+\noindent and
+
+\begin{equation}
+    L_\phi = r_2 \arccos(\sin\phi_2\sin\phi_1 + \cos\phi_2\cos\phi_1).
+\end{equation}
+
 \textit{Step 2}:
 If none of the dimensions of the tesseroid fail inequality~\ref{eq:condition}, then
 compute the gravitational effect of the tesseroid using a second-order GLQ
@@ -397,17 +393,17 @@ compute the gravitational effect of the tesseroid using a second-order GLQ
 Add the computed effect to a running total.
 
 \textit{Step 3}:
-If any dimension fails inequality~\ref{eq:condition}, split the tesseroid in half along
-the offending dimensions.
-Repeat steps 1-3 for all smaller tesseroids until none are left.
+If inequality~\ref{eq:condition} does not hold for one of the dimensions
+(longitudinal or latitudinal), split the tesseroid in half along that dimension.
+Repeat steps 1-3 for all smaller tesseroids until none are left that violate
+inequality~\ref{eq:condition}.
 
 \textit{Final step}:
-By the end of the algorithm, a second-order GLQ will be applied on each small tesseroid
-to compute the gravitational field they generate, and the sum of these results will be
-the gravitational effect of the original tesseroid.
+By the end of the algorithm, a second-order GLQ will have been applied to each smaller
+tesseroid and the running total gathered in step 2 will be the gravitational effect of
+the original tesseroid.
 
-Notice that the distance-size ratio $D$ determines how many
-times the tesseroids will be divided.
+The distance-size ratio $D$ determines how many times the tesseroids will be divided.
 Therefore, it effectively regulates both the accuracy of the algorithm and its
 computation time.
 An optimal value for $D$ cannot be directly calculated from the desired accuracy level.
@@ -416,11 +412,9 @@ analytical solution for a spherical shell.
 \citet{Uieda2016} used a shell with homogeneous density to determine optimal values of
 $D$.
 Here, we will repeat the numerical experiment using analytical expressions for shells
-with density varying according to certain functions of $r$.
-This numerical experiment will also show that the two dimensional adaptive
-discretization algorithm can achieve the same accuracy as the original three dimensional
-version, though it reduces the number of tesseroid subdivisions and thus the computation
-time.
+with density varying according to functions of $r$.
+This experiment will also test whether the same values of $D$ determined by
+\citet{Uieda2016} can be used for the two dimensional adaptive discretization.
 
 
 \subsection{Density-based Discretization Algorithm}
