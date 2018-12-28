@@ -701,46 +701,12 @@ A spherical shell with a linear density function given by
 \end{equation}
 
 \noindent
-has an analytical solution given by Eq.~\ref{eq:shell-pot-linear}.
-
-The absolute density difference defined on equation~\ref{eq:density-abs-diff} will
-always be zero for the linear density case.
-As a result, the inequality~\ref{eq:delta-density} will always be satisfied and no
-divisions will ever be performed.
-Therefore, the two dimensional adaptive discretization algorithm is the
-only mechanism that controls the accuracy of the numerical integration.
-For this reason, we will only determine the minimum value of $D$ needed in order to
-guarantee an acceptable accuracy while ignoring the value of $\delta$.
-
-In order to compare the numerical results with the analytical solution we must build
-spherical shell models made of tesseroids: we choose to regularly split the spherical
-shell along the latitudinal and longitudinal directions obtaining a shell model made out
-of $30^\circ \times 30^\circ$ tesseroids.
-In order to cover different computation scenarios we use five spherical shells, each one
-with the outer radius equal to the mean Earth radius and the inner radius determined by
-the desired thickness (100m, 1km, 10km, 100km and 1000km).
-These shell models are detailed on Table~\ref{tab:shell-models}.
-
-The comparison between the numerical results and the analytical solution could be
-naively compared on a single computation point due to the rotation symmetry of the
-spherical shell.
-But the numerical results may adopt different values depending on the relative location
-between the computation point and the tesseroid, thus is not wise to carry out the
-comparison on a single point.
-Instead, we propose four computation grids detailed on Table~\ref{tab:grids}: a Pole and
-an Equator grids, and a Global and Satellite grids.
-The former ones are regional scale grids located on the outer surface of the spherical
-shell, while the latter are global scale grids located at zero height (Global) and at
-the mean orbital height of the gravimetric satellite missions (Satellite).
-These grids are defined in the spirit of spanning a broad scenario of gravitational
-field computations and ensure an acceptable accuracy on each one of them.
-The comparison will be carried out by computing the maximum absolute difference between
-the analytical solution and the numerical result on each point of the computation grid.
-
-We assign a density that varies linearly with $r$ (Eq.~\ref{eq:density-linear}) to each
-shell model, which assumes the values of $\rho_\text{in} = 3300$~kg/m$^3$ and
-$\rho_\text{out} = 2670$~kg/m$^3$ on the inner and outer radii, respectively.
-So, the constants $a$ and $b$ from Eq.~\ref{eq:density-linear} must be
+has an analytical solutions for the gravitational potential and its vertical derivative
+given by Eqs.~\ref{eq:shell-pot-linear} and \ref{eq:shell-gz}.
+The values of the angular and linear coefficients ($a$ and $b$)
+can be chosen so that the density assumes the values of $\rho_\text{in} = 3300$~kg/m$^3$
+and $\rho_\text{out} = 2670$~kg/m$^3$ on the inner ($R_\text{in}$) and outer
+($R_\text{out}$) radii of the shell, respectively,
 
 \begin{equation}
     a = \frac{\rho_\text{out} - \rho_\text{in}}{R_\text{out} - R_\text{in}},
@@ -748,14 +714,9 @@ So, the constants $a$ and $b$ from Eq.~\ref{eq:density-linear} must be
 
 \begin{equation}
     b = \rho_\text{out} -
-    \frac{\rho_\text{out} - \rho_\text{in}}{R_\text{out} - R_\text{in}} R_\text{out},
+    \frac{\rho_\text{out} - \rho_\text{in}}{R_\text{out} - R_\text{in}} R_\text{out}.
 \end{equation}
 
-\noindent
-where $R_\text{out}$ and $R_\text{in}$ are the outer and inner radii of the shell,
-respectively.
-Because the outer radius of every spherical shell model will be equal to the mean Earth
-radius, $R_\text{out} = 6378.137 \text{km}$.
 
 \begin{figure*}
 \centering
@@ -775,24 +736,35 @@ radius, $R_\text{out} = 6378.137 \text{km}$.
 \label{fig:D-linear}
 \end{figure*}
 
-We compute the gravitational potential ($V$) and the vertical component of the gradient
-($g_z$) that each shell model generates on each computation grid.
-Other components of the gradient are equal to zero outside of the shell due to the
-rotational symmetry and are thus omitted from the analysis.
-The computations are repeated for values of $D$ ranging from 0.5 to 5 with a step of
-0.5.
-Then we calculate the absolute difference between these results and the analytical
-solution, taking only the maximum absolute difference on each computation grid.
-This differences are shown in Fig.~\ref{fig:D-linear}.
-Finally, we set the optimal value of $D$ as the minimum value at which the corresponding
-error of the numerical approximation is lower than 0.1\%.
+The absolute density difference defined on equation~\ref{eq:density-abs-diff} will
+always be zero for the linear density case.
+As a result, the inequality~\ref{eq:delta-density} will always be satisfied and no
+divisions will ever be performed during the density-based discretization.
+Therefore, the two dimensional adaptive discretization algorithm is the
+only mechanism that controls the accuracy of the numerical integration for the linear
+density case.
+For this reason, we will ignore the values of $\delta$ and only determine the minimum
+value of $D$ needed in order to guarantee an acceptable accuracy.
+
+We compute the gravitational potential ($V$) and its vertical derivative ($g_z$) for
+each shell model in Table~\ref{tab:shell-models} on each computation grid in
+Table~\ref{tab:grids}.
+The horizontal derivatives of the potential are equal to zero outside of the shell due
+to the rotational symmetry and are thus omitted from the analysis.
+The computations are repeated for values of the distance-size ratio $D$ ranging from 0.5
+to 5 in increments of 0.5.
+We then calculate the absolute difference between the numerical results and the
+analytical solution for the shell.
+Fig.~\ref{fig:D-linear} shows the maximum absolute difference for each shell model and
+computation grid as a function of $D$.
+The differences are relative to the shell value.
+Finally, we set the optimal value of $D$ as the smallest value for which the difference
+is below 0.1\%.
 
 We observe from Fig.~\ref{fig:D-linear} that the relative errors for the
-potential and the $g_z$ component fall below the 0.1\% threshold at
-$D=1$ and $D=2.5$, respectively, for every shell model and computation grid.
-These results also show that there's no meaningful dependency between the accuracy of
-the method and the thickness of the shell or the height of the computation grid (the
-results for the Satellite grid and the Global grid are very similar).
+potential and $g_z$ fall below the 0.1\% threshold at
+$D=1$ and $D=2.5$, respectively.
+These values are consistent for all shell models and computation grids.
 
 
 \subsection{Exponential Density}
@@ -1188,6 +1160,12 @@ differences with the constant and the linear density, respectively.
 
 \section{Results and Discussion}
 
+% Brought this down from the results. It fits better in the discussion. I'll find a
+% place for it afterwards.
+These results also show that there's no meaningful dependency between the accuracy of
+the method and the thickness of the shell or the height of the computation grid (the
+results for the Satellite grid and the Global grid are very similar).
+
 The $D$ and $\delta$ ratios determinations proved that for a linear density case only
 the two dimensional adaptive discretization algorithm and a second-order GLQ
 approximation is needed to achieve a 0.1\% accuracy of the gravitational potential and
@@ -1417,6 +1395,7 @@ Following \citet{Grombein2013}:
 
 \begin{equation}
     g_z(r) = \frac{V_\text{sh}(r)}{r},
+\label{eq:shell-gz}
 \end{equation}
 
 From Eq.~\ref{eq:shell-pot} we can obtain expressions of the gravitational potential for
