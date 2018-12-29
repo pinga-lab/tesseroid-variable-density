@@ -1018,38 +1018,52 @@ We note that, even for the case of $b=10$, the differences for $\delta = 0.1$ ar
 Because the density-based discretization algorithm introduces more division along the
 radial dimension, it is reasonable that the computation time for variable densities will
 be increased in comparison to the homogeneous density case.
-In addition to the extra division, there is also the overhead imposed by the extra
-function calls to evaluate the density function.
-In order to quantify these effects, compare the computation times between the
-homogeneous density case and the linear and the exponential density ones.
-We note that these results are highly dependent on our particular implementation of the
-algorithm and choice of programming language.
+In order to get a qualitative indicator of this increase in the computation time we
+gathered the number of subdivisions the density-based discretization performs under
+exponential and sinusoidal density cases.
 
-We define a $20^\circ \times 20^\circ$ tesseroid of 1 km of thickness and a single
-computation point located at different heights above the top surface of the tesseroid (1
-m, 10 m, 100 m, 1 km, 10 km, 100 km and 1000 km).
-We then compute $V$ and $g_z$ for the homogeneous, linear, and exponential (with $b =
-3$) density cases.
-We perform 1000 computations for each field, density function, and height while tracking
-their computation time.
-The final computation time is the mean of these 1000 executions.
+We assign an exponential density (Eq.~\ref{eq:density-exp}) with values of $b$ equal to
+1, 2, 5, 10, 30 and 100, and a sinusoidal density (Eq.~\ref{eq:density-sine}) with
+values of $b$ equal to 1, 2, 5, and 10 to an arbitrary tesseroid.
+Then we applied the density-based discretization algorithm on each case recording how
+many subdivisions it carried out and where the boundaries of the smaller tesseroids are
+located.
+On both exponential and sinusoidal density cases a value of $\delta$ equal to 0.1 has
+been used.
 
-Fig.~\ref{fig:computation-times} shows the computation times relative to the homogeneous
-case (i.e., ${\Delta t}/{\Delta t_\text{homog}}$).
+Figs.~\ref{fig:number-of-tesseroids}(a) and~\ref{fig:number-of-tesseroids}(b) show the
+exponential and sinusoidal densities used and the resulting boundaries of the
+discretized tesseroids as orange dots.
+The number of discretizations are independent of the value of factor $b$ in the
+exponential density case: the algorithm only performs one split independently of $b$.
+On the other hand, the sinusoidal density results show a significant relation between
+the number of discretizations and the constant $b$.
+Fig.~\ref{fig:number-of-tesseroids} shows an almost linear relation between these two
+magnitudes.
 
-\begin{figure}
+Therefore, the computation time for the exponential density would be increased in
+comparison to the homogeneous density case because the
+single split the density-based algorithm performs, although it will be independent of
+the value of $b$.
+On the other hand, the computation time for the sinusoidal density is bounded to the
+value of $b$ used, greatly increasing it for a large $b$ as 100.
+
+\begin{figure*}
 \centering
-\iftwocol{
-\includegraphics[width=\linewidth]{figures/computation-times.pdf}
-}{
-\includegraphics[width=0.5\linewidth]{figures/computation-times.pdf}
-}
+\includegraphics[width=\linewidth]{figures/number-of-tesseroids.pdf}
 \caption{
-    Computation times ratio between linear and exponential density tesseroids with an
-    homogeneous one.
+    Number of discretizations performed by the density-based algorithm in case of
+    (a)~exponential densities with the same values of $b$ shown in
+    Fig.~\ref{fig:exp-densities},
+    (b)~sinusoidal densities with the same values of $b$ shown in
+    Fig.~\ref{fig:sine-densities}.
+    On both figures the boundaries of the discretized tesseroids are marked with orange
+    dots.
+    Subfigure (c) shows the number of discretized tesseroids for the sinusoidal
+    densities as a function of the factor $b$.
 }
-\label{fig:computation-times}
-\end{figure}
+\label{fig:number-of-tesseroids}
+\end{figure*}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
