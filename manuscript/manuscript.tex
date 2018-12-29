@@ -943,29 +943,28 @@ Although such density functions are rarely, if ever, seen in geological structur
 we want to subject our algorithm to such cases in order to show that it can solve more
 complex situations than linear and exponential functions.
 
-We will consider spherical shells with a sinusoidal density defined as follows:
+We will consider spherical shells with a sinusoidal density function defined as follows:
 
 \begin{equation}
-    \rho(r') = A \sin \left( 2 \pi b \frac{r' - R}{T} \right) + A,
+    \rho(r') = A \sin \left( 2 \pi b \frac{r' - R}{R_2 - R_1} \right) + A,
     \label{eq:density-sine}
 \end{equation}
 
-\noindent where $A$ is a constant, $T$ is the thickness of the shell, $R$ is the mean
-Earth radius and $b$ is a dimensionless constant that regulates how many periods of the
-trigonometric function are included inside the inner and outer radii.
-For this analysis we will use values of $b$ equal to 1, 2, 5 and 10
-(Fig.~\ref{fig:sine-densities}).
-We shift the sine function in order to prevent near zero values of the potential and the
-$g_z$.
+\noindent in which $A$ is a constant that controls the amplitude and vertical shift of
+the sine function, $R$ is the mean Earth radius, and $b$ is a dimensionless constant
+that regulates how many periods of the trigonometric function are included inside the
+inner and outer radii.
+The analytical solutions for $V$ and $g_z$ of a spherical shell with a sinusoidal
+density function can be found on Appendix~\ref{sec:shell}.
 
-We compute the relative difference between the numerical and analytical results for the
-gravitational potential ($V$) and the $g_z$ of the spherical shells detailed in
-Table~\ref{tab:shell-models} on each grid detailed in Table~\ref{tab:grids}.
-Each shell is assigned with different sinusoidal density functions by changing the
-values of $b$ in Eq.~\ref{eq:density-sine} (Fig.~\ref{fig:sine-densities}).
-The analytical solution for the potential $V$ can be found on Appendix~\ref{sec:shell}.
+We compute the relative difference between the numerical and analytical results for $V$
+and $g_z$ for all combinations of spherical shell models (Table~\ref{tab:shell-models})
+and computation grids (Table~\ref{tab:grids}).
 We fixed the distance-size ratio $D$ to the ones obtained for the linear density case
 and explored values of $\delta$ ranging from $10^{-4}$ to $1$.
+The calculations are repeated for values of $b$ equal to 1, 2, 5 and 10
+(Fig.~\ref{fig:sine-densities}).
+For all computations, the value of $A$ is fixed at 1650 kg/m$^3$.
 
 \begin{figure}
 \centering
@@ -975,7 +974,7 @@ and explored values of $\delta$ ranging from $10^{-4}$ to $1$.
 \includegraphics[width=0.5\linewidth]{figures/sine-densities.pdf}
 }
 \caption{
-    Sinusoidal density functions assigned to each spherical shell in the $\delta$ ratio
+    Sinusoidal density functions assigned to the spherical shells in the $\delta$ ratio
     determination.
     Each density function corresponds to a different value of $b$ on
     Eq.~\ref{eq:density-sine}.
@@ -1003,17 +1002,15 @@ and explored values of $\delta$ ranging from $10^{-4}$ to $1$.
 \label{fig:delta-sine}
 \end{figure*}
 
-Fig.~\ref{fig:sine-densities} shows the sinusoidal density functions assigned to every
-spherical shell and Fig.~\ref{fig:delta-sine} shows the resulting relative differences
-between the analytical and the numerical solutions.
-In order to improve the visualization of the results, each curve corresponds to the
-maximum difference between all shell models for the same value of $b$.
-For this kind of sinusoidal density, a value of $\delta=0.01$ is needed in order to
-achieve the 0.1\% accuracy threshold for both the potential and the $g_{z}$, every
-shell model, computation grid and value of $b$.
-Even in case of a continuous density function with several local maximums and minimums
-and inflection points, the GLQ along with the two discretization algorithms reproduce
-the gravitational fields with an acceptable degree of accuracy.
+Fig.~\ref{fig:delta-sine} shows the relative absolute differences between the analytical
+and the numerical solutions for sinusoidal density case.
+Once again, each curve corresponds to the maximum difference between all shell models.
+For all values of $b$ except for $b=10$,
+the differences fall below the 0.1\% threshold for $\delta = 0.1$.
+In the case of $b=10$, a lower value of $\delta = 0.01$ is required to achieve 0.1\%
+difference.
+We note that, even for the case of $b=10$, the differences for $\delta = 0.1$ are below
+1\%.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
