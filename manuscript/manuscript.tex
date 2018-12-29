@@ -48,7 +48,7 @@ by two parameters: the distance-size ratio and the delta ratio.
 We have obtained analytical solutions for a spherical shell with radially variable
 density and compared them to the results of the numerical model for linear,
 exponential and sinusoidal density functions.
-These comparisons allowed us to obtain optimum values for the distance-size and
+These comparisons allowed us to obtain optimal values for the distance-size and
 delta ratios that yield an accuracy of 0.1\% of the analytical solutions.
 The resulting optimal values of distance-size ratio for the gravitational potential and
 its gradient are 1 and 2.5, respectively.
@@ -774,14 +774,14 @@ model thickness or geographic location.
 For an exponential density function, the density-based discretization will be applied
 before the adaptive discretization algorithm.
 This means that optimal values for both the distance-size ratio $D$ and the delta ratio
-$\delta$ must be determined.
+$\delta$ (Eq.~\ref{eq:delta-density}) must be determined.
 We perform an error analysis similar to what was done for the linear density case.
-But, now the spherical shell will have an exponential density function that assumes the
+Now the spherical shell will have an exponential density function that assumes the
 values of $\rho_\text{out} = 2670$~kg/m$^3$ and $\rho_\text{in} = 3300$~kg/m$^3$ on the
 outer and inner surfaces, respectively, defined as follows:
 
 \begin{equation}
-    \rho(r') = A e^{- \frac{b}{T} (r' - R_1)} + C,
+    \rho(r') = A e^{- \frac{b}{R_2 - R_1} (r' - R_1)} + C,
     \label{eq:density-exp}
 \end{equation}
 
@@ -795,12 +795,10 @@ outer and inner surfaces, respectively, defined as follows:
     C = \rho_\text{in} - A,
 \end{equation}
 
-\noindent $T$ is the thickness of the shell ($T = R_2 - R_1$) and $b$ is a dimensionless
-constant that determines the variability of the function: a higher value of $b$
-increases the maximum slope of the density function.
-On exponential density analysis we will use values of $b$ equal to 1, 2, 5, 10, 30
-and 100, in order to cover different kind of exponential density variations, from smooth
-to sharp (Fig.~\ref{fig:exp-densities}).
+\noindent and $b$ is a dimensionless
+constant that determines the variability of the function.
+A higher value of $b$ increases the maximum slope of the density function
+(Fig.~\ref{fig:exp-densities}).
 
 \begin{figure}
 \centering
@@ -825,38 +823,39 @@ We aim to find a combination of the $D$ and $\delta$ that produces a numerical e
 lower than the 0.1\% threshold while minimizing computation time.
 We use a grid search method and compute the numerical error for every ($D$, $\delta$)
 pair belonging to a grid on the $D$-$\delta$ space (Fig.~\ref{fig:grid-search}).
-For optimum algorithm performance, we search for the ($D$, $\delta$) pair that minimize
-the number of splittings while keeping a numerical error under the 0.1\% threshold,
-i.e.~the smallest possible value of $D$ and the highest possible value of $\delta$.
+For optimum algorithm performance, we search for the ($D$, $\delta$) pair that minimizes
+the number of tesseroid division while keeping a numerical error under the 0.1\%
+threshold.
+This requirement translates into the smallest possible value of $D$ and the highest
+possible value of $\delta$.
 
-We compute the relative difference between the numerical and analytical results for the
-gravitational potential ($V$) and the vertical component of its gradient ($g_z$) on the
-computation grids detailed in Table~\ref{tab:grids}.
-Because this is a time consuming computation, we limit the analysis only to a single
-value of $b$ equal to 30 (Fig.~\ref{fig:exp-densities}).
-For the sake of brevity, we compute the maximum differences between the results for each
-shell model.
-The results are shown in Fig.~\ref{fig:grid-search}, in which points inside the dotted
-lines are the ones that present a numerical error lower than the 0.1\% threshold.
+Because this is a time consuming computation, we limit the analysis to a high value of
+$b=30$ (Fig.\ref{fig:exp-densities}) and the global grid defined in
+Table~\ref{tab:grids}.
+We compute the relative absolute difference between the numerical and analytical results
+of the gravitational potential ($V$) and its vertical derivative ($g_z$) for all shell
+models defined in Table~\ref{tab:shell-models}.
+For the sake of brevity, Fig.~\ref{fig:grid-search} shows the maximum difference values
+obtained from all shell models.
+The dotted lines in Fig.~\ref{fig:grid-search} represent a contour of 0.1\% relative
+error.
+Points inside the dotted are within the acceptable threshold.
 Also shown in Fig.~\ref{fig:grid-search} are the $D$ values determined for the linear
 density function in the previous section ($D_\text{linear}$).
 
-The minimum values of $D$ that are within the 0.1\% threshold are the $D_\text{linear}$
-ones, i.e.~they are the optimal values of the distance-size ratios for $V$ and $g_z$.
-These results indicate that the values of $D_\text{linear}$ can be safely extrapolated
-to non linear density cases.
-This conclusion can be understood considering that the two dimensional adaptive
-discretization and the density-based algorithms are independent of each other: the first
-one splits the tesseroid only in the latitudinal and longitudinal directions, while the
-latter only does it in the radial direction.
-This leads to the fact that the value of $\delta$ needed to limit the numerical error
-due to the density variation is independent of the value of $D$ and vice versa.
-That's why the optimal distance-size ratios for the exponential density case is the same
-as the ones for the linear density case.
-
-Because the grid search was limited to specific values of $b$ and used only one grid, we
-will perform a more detailed analysis for $\delta$ determination in case of exponential
-density tesseroids.
+The smallest values of $D$ that are within the 0.1\% threshold coincide with
+$D_\text{linear}$ for both $V$ and $g_z$.
+These results indicate that $D_\text{linear}$ can be safely extrapolated to non-linear
+density cases.
+This is not surprising considering that the two dimensional adaptive
+discretization and the density-based discretization are independent of each other.
+The former divides the tesseroid in the horizontal dimensions, while the latter only
+divides in the radial dimension.
+Hence, the optimal value of $\delta$ is likely to be independent of the optimal value of
+$D$.
+Because the grid search was limited to a specific computation grid and value of $b$,
+we perform a more detailed analysis in the following section to determine an optimal
+value of $\delta$ for the exponential density case.
 
 \begin{figure}
 \centering
@@ -910,43 +909,39 @@ density tesseroids.
 \end{figure*}
 
 Having chosen values of $D$ equal to the ones obtained for the linear density case, we
-are free to explore the integration error as a function of $\delta$ in more detail and
-how it varies for different values of $b$ (Eq.~\ref{eq:density-exp}).
-Now we perform the error calculations for values of delta ranging from $10^{-3}$ to
-$10^{1}$, for every grid detailed in Table~\ref{tab:grids} and for the spherical shell
-models detailed in Table~\ref{tab:shell-models}.
-The calculations are repeated for distinct values of $b$ (1, 2, 5, 10, 30, 100) to
-examine the accuracy of the method for different sharpness of the density function.
+are free to explore the integration error as a function of $\delta$ in more detail.
+We will compute the difference between the numerical and analytical results for all
+combinations of computation grid (Table~\ref{tab:grids}) and spherical shell model
+(Table~\ref{tab:shell-models}), varying $\delta$ from $10^{-3}$ to $10^{1}$.
+The calculations are repeated for each $b \in \{1, 2, 5, 10, 30, 100\}$
+(Fig.~\ref{fig:exp-densities}) to examine the accuracy of the method for density
+functions of different sharpness.
 Because larger $\delta$ values result in fewer tesseroid divisions,
-our intention is to find the highest value of $\delta$ whose numerical error is bellow
-the $0.1\%$ threshold.
+our intention is to find the highest value of $\delta$ that produces a relative
+difference bellow the $0.1\%$ threshold.
 
-Fig.~\ref{fig:exp-densities} shows the density functions for each value of $b$ and
 Fig.~\ref{fig:delta-exponential} shows the resulting relative
-differences ($V$ and $g_z$).
-In order to improve the visualization of the results, each curve corresponds to the
-maximum difference between all shell models for the same value of $b$.
-The relative difference for $V$ and $g_z$ falls below the 0.1\% threshold
-for each computation grid, shell model and $b$ value if $\delta$ is lower than 0.1.
-This results imply that the optimal value of $\delta$ is 0.1 in case of exponential
-density.
-They also show that there is no significant relation between the $b$ value and the
-numerical error, proving that the density-based discretization algorithm is capable of
-limiting the error due to the density variation regardless the variation of the
-exponential density.
+absolute differences for $V$ and $g_z$ as a function of $\delta$.
+For the sake of brevity, each curve corresponds to the maximum difference between all
+shell models.
+The curves for $b=1$ and $b=2$ are below the 0.1\% threshold for all values of $\delta$
+and do not change for $\delta > 0.8$, indicating that the density
+functions are sufficiently smooth and no density discretizations are necessary.
+For all other values of $b$, the difference falls below the 0.1\% threshold
+if $\delta = 0.1$.
+These results indicate that there is no significant relationship between the
+sharpness of the exponential density function and the numerical error.
 
 
 \subsection{Sinusoidal Density}
 
 So far we have tested the density-based discretization algorithm against linear and
 exponential density functions.
-Nevertheless, this new algorithm is well suited to accurately reproduce the
-gravitational fields of tesseroids with more complex continuous functions, like
-non-monotonic or with one or more inflection points.
-Although such density functions are very rare (or maybe even non-existent) between
-geological structures, we want to subject the density-based algorithm to such cases in
-order to show that it can solve more complex situations other than linear and
-exponential functions.
+Nevertheless, this new algorithm is well suited to more complex continuous functions,
+for example non-monotonic functions or those with multiple inflection points.
+Although such density functions are rarely, if ever, seen in geological structures,
+we want to subject our algorithm to such cases in order to show that it can solve more
+complex situations than linear and exponential functions.
 
 We will consider spherical shells with a sinusoidal density defined as follows:
 
@@ -1255,11 +1250,11 @@ This new algorithm is intended to minimise the error due to the inability of
 the GLQ to produce precise approximations of density functions with sharp variations.
 
 Because there is no direct relation between the values assigned to $D$ and $\delta$ and
-the error of the computation, we empirically determined the optimum values for these
+the error of the computation, we empirically determined the optimal values for these
 parameters.
 These values minimize the computational load while maintaining the numerical error below
 0.1\% of an analytical solution.
-The density functions used to establish the optimum values were a linear, an exponential
+The density functions used to establish the optimal values were a linear, an exponential
 and a sinusoidal function.
 The linear function represents the smoothest variation of density and does not require
 density-based discretization at all.
