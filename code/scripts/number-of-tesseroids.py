@@ -43,7 +43,7 @@ top, bottom = 0, -1e3
 
 # Initialize figure and GridSpec
 # ------------------------------
-fig = plt.figure(figsize=(6.66, 2.5))
+fig = plt.figure(figsize=(6.66, 2.8))
 outer_grid = GridSpec(ncols=3, nrows=1)
 script_path = os.path.dirname(os.path.abspath(__file__))
 figure_fname = os.path.join(script_path,
@@ -94,6 +94,7 @@ for i, b_factor in enumerate(b_factors):
     ax.set_xticklabels([r"$r_1$", r"$r_2$"])
     ax.set_ylabel("Density")
     ax.set_xlabel("Depth")
+    ax.set_title("(a)")
 
 
 # Compute number of discretized tesseroids (sine)
@@ -143,6 +144,8 @@ for i, b_factor in enumerate(b_factors):
     axes[i].set_xticks([bottom, top])
     axes[i].set_xticklabels([r"$r_1$", r"$r_2$"])
     axes[i].set_xlabel("Depth")
+    if i == 0:
+        axes[i].set_title("(b)")
 
 
 # Plot number of tesseroids (sine)
@@ -157,6 +160,7 @@ ax.set_yticks(np.arange(3, 21, 2))
 ax.set_xticks(np.arange(1, 11, 2))
 ax.set_xlabel(r"$b$")
 ax.set_ylabel("Number of tesseroids")
+ax.set_title("(c)")
 
 outer_grid.tight_layout(fig)
 plt.savefig(figure_fname, dpi=300)
