@@ -1035,10 +1035,10 @@ On both exponential and sinusoidal density cases a value of $\delta$ equal to 0.
 been used.
 
 On the exponential density scenario, the algorithm performs a single split independently
-of the value of $b$, i.e.~the number of discretizations is independent of the
-variability of the exponential function.
+of the value of $b$.
 Therefore, the computation time would be increased in comparison to the homogeneous
-density case due to this single split, but would be independent of the value of $b$.
+density case due to this single split, but would be independent of the variation of the
+function.
 
 On the other hand, the sinusoidal density case shows a strong dependence of the
 number of discretizations on the value of $b$.
@@ -1052,6 +1052,13 @@ in case of multiple inflection points on the density function.
 Nevertheless, for most geophysical applications on which the density profiles may have
 low number of inflection points, the computation time would be in the same order of
 magnitude as the one for the homogeneous density case.
+
+There are some elements related to the implementation of the algorithm and the
+programming language used that may increase the computation time, e.g.~we found that
+density function callbacks on a Python implementation plays an important role on the
+computation time increase.
+For simplicity, these elements were not taken into account, and because they are
+dependent on the specific implementation of the algorithm, they cannot be generalized.
 
 \begin{figure*}
 \centering
