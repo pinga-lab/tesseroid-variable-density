@@ -16,5 +16,3 @@ You can also run `proselint` (a grammar checker) on manuscript.tex with:
 
   make proselint
 
-*It's also a good idea to mention here what notebook generated the figures in
-the `figures` folder.*

@@ -1,10 +1,9 @@
 # Source code for producing the results and figures
 
-The code is divided between Python modules in `tesseroid-density` and Jupyter
-notebooks in `notebooks`. The modules implement the methodology and code that
-is reused in different applications. This code is tested using `pytest` with
-the test code in `tests`. The notebooks perform the data analysis and
-processing and generate the figures for the paper.
+The code is divided between Python modules in `tesseroid-density`, Jupyter
+notebooks in `notebooks`, and analysis scripts in `scripts`.
+The modules implement the methodology and code that is reused in different applications.
+This code is tested using `pytest` with the test code in `tests`.
 
 The `Makefile` automates all processes related to executing code.
 Run the following to perform all actions from building the software to
@@ -23,8 +22,6 @@ The tesseroid geometry must be generated through the
 `fatiando.mesher.TesseroidMesh`. We can incorporate a density
 function to every tesseroid by defining a regular Python function with a single
 `height` argument (float or numpy 1d array) that returns a float.
-
-See the notebooks for examples and tests.
 
 
 ## Building, testing, and linting
@@ -47,23 +44,6 @@ Use the `Makefile` to build, test, and lint the software:
   notebooks):
 
         make coverage
-
-
-## Generating results and figures
-
-The Jupyter notebooks produce most of the results and figures. The `Makefile`
-can execute the notebooks to generate these outputs. This is better than
-executing the notebooks by hand because it ensures that cells are run
-sequentially in a way that can be reproduced.
-
-* Generate all results files specified in the `Makefile`:
-
-        make results
-
-* Create all figure files specified in the `Makefile`:
-
-        make figures
-
 
 ## Notebooks
 
