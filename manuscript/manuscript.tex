@@ -1015,65 +1015,48 @@ We note that, even for the case of $b=10$, the differences for $\delta = 0.1$ ar
 
 \section{Algorithm performance}
 
-Because the density-based discretization algorithm introduces more division along the
+Because the density-based discretization algorithm introduces more divisions along the
 radial dimension, it is reasonable that the computation time for variable densities will
-be increased in comparison to the homogeneous density case.
-In order to get a qualitative indicator of this increase in the computation time we
-gathered the number of subdivisions the density-based discretization performs under
-exponential and sinusoidal density cases.
+be higher than the homogeneous density case.
+Directly comparing the computation time of both cases cannot be done in a meaningful
+way because it is highly dependent on the implementation of the algorithm,
+the choice of programming language, and the particular density function used.
+In order to obtain an indicator of the increase in the computation time,
+we chose the number of tesseroid divisions in the density-based discretization as a
+proxy measure.
 
-We assign an exponential density (Eq.~\ref{eq:density-exp}) with values of $b$ equal to
-1, 2, 5, 10, 30 and 100, and a sinusoidal density (Eq.~\ref{eq:density-sine}) with
-values of $b$ equal to 1, 2, 5, and 10 to an arbitrary tesseroid.
-Then we applied the density-based discretization algorithm on each case recording how
-many subdivisions it carried out and where the boundaries of the smaller tesseroids are
-located.
-Figs.~\ref{fig:number-of-tesseroids}(a) and~\ref{fig:number-of-tesseroids}(b) show the
-exponential and sinusoidal densities used and the resulting boundaries of the
-discretized tesseroids as orange dots.
-On both exponential and sinusoidal density cases a value of $\delta$ equal to 0.1 has
-been used.
+We analyse exponential density functions (Eq.~\ref{eq:density-exp}) with values of $b$
+equal to 1, 2, 5, 10, 30 and 100, and sinusoidal density functions
+(Eq.~\ref{eq:density-sine}) with values of $b$ equal to 1, 2, 5, and 10.
+We then apply the density-based discretization algorithm on each function and record the
+number divisions carried out.
+Figs.~\ref{fig:number-of-tesseroids}a and~\ref{fig:number-of-tesseroids}b show the
+exponential and sinusoidal density functions and the resulting discretization points as
+orange dots.
 
-On the exponential density scenario, the algorithm performs a single split independently
-of the value of $b$.
-Therefore, the computation time would be increased in comparison to the homogeneous
-density case due to this single split, but would be independent of the variation of the
-function.
-
-On the other hand, the sinusoidal density case shows a strong dependence of the
-number of discretizations on the value of $b$.
-Fig.~\ref{fig:number-of-tesseroids} shows an almost linear relation between these two
-magnitudes.
-This means that the computation time is heavily bounded to the value of $b$ used:
-it can be greatly increased for large values of $b$ such as 100.
-
-From this results we can conclude that the computation time would be greatly increased
-in case of multiple inflection points on the density function.
-Nevertheless, for most geophysical applications on which the density profiles may have
-low number of inflection points, the computation time would be in the same order of
-magnitude as the one for the homogeneous density case.
-
-There are some elements related to the implementation of the algorithm and the
-programming language used that may increase the computation time, e.g.~we found that
-density function callbacks on a Python implementation plays an important role on the
-computation time increase.
-For simplicity, these elements were not taken into account, and because they are
-dependent on the specific implementation of the algorithm, they cannot be generalized.
+For the exponential density functions, the algorithm performs a single division
+independently of the value of $b$.
+Therefore, the computation time would likely be at least twice that of the homogeneous
+density case (assuming equal implementations).
+On the other hand, Fig.~\ref{fig:number-of-tesseroids}c shows an almost linear relation
+between the number of divisions in the sinusoidal density case and the value of $b$.
+Thus, the computation time is likely to be dependent on the number of wavelengths
+of the sinusoidal function that are contained within the tesseroid.
 
 \begin{figure*}
 \centering
 \includegraphics[width=\linewidth]{figures/number-of-tesseroids.pdf}
 \caption{
-    Number of discretizations performed by the density-based algorithm
-    (with a $\delta = 0.1$) in case of
-    (a)~exponential densities with the same values of $b$ shown in
+    Number of divisions performed by the density-based discretization algorithm
+    (with $\delta = 0.1$) in case of
+    (a)~exponential density functions with the same values of $b$ shown in
     Fig.~\ref{fig:exp-densities},
-    (b)~sinusoidal densities with the same values of $b$ shown in
+    (b)~sinusoidal density functions with the same values of $b$ shown in
     Fig.~\ref{fig:sine-densities}.
-    On both figures the boundaries of the discretized tesseroids are marked with orange
+    On both figures, the locations of the tesseroid divisions are are marked with orange
     dots.
-    Subfigure (c) shows the number of discretized tesseroids for the sinusoidal
-    densities as a function of the factor $b$.
+    (c) shows the number of discretized tesseroids for the sinusoidal density functions
+    as a function of $b$.
 }
 \label{fig:number-of-tesseroids}
 \end{figure*}
@@ -1225,6 +1208,17 @@ extrapolated to any realistic continuous density function.
 Notwithstanding, we encourage users of the algorithms and software to perform similar
 tests in order evaluate the accuracy when using density functions more complex than the
 ones tested here.
+
+The algorithm performance analysis shows that the computation time using variable
+densities is likely to be at least two times larger than the homogeneous density case.
+It is also likely to increase proportionally to the number of inflection points of the
+density function.
+As is the case for most numerical methods, there is a trade-off between computation time
+and accuracy.
+Nevertheless, density profiles will have few inflection points for most geophysical
+applications.
+Therefore, the computation time would be in the same order of
+magnitude as the one for the homogeneous density in most real world applications.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
