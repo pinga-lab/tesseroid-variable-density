@@ -1028,25 +1028,30 @@ values of $b$ equal to 1, 2, 5, and 10 to an arbitrary tesseroid.
 Then we applied the density-based discretization algorithm on each case recording how
 many subdivisions it carried out and where the boundaries of the smaller tesseroids are
 located.
-On both exponential and sinusoidal density cases a value of $\delta$ equal to 0.1 has
-been used.
-
 Figs.~\ref{fig:number-of-tesseroids}(a) and~\ref{fig:number-of-tesseroids}(b) show the
 exponential and sinusoidal densities used and the resulting boundaries of the
 discretized tesseroids as orange dots.
-The number of discretizations are independent of the value of factor $b$ in the
-exponential density case: the algorithm only performs one split independently of $b$.
-On the other hand, the sinusoidal density results show a significant relation between
-the number of discretizations and the constant $b$.
+On both exponential and sinusoidal density cases a value of $\delta$ equal to 0.1 has
+been used.
+
+On the exponential density scenario, the algorithm performs a single split independently
+of the value of $b$, i.e.~the number of discretizations is independent of the
+variability of the exponential function.
+Therefore, the computation time would be increased in comparison to the homogeneous
+density case due to this single split, but would be independent of the value of $b$.
+
+On the other hand, the sinusoidal density case shows a strong dependence of the
+number of discretizations on the value of $b$.
 Fig.~\ref{fig:number-of-tesseroids} shows an almost linear relation between these two
 magnitudes.
+This means that the computation time is heavily bounded to the value of $b$ used.
+It can be greatly increased for large values of $b$ such as 100.
 
-Therefore, the computation time for the exponential density would be increased in
-comparison to the homogeneous density case because the
-single split the density-based algorithm performs, although it will be independent of
-the value of $b$.
-On the other hand, the computation time for the sinusoidal density is bounded to the
-value of $b$ used, greatly increasing it for a large $b$ as 100.
+From this results we can conclude that the computation time would be greatly increased
+in case of multiple inflection points on the density function.
+Nevertheless, for most geophysical applications on which the density profiles may have
+low number of inflection points, the computation time would be in the same order of
+magnitude as the one for the homogeneous density case.
 
 \begin{figure*}
 \centering
