@@ -379,6 +379,29 @@ units = {"potential": "J/kg", "gz": "mGal"}
 titles = {"potential": r"$V$", "gz": r"$g_{z}$"}
 fig_titles = "(a) (b) (c) (d)".split()
 
+# Compute differences between exponential density results with linear and homogeneous
+differences = dict(zip(fields, [{}, {}]))
+for field in fields:
+    exponential = np.load(
+        os.path.join(result_dir, "exponential-{}.npz".format(field))
+    )
+    shape = exponential["shape"]
+    longitude = exponential["lon"].reshape(shape)
+    latitude = exponential["lat"].reshape(shape)
+    for density in densities:
+        other = np.load(
+            os.path.join(result_dir, "{}-{}.npz".format(density, field))
+        )
+        difference = exponential["result"] - other["result"]
+        differences[field][density] = difference.reshape(shape)
+
+min_value = {}
+for field in fields:
+    min_value[field] = min(
+        [differences[field][density].min() for density in densities]
+    )
+
+# Plot result
 for i, density in enumerate(densities):
     for j, field in enumerate(fields):
         ax = axes[i, j]
@@ -386,22 +409,11 @@ for i, density in enumerate(densities):
         ax.set_title(fig_titles[2*i + j], y=1.08, loc='left')
         ax.set_title(titles[field], y=1.08, loc='center')
 
-        # Plot result
-        exponential = np.load(
-            os.path.join(result_dir, "exponential-{}.npz".format(field))
-        )
-        other = np.load(
-            os.path.join(result_dir, "{}-{}.npz".format(density, field))
-        )
-        difference = exponential["result"] - other["result"]
-        vmax = np.abs(difference).max()
-
-        shape = exponential["shape"]
-        im = bm.pcolormesh(exponential["lon"].reshape(shape),
-                           exponential["lat"].reshape(shape),
-                           difference.reshape(shape),
-                           vmin=-vmax, vmax=vmax,
-                           cmap="RdBu_r", rasterized=True, latlon=True)
+        vmin = min_value[field]
+        # Because max value of differences is bellow zero, we set vmax=0
+        im = bm.pcolormesh(longitude, latitude, differences[field][density],
+                           vmin=vmin, vmax=0,
+                           cmap="Blues_r", rasterized=True, latlon=True)
         bm.contour(exponential["lon"].reshape(shape),
                    exponential["lat"].reshape(shape),
                    difference.reshape(shape),
