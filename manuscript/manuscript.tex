@@ -430,11 +430,11 @@ This experiment will also test whether the same values of $D$ determined by
     Example application of the density-based discretization algorithm to a non-linear
     density function.
     (a)~The normalised density function $\rho_n(r')$ (blue), current boundaries of the
-    tesseroid (orange dots), and the linear density function $\rho_l(r')$ (orange line).
+    tesseroid (orange dots), and the straight line $\rho_l(r')$ (orange line).
     The dashed red line represents the maximum density difference $\Delta \rho (r')$ at
     which the tesseroid would be divided (assuming that the
     inequality~\ref{eq:delta-density} is not satisfied).
-    (b)~Second iteration of the algorithm with a new linear density function and maximum
+    (b)~Second iteration of the algorithm with a new straight line and maximum
     density difference. The tesseroid would be divided at the depth indicated by the
     dashed red line.
     (c)~Third iteration of the algorithm.
@@ -480,7 +480,7 @@ The algorithm is comprised of the following steps
 (Fig.~\ref{fig:density-discretization-algorithm}):
 
 \textit{Step 1}:
-Define a linear function $\rho_l(r')$ that assumes the same values as the normalised
+Define a straight line $\rho_l(r')$ that assumes the same values as the normalised
 density function $\rho_n(r')$ at the boundaries of the tesseroid ($r_1$ and $r_2$):
 
 \begin{equation}
@@ -490,14 +490,14 @@ density function $\rho_n(r')$ at the boundaries of the tesseroid ($r_1$ and $r_2
 \end{equation}
 
 \textit{Step 2}:
-Evaluate the normalized and linear density functions on a range of $N$ radii between
-$r_1$ and $r_2$.
+Evaluate the normalized density function and straight line on a range of $N$ radii
+between $r_1$ and $r_2$.
 We have opted for $N = 101$ but the specific value of $N$ is not critical to the
 algorithm.
 
 \textit{Step 3}:
-Compute the absolute difference between the values of the linear and normalised density
-functions:
+Compute the absolute difference between the values of the straight line and the
+normalised density function:
 
 \begin{equation}
     \Delta \rho (r') = | \rho_n(r') - \rho_l(r') |.
