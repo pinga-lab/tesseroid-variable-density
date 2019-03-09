@@ -158,7 +158,13 @@ Both the \citet{Lin2018} and the \citet{Fukushima2018} studies limit the radial 
 variation to polynomial functions.
 While most continuous and smooth functions can be approximated by piecewise linear
 functions, the choice of a discretization interval is neither straight forward nor
-automatic.
+automatic for the general case.
+Although many piecewise linear approximation algorithms that automatize this process
+exist \citep{Ketkov1969, Vandewalle1975, Imamoto2008, Ahmadi2013}, they either require
+a fixed number of discretization intervals or are meant to be used only on convex
+functions.
+They would limit the range of density functions that can be assigned to the tesseroids
+or wouldn't guarantee a fully automatic process.
 Furthermore, it is well known that the use of high-degree polynomials to approximate a
 highly variable function produces unstable results when extrapolating beyond the data
 domain.
