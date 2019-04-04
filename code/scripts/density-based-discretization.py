@@ -122,7 +122,7 @@ for i in range(len(subsets) - 1):
                         color="C7", markersize=8)
                 ax.text(0.5*(bottom_j + top_j),
                         normalized_density(bottom_j) - 0.03,
-                        '$L_r^{sm}$',
+                        '$L_r$',
                         fontdict={'color': "C7"},
                         horizontalalignment='center')
             elif i == 2:
@@ -131,7 +131,7 @@ for i in range(len(subsets) - 1):
                         color="C7", markersize=8)
                 ax.text(0.5*(bottom_j + top_j),
                         normalized_density(top_j) + 0.13,
-                        '$L_r^{sm}$',
+                        '$L_r$',
                         fontdict={'color': "C7"},
                         horizontalalignment='center')
 
