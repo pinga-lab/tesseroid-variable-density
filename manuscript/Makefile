@@ -16,6 +16,7 @@
 # Other files can be included into this one.
 PROJECT = manuscript
 R1 = $(PROJECT)-marked-R1
+R2 = $(PROJECT)-marked-R2
 
 # Folder with the Latex source files
 SRC = .
@@ -106,3 +107,8 @@ r1: $(OUTPUT)/$(R1).pdf
 
 $(R1).tex: $(PROJECT).tex
 	git ldiff submitted $< > $@
+
+r2: $(OUTPUT)/$(R2).pdf
+
+$(R2).tex: $(PROJECT).tex
+	git ldiff resubmitted $< > $@

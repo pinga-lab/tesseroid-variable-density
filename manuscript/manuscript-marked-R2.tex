@@ -1,0 +1,1663 @@
+%\documentclass[extra]{gji}
+%DIF LATEXDIFF DIFFERENCE FILE
+%DIF DEL /tmp/BrPd3I_manuscript.tex   Fri May 10 15:54:27 2019
+%DIF ADD manuscript/manuscript.tex    Fri May 10 12:28:10 2019
+\documentclass[extra, referee]{gji}
+
+\usepackage[utf8]{inputenc}
+\usepackage{timet}
+\usepackage{amsmath}
+\usepackage{graphicx}
+
+\usepackage{url}
+\usepackage[pdftex,colorlinks=true]{hyperref}
+\hypersetup{
+    allcolors=blue,
+}
+%DIF PREAMBLE EXTENSION ADDED BY LATEXDIFF
+%DIF UNDERLINE PREAMBLE %DIF PREAMBLE
+\RequirePackage[normalem]{ulem} %DIF PREAMBLE
+\RequirePackage{color}\definecolor{RED}{rgb}{1,0,0}\definecolor{BLUE}{rgb}{0,0,1} %DIF PREAMBLE
+\providecommand{\DIFaddtex}[1]{{\protect\color{blue}\uwave{#1}}} %DIF PREAMBLE
+\providecommand{\DIFdeltex}[1]{{\protect\color{red}\sout{#1}}}                      %DIF PREAMBLE
+%DIF SAFE PREAMBLE %DIF PREAMBLE
+\providecommand{\DIFaddbegin}{} %DIF PREAMBLE
+\providecommand{\DIFaddend}{} %DIF PREAMBLE
+\providecommand{\DIFdelbegin}{} %DIF PREAMBLE
+\providecommand{\DIFdelend}{} %DIF PREAMBLE
+\providecommand{\DIFmodbegin}{} %DIF PREAMBLE
+\providecommand{\DIFmodend}{} %DIF PREAMBLE
+%DIF FLOATSAFE PREAMBLE %DIF PREAMBLE
+\providecommand{\DIFaddFL}[1]{\DIFadd{#1}} %DIF PREAMBLE
+\providecommand{\DIFdelFL}[1]{\DIFdel{#1}} %DIF PREAMBLE
+\providecommand{\DIFaddbeginFL}{} %DIF PREAMBLE
+\providecommand{\DIFaddendFL}{} %DIF PREAMBLE
+\providecommand{\DIFdelbeginFL}{} %DIF PREAMBLE
+\providecommand{\DIFdelendFL}{} %DIF PREAMBLE
+%DIF HYPERREF PREAMBLE %DIF PREAMBLE
+\providecommand{\DIFadd}[1]{\texorpdfstring{\DIFaddtex{#1}}{#1}} %DIF PREAMBLE
+\providecommand{\DIFdel}[1]{\texorpdfstring{\DIFdeltex{#1}}{}} %DIF PREAMBLE
+\newcommand{\DIFscaledelfig}{0.5}
+%DIF HIGHLIGHTGRAPHICS PREAMBLE %DIF PREAMBLE
+\RequirePackage{settobox} %DIF PREAMBLE
+\RequirePackage{letltxmacro} %DIF PREAMBLE
+\newsavebox{\DIFdelgraphicsbox} %DIF PREAMBLE
+\newlength{\DIFdelgraphicswidth} %DIF PREAMBLE
+\newlength{\DIFdelgraphicsheight} %DIF PREAMBLE
+% store original definition of \includegraphics %DIF PREAMBLE
+\LetLtxMacro{\DIFOincludegraphics}{\includegraphics} %DIF PREAMBLE
+\newcommand{\DIFaddincludegraphics}[2][]{{\color{blue}\fbox{\DIFOincludegraphics[#1]{#2}}}} %DIF PREAMBLE
+\newcommand{\DIFdelincludegraphics}[2][]{% %DIF PREAMBLE
+\sbox{\DIFdelgraphicsbox}{\DIFOincludegraphics[#1]{#2}}% %DIF PREAMBLE
+\settoboxwidth{\DIFdelgraphicswidth}{\DIFdelgraphicsbox} %DIF PREAMBLE
+\settoboxtotalheight{\DIFdelgraphicsheight}{\DIFdelgraphicsbox} %DIF PREAMBLE
+\scalebox{\DIFscaledelfig}{% %DIF PREAMBLE
+\parbox[b]{\DIFdelgraphicswidth}{\usebox{\DIFdelgraphicsbox}\\[-\baselineskip] \rule{\DIFdelgraphicswidth}{0em}}\llap{\resizebox{\DIFdelgraphicswidth}{\DIFdelgraphicsheight}{% %DIF PREAMBLE
+\setlength{\unitlength}{\DIFdelgraphicswidth}% %DIF PREAMBLE
+\begin{picture}(1,1)% %DIF PREAMBLE
+\thicklines\linethickness{2pt} %DIF PREAMBLE
+{\color[rgb]{1,0,0}\put(0,0){\framebox(1,1){}}}% %DIF PREAMBLE
+{\color[rgb]{1,0,0}\put(0,0){\line( 1,1){1}}}% %DIF PREAMBLE
+{\color[rgb]{1,0,0}\put(0,1){\line(1,-1){1}}}% %DIF PREAMBLE
+\end{picture}% %DIF PREAMBLE
+}\hspace*{3pt}}} %DIF PREAMBLE
+} %DIF PREAMBLE
+\LetLtxMacro{\DIFOaddbegin}{\DIFaddbegin} %DIF PREAMBLE
+\LetLtxMacro{\DIFOaddend}{\DIFaddend} %DIF PREAMBLE
+\LetLtxMacro{\DIFOdelbegin}{\DIFdelbegin} %DIF PREAMBLE
+\LetLtxMacro{\DIFOdelend}{\DIFdelend} %DIF PREAMBLE
+\DeclareRobustCommand{\DIFaddbegin}{\DIFOaddbegin \let\includegraphics\DIFaddincludegraphics} %DIF PREAMBLE
+\DeclareRobustCommand{\DIFaddend}{\DIFOaddend \let\includegraphics\DIFOincludegraphics} %DIF PREAMBLE
+\DeclareRobustCommand{\DIFdelbegin}{\DIFOdelbegin \let\includegraphics\DIFdelincludegraphics} %DIF PREAMBLE
+\DeclareRobustCommand{\DIFdelend}{\DIFOaddend \let\includegraphics\DIFOincludegraphics} %DIF PREAMBLE
+\LetLtxMacro{\DIFOaddbeginFL}{\DIFaddbeginFL} %DIF PREAMBLE
+\LetLtxMacro{\DIFOaddendFL}{\DIFaddendFL} %DIF PREAMBLE
+\LetLtxMacro{\DIFOdelbeginFL}{\DIFdelbeginFL} %DIF PREAMBLE
+\LetLtxMacro{\DIFOdelendFL}{\DIFdelendFL} %DIF PREAMBLE
+\DeclareRobustCommand{\DIFaddbeginFL}{\DIFOaddbeginFL \let\includegraphics\DIFaddincludegraphics} %DIF PREAMBLE
+\DeclareRobustCommand{\DIFaddendFL}{\DIFOaddendFL \let\includegraphics\DIFOincludegraphics} %DIF PREAMBLE
+\DeclareRobustCommand{\DIFdelbeginFL}{\DIFOdelbeginFL \let\includegraphics\DIFdelincludegraphics} %DIF PREAMBLE
+\DeclareRobustCommand{\DIFdelendFL}{\DIFOaddendFL \let\includegraphics\DIFOincludegraphics} %DIF PREAMBLE
+%DIF LISTINGS PREAMBLE %DIF PREAMBLE
+\RequirePackage{listings} %DIF PREAMBLE
+\RequirePackage{color} %DIF PREAMBLE
+\lstdefinelanguage{DIFcode}{ %DIF PREAMBLE
+%DIF DIFCODE_UNDERLINE %DIF PREAMBLE
+  moredelim=[il][\color{red}\sout]{\%DIF\ <\ }, %DIF PREAMBLE
+  moredelim=[il][\color{blue}\uwave]{\%DIF\ >\ } %DIF PREAMBLE
+} %DIF PREAMBLE
+\lstdefinestyle{DIFverbatimstyle}{ %DIF PREAMBLE
+	language=DIFcode, %DIF PREAMBLE
+	basicstyle=\ttfamily, %DIF PREAMBLE
+	columns=fullflexible, %DIF PREAMBLE
+	keepspaces=true %DIF PREAMBLE
+} %DIF PREAMBLE
+\lstnewenvironment{DIFverbatim}{\lstset{style=DIFverbatimstyle}}{} %DIF PREAMBLE
+\lstnewenvironment{DIFverbatim*}{\lstset{style=DIFverbatimstyle,showspaces=true}}{} %DIF PREAMBLE
+%DIF END PREAMBLE EXTENSION ADDED BY LATEXDIFF
+
+\begin{document}
+
+\title[Variable Density Tesseroids]{
+    Gravitational field calculation in spherical coordinates using variable
+    densities in depth
+}
+\author[S.R. Soler, A. Pesce, M.E. Gimenez, and L. Uieda]{
+    Santiago R. Soler$^{1,2}$, Agustina Pesce$^{1,2}$,
+    Mario E. Gimenez$^{1,2}$, and Leonardo Uieda$^3$ \\
+    $^1$CONICET, Argentina.~e-mail: santiago.r.soler@gmail.com\\
+    $^2$Instituto Geofísico Sismológico Volponi, Universidad Nacional de
+    San Juan, Argentina\\
+    $^3$Department of Earth Sciences, SOEST, University of Hawai‘i at
+    M\={a}noa, Honolulu, Hawaii, USA
+}
+
+
+\maketitle
+
+\begin{summary}
+We present a new methodology to compute the gravitational fields generated by
+tesseroids (spherical prisms) whose density varies with depth according to
+an arbitrary continuous function.
+It approximates the gravitational fields through the Gauss-Legendre Quadrature along
+with two discretization algorithms that automatically control its accuracy by adaptively
+dividing the tesseroid into smaller ones.
+The first one is a preexisting two dimensional adaptive discretization algorithm that
+reduces the errors due to the distance between the tesseroid and the computation point.
+The second is a new density-based discretization algorithm that
+decreases the errors introduced by the variation of the density function with depth.
+The amount of divisions made by each algorithm is indirectly controlled
+by two parameters: the distance-size ratio and the delta ratio.
+We have obtained analytical solutions for a spherical shell with radially variable
+density and compared them to the results of the numerical model for linear,
+exponential, and sinusoidal density functions.
+\DIFaddbegin \DIFadd{The heavily oscillating density functions are intended only to test the algorithm to its
+limits and not to emulate a real world case.
+}\DIFaddend These comparisons allowed us to obtain optimal values for the distance-size and
+delta ratios that yield an accuracy of 0.1\% of the analytical solutions.
+The resulting optimal values of distance-size ratio for the gravitational potential and
+its gradient are 1 and 2.5, respectively.
+The density-based discretization algorithm produces no discretizations in the linear
+density case, but a delta ratio of 0.1 is needed for the exponential and \DIFdelbegin \DIFdel{the
+}\DIFdelend \DIFaddbegin \DIFadd{most }\DIFaddend sinusoidal
+density functions.
+These values can be extrapolated to cover most common use cases\DIFaddbegin \DIFadd{, which are simpler than
+oscillating density profiles}\DIFaddend .
+However, the distance-size and delta ratios can be configured by the user to increase
+the accuracy of the results at the expense of computational speed.
+Lastly, we apply this new methodology to model the Neuqu\'en Basin, a foreland basin in
+Argentina with a maximum depth of over 5000~m, using an exponential density function.
+\end{summary}
+
+\begin{keywords}
+Numerical modelling, Numerical approximations and analysis, Gravity anomalies
+and Earth structure, Satellite gravity
+\end{keywords}
+
+
+\section{Introduction}
+
+The lithosphere's density variation with depth has been studied for close to a
+century.
+Over this time period,
+several density-depth relations have been proposed for different rock types
+\citep[e.g.][]{Maxant1980, Rao1986, Rao1993, Rao1994}.
+Furthermore, depth-variable densities have been used in forward and
+inverse gravity modelling, mostly applied to sedimentary basins
+\citep{Cordell1973, Rao1986, Cowie1990, Rao1993, Rao1994, Zhang2001,
+Welford2010}.
+These forward gravity models have been developed for two or three dimensional
+bodies in Cartesian coordinates, which limits the applications to local scales.
+The advent of satellite gravimetry has provided gravity field
+measurements with global coverage, enabling modelling and interpretation on regional and
+global scales.
+Hence, designing forward modelling methods that reproduce the gravity anomalies for
+such scales is of high importance.
+
+To take into account the curvature of the Earth, many global forward modelling methods
+are defined in geocentric spherical coordinates.
+A common approach is to discretize the Earth into tesseroids \citep{Anderson1976},
+i.e.~spherical prisms, which are defined by pairs of latitude, longitude, and radial
+boundaries (Fig.~\ref{fig:tesseroid}).
+The gravitational fields generated by a
+tesseroid on any external point are given by volume
+integrals that must be numerically approximated.
+The literature offers two main approaches: one involves Taylor series expansion
+\citep{Heck2007, Grombein2013} while the other makes use of Gauss-Legendre
+Quadrature (GLQ)
+\citep{Asgharzadeh2007, Wild-Pfeiffer2008, Li2011, Uieda2016, Lin2018}.
+The Taylor series expansion is not well suited to develop an algorithm for
+a density varying with depth according to an arbitrary continuous function.
+Different series expansion terms would have to obtained for each density function
+desired.
+Conversely, an arbitrary continuous density function can be included in the GLQ without
+any change to the integration method.
+Thus, we will focus only on GLQ-based methods henceforth.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.6\linewidth]{figures/tesseroid-uieda.pdf}
+\caption{
+    A tesseroid (spherical prism) in a geocentric spherical coordinate system, with a
+    computation point $P$ and its local north oriented Cartesian coordinate system.
+    After \citet{Uieda2015}.
+}
+\label{fig:tesseroid}
+\end{figure}
+
+The main challenge of the GLQ integration is the loss of accuracy that occurs when the
+computation point approaches the tesseroid \citep{Ku1977}.
+\citet{Uieda2016} built on the three dimensional adaptive discretization algorithm of
+\citet{Li2011} to automatically obtain integration results with 0.1\% accuracy.
+The algorithm recursively divides the tesseroid into smaller ones when a
+threshold is exceeded,
+namely when the \DIFdelbegin \DIFdel{normalized }\DIFdelend \DIFaddbegin \DIFadd{normalised }\DIFaddend distance to the computation point is greater than a
+``distance-size ratio'' parameter ($D$).
+\citet{Uieda2016} have also obtained standard values of $D$
+for the gravitational potential, its gradient and Marussi tensor components
+by comparing the numerical integration results with the fields generated by a spherical
+shell.
+
+Two recent publications present alternative approaches for calculating the gravitational
+fields of homogeneous tesseroids and incorporate methodologies for tesseroids with
+variable densities in depth.
+\citet{Fukushima2018} analytically integrates the volumetric integral for the
+gravitational potential in the radial direction, obtaining a surface integral, which is
+then numerically solved by conditionally splitting the tesseroid and applying the double
+exponential quadrature rule.
+The gradient of the potential and the Marussi tensor components are computed by finite
+differences.
+\citet{Fukushima2018} also generalized their method to tesseroids with a radial
+polynomial density function of arbitrary degree.
+\citet{Lin2018} compared the different integration and discretization methodologies for
+homogeneous tesseroids.
+From this analysis they developed a combined method:
+for computation points near the tesseroid, they use a GLQ integration with an adaptive
+discretization based on \citet{Uieda2016} but only applied to the horizontal dimensions.
+If the computation point is farther than a certain truncation distance,
+a second order Taylor series approximation is applied instead along with the regular
+subdivision developed by \citet{Grombein2013}.
+\citet{Lin2018} also introduced a variation of their combined method to compute the
+gravitational fields generated by tesseroids with a linearly varying density in the
+radial dimension.
+
+Both the \citet{Lin2018} and the \citet{Fukushima2018} studies limit the radial density
+variation to polynomial functions.
+While most continuous and smooth functions can be approximated by piecewise linear
+functions, the choice of a discretization interval is neither straight forward nor
+automatic \DIFdelbegin \DIFdel{.
+}\DIFdelend \DIFaddbegin \DIFadd{for the general case.
+Although many piecewise linear approximation algorithms that automate this process
+exist \mbox{%DIFAUXCMD
+\citep{Ketkov1969, Vandewalle1975, Imamoto2008, Ahmadi2013}}\hspace{0pt}%DIFAUXCMD
+, they either require
+a fixed number of discretization intervals or are meant to be used only on convex
+functions.
+Using such algorithms would limit the range of density functions that can be assigned
+to the tesseroids and would not guarantee a fully automatic process.
+}\DIFaddend Furthermore, it is well known that the use of high-degree polynomials to approximate a
+highly variable function produces unstable results when extrapolating beyond the data
+domain.
+These shortcomings could make piecewise linear or high-degree polynomial density
+functions unwieldy for non-linear gravity inversions \citep[e.g.][]{Uieda2017} if the
+density function in depth is highly variable.
+
+We present a new algorithm for computing the gravitational potential and its gradient
+generated by a tesseroid with an arbitrary continuous density function on an external
+point.
+It is based on the three dimensional GLQ integration, a two dimensional version of the
+adaptive discretization of \citet{Uieda2016} (following \citet{Lin2018}),
+and a new density-based radial discretization algorithm.
+To ensure the accuracy of the numerical approximation, we empirically determine
+optimal values for the controlling parameters by comparing the numerical results with
+analytical solutions for spherical shells.
+Finally, we apply the methodology to model the Neuqu\'en basin, Argentina, using
+tesseroids with linear and exponentially increasing density with depth.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Methodology}
+
+Consider a tesseroid in a geocentric spherical coordinate system defined by
+pairs of geocentric latitudinal ($\phi_1$, $\phi_2$), longitudinal ($\lambda_1$,
+$\lambda_2$), and radial ($r_1$, $r_2$) boundaries.
+We define an external computation point $P(r, \phi, \lambda)$ located at radius $r$,
+geocentric latitude $\phi$, and longitude $\lambda$.
+\citet{Grombein2013} provide efficient formulations for the volume integrals of the
+gravitational potential and its first- and second-order derivatives of a tesseroid with
+homogeneous density.
+The derivatives of the gravitational potential are taken with
+respect to the local north-oriented Cartesian coordinate system with origin at $P$
+(Fig.~\ref{fig:tesseroid}).
+Here, we will assume that the tesseroid has a density varying with $r$ according to an
+arbitrary continuous function $\rho(r)$.
+Thus, the integrals for the gravitational potential and its first-order derivatives are
+slightly modified to
+
+\begin{equation}
+    V(r,\phi,\lambda) = G
+    \int\limits_{\lambda_1}^{\lambda_2}
+    \int\limits_{\phi_1}^{\phi_2}
+    \int\limits_{r_1}^{r_2}
+    \frac{\rho(r')}{\ell} \kappa \,  dr' d\phi' d\lambda',
+\label{eq:tesseroid-pot}
+\end{equation}
+
+\noindent and
+
+\begin{equation}
+    g_{\alpha}(r,\phi,\lambda) = G
+    \int\limits_{\lambda_1}^{\lambda_2}
+    \int\limits_{\phi_1}^{\phi_2}
+    \int\limits_{r_1}^{r_2}
+    \rho(r') \frac{\Delta_\alpha}{\ell^3}
+    \kappa \, dr' d\phi' d\lambda',
+\label{eq:tesseroid-grav}
+\end{equation}
+
+\noindent in which $\alpha \in \{x, y, z\}$,
+$G = 6.674\times10^{-11}\, \text{m$^3$kg$^{-1}$s$^{-1}$}$ is the gravitational constant
+and
+
+\begin{equation}
+    \Delta_x = r'[\cos\phi\sin\phi' - \sin\phi\cos\phi'
+               \cos(\lambda' - \lambda)],
+\end{equation}
+\begin{equation}
+    \Delta_y = r' \cos \phi' \sin(\lambda' - \lambda),
+\end{equation}
+\begin{equation}
+    \Delta_z = r' \cos \psi - r,
+\end{equation}
+\begin{equation}
+    \kappa = {r'}^2 \cos \phi',
+\end{equation}
+\begin{equation}
+    \ell = \sqrt{{r'}^2 + r^2 - 2 r r' \cos \psi},
+\label{eq:ell}
+\end{equation}
+\begin{equation}
+    \cos\psi = \sin\phi\sin\phi' + \cos\phi\cos\phi'
+                 \cos(\lambda' - \lambda).
+\label{eq:cospsi}
+\end{equation}
+
+
+\subsection{Gauss-Legendre Quadrature integration}
+
+Applying a $N$th order GLQ, we can approximate each integral in
+equations~\ref{eq:tesseroid-pot} and~\ref{eq:tesseroid-grav} by a weighted sum of the
+integration kernel evaluated on the roots of an $N$th order Legendre polynomial
+\citep[p.~390]{Hildebrand1987}.
+Unlike the homogeneous density case, the radial density function $\rho(r)$ must also be
+included in the integration and evaluated on the Legendre polynomial roots
+(i.e.~quadrature nodes).
+
+\iftwocol{
+\begin{equation}
+    \begin{split}
+        \int\limits_{\lambda_1}^{\lambda_2}
+        \int\limits_{\phi_1}^{\phi_2}
+        \int\limits_{r_1}^{r_2}
+        \rho(r') f(r', \phi', \lambda')
+        dr' d\phi' d\lambda' \approx& \\
+        A
+        \sum\limits_{i=1}^{N^r}
+        \sum\limits_{j=1}^{N^\phi}
+        \sum\limits_{k=1}^{N^\lambda}
+        W_i^r W_j^\phi W_k^\lambda
+        &\rho(r_i) f(r_i, \phi_j, \lambda_k),
+    \end{split}
+\label{eq:glq-var-dens}
+\end{equation}
+}{
+\begin{equation}
+    \int\limits_{\lambda_1}^{\lambda_2}
+    \int\limits_{\phi_1}^{\phi_2}
+    \int\limits_{r_1}^{r_2}
+    \rho(r') f(r', \phi', \lambda')
+    dr' d\phi' d\lambda' \approx
+    A
+    \sum\limits_{i=1}^{N^r}
+    \sum\limits_{j=1}^{N^\phi}
+    \sum\limits_{k=1}^{N^\lambda}
+    W_i^r W_j^\phi W_k^\lambda \rho(r_i) f(r_i, \phi_j, \lambda_k),
+\label{eq:glq-var-dens}
+\end{equation}
+}
+
+\noindent where
+
+\begin{equation}
+    A = \frac{(\lambda_2 - \lambda_1)(\phi_2 - \phi_1)(r_2 - r_1)}{8},
+\end{equation}
+
+\noindent $f(r', \phi', \lambda')$ is an integral kernel for a homogeneous tesseroid
+\citep{Grombein2013},
+$(r_i, \phi_j, \lambda_k)$ are the coordinates of the quadrature nodes,
+$N^r$, $N^\phi$, $M^\lambda$ are the quadrature orders and $W_i^r$, $W_j^\phi$,
+$W_k^\lambda$ are the quadrature weights in the radial, latitudinal, and longitudinal
+directions, respectively.
+\citet[p.~391]{Hildebrand1987} provides the formulas for calculating the GLQ weights and
+pre-computed values of the Legendre polynomial roots for low orders.
+See \citet{Uieda2016} for a more detailed description using a similar notation to the
+one used here.
+It is worth noting that a GLQ is equivalent to approximating the tesseroid by $N^r
+\times N^\phi \times N^\lambda$ point masses located on the quadrature nodes
+\citep{Ku1977, Asgharzadeh2007}.
+
+
+\subsection{Two Dimensional Adaptive Discretization}
+
+\citet{Ku1977} noticed that the GLQ integration
+becomes less accurate when the computation point is closer to the
+mass element.
+One way to prevent this from happening would be to increase the GLQ order.
+Doing so would uniformly increase the number of point masses inside the
+tesseroid volume.
+However, an increase in the point mass concentration is only required close to the
+computation point \citep{Uieda2016}.
+Alternatively, \citet{Li2011} proposed an adaptive
+discretization algorithm which keeps the GLQ order fixed and divides the
+tesseroid based on a ratio between the distance to the computation
+point and its dimensions.
+This algorithm produces a more efficient computation because an increased concentration
+of point masses is produced where it is needed more.
+\citet{Uieda2016} developed a modified version of this algorithm along with an efficient
+computational implementation.
+Both algorithms perform tesseroid subdivisions in the latitudinal,
+longitudinal and radial directions, thus we can define them as three-dimensional
+adaptive discretization algorithms.
+On the other hand, \citet{Lin2018} proposed a two dimensional discretization algorithm
+that subdivides the tesseroid only on the latitudinal and longitudinal directions.
+Removing a dimension from the discretization makes the computation more efficient by
+reducing the number of tesseroids in the model, while
+retaining an acceptable accuracy \citep{Lin2018}.
+
+Here we will follow \citet{Lin2018} and use a two dimensional version of the adaptive
+discretization of \citet{Uieda2016}.
+What follows is a summary of the algorithm and the reader is referred to
+\citet{Uieda2016} for a detailed description.
+
+\textit{Step 1}: Check that the tesseroid satisfies the following inequality for \DIFdelbegin \DIFdel{each
+dimension }\DIFdelend \DIFaddbegin \DIFadd{its
+latitudinal and longitudinal dimensions }\DIFaddend $L_i\ (i \in \{\lambda, \phi\})$\DIFdelbegin \DIFdel{of the tesseroid}\DIFdelend :
+
+\begin{equation}
+    \frac{d}{L_i} \geq D,
+    \label{eq:condition}
+\end{equation}
+
+\noindent
+in which $D$ is a positive scalar called the distance-size ratio, $d$ is the distance
+between the computation point and the geometric centre of the tesseroid
+
+\begin{equation}
+    d = \left[
+        r^2 + r_t^2 - 2 r r_t \cos\psi_t
+        \right]^{\frac{1}{2}} ,
+    \label{eq:distance}
+\end{equation}
+
+\begin{equation}
+    \cos\psi_t =
+        \sin\phi\sin\phi_t + \cos\phi\cos\phi_t\cos(\lambda - \lambda_t)\DIFdelbegin \DIFdel{.
+}\DIFdelend \DIFaddbegin \DIFadd{,
+}\DIFaddend \end{equation}
+
+\begin{equation}
+    r_t = \frac{r_2 + r_1}{2}, \quad
+    \phi_t = \frac{\phi_2 + \phi_1}{2}, \quad
+    \lambda_t = \frac{\lambda_2 + \lambda_1}{2}\DIFdelbegin \DIFdel{.
+}\DIFdelend \DIFaddbegin \DIFadd{,
+}\DIFaddend \end{equation}
+
+\noindent
+and the dimensions of the tesseroid are defined as
+
+\begin{equation}
+    L_\lambda = r_2 \arccos(\sin^2\phi_t +
+        \cos^2\phi_t\cos(\lambda_2 - \lambda_1)),
+    \label{eq:sizelon}
+\end{equation}
+
+\noindent and
+
+\begin{equation}
+    L_\phi = r_2 \arccos(\sin\phi_2\sin\phi_1 + \cos\phi_2\cos\phi_1).
+\end{equation}
+
+\textit{Step 2}:
+If none of the dimensions of the tesseroid fail inequality~\ref{eq:condition}, then
+compute the gravitational effect of the tesseroid using a second-order GLQ
+(Eq.~\ref{eq:glq-var-dens}).
+Add the computed effect to a running total.
+
+\textit{Step 3}:
+If inequality~\ref{eq:condition} does not hold for one of the dimensions
+(longitudinal or latitudinal), split the tesseroid in half along that dimension.
+Repeat steps 1-3 for all smaller tesseroids until none are left that violate
+inequality~\ref{eq:condition}.
+
+\textit{Final step}:
+By the end of the algorithm, a second-order GLQ will have been applied to each smaller
+tesseroid and the running total gathered in step 2 will be the gravitational effect of
+the original tesseroid.
+
+The distance-size ratio $D$ determines how many times the tesseroids will be divided.
+Therefore, it effectively regulates both the accuracy of the algorithm and its
+computation time.
+An optimal value for $D$ cannot be directly calculated from the desired accuracy level.
+Instead, it is empirically determined by comparing the numerical results with the
+analytical solution for a spherical shell.
+\citet{Uieda2016} used a shell with homogeneous density to determine optimal values of
+$D$.
+Here, we will repeat the numerical experiment using analytical expressions for shells
+with density varying according to functions of $r$.
+This experiment will also test whether the same values of $D$ determined by
+\citet{Uieda2016} can be used for the two dimensional adaptive discretization.
+
+
+\subsection{Density-based Discretization Algorithm}
+
+\begin{figure*}
+\centering
+\includegraphics[width=\linewidth]
+    {figures/density-based-discretization-algorithm.pdf}
+\caption{
+    Example application of the density-based discretization algorithm to a non-linear
+    density function.
+    (a)~The normalised density function $\rho_n(r')$ (blue), current boundaries of the
+    tesseroid (orange dots), and the \DIFdelbeginFL \DIFdelFL{linear density function }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{straight line }\DIFaddendFL $\rho_l(r')$ (orange line).
+    The dashed red line represents the maximum density difference $\Delta \rho (r')$ at
+    which the tesseroid would be divided (assuming that the
+    inequality~\ref{eq:delta-density} is not satisfied).
+    (b)~Second iteration of the algorithm with a new \DIFdelbeginFL \DIFdelFL{linear density function }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{straight line }\DIFaddendFL and maximum
+    density difference. The tesseroid would be divided at the depth indicated by the
+    dashed red line.
+    (c)~Third iteration of the algorithm.
+    (d)~Final output of the density-based discretization, assuming that all four new
+    tesseroids satisfy inequality~\ref{eq:delta-density}.
+}
+\label{fig:density-discretization-algorithm}
+\end{figure*}
+
+The numerical integration of an arbitrary continuous density function introduces a new
+type of problem: the integration error from using only a few quadrature nodes to account
+for the variation of the density function.
+The three dimensional adaptive discretization may help to reduce this kind of error by
+adding more point masses in the radial direction.
+However, it does not take into account the density function itself when dividing the
+tesseroid and hence it is not well suited to fully perform this task.
+
+We have developed a complementary discretization algorithm in the \DIFdelbegin \DIFdel{redial }\DIFdelend \DIFaddbegin \DIFadd{radial }\DIFaddend direction that
+takes into account the variations of the density function.
+This density-based discretization is applied prior to the two dimensional adaptive
+discretization described in the previous section.
+In short, the algorithm divides the tesseroid along the radial dimension at the
+depths at which the \emph{maximum density variations} take place.
+
+Consider an \emph{original} tesseroid with a density given by the continuous function
+$\rho(r')$.
+Before the density-based discretization starts,
+we normalise the density function to the range $[0, 1]$ as follows
+
+\begin{equation}
+    \rho_n(r') =
+    \frac{\rho(r') - \rho_\text{min}}{\rho_\text{max} - \rho_\text{min}},
+\end{equation}
+
+\noindent in which $\rho_\text{min}$ and $\rho_\text{max}$ are the minimum and maximum
+density values inside the tesseroid boundaries.
+We emphasize that this normalised density function will not be modified throughout the
+algorithm.
+In case the density function is constant, both maximum and minimum densities will be
+equal and the density-based discretization algorithm will not be applied.
+
+The algorithm is comprised of the following steps
+(Fig.~\ref{fig:density-discretization-algorithm}):
+
+\textit{Step 1}:
+Define a \DIFdelbegin \DIFdel{linear function }\DIFdelend \DIFaddbegin \DIFadd{straight line }\DIFaddend $\rho_l(r')$ that assumes the same values as the normalised
+density function $\rho_n(r')$ at the boundaries of the tesseroid ($r_1$ and $r_2$):
+
+\begin{equation}
+    \rho_l(r') =
+    \frac{ \rho_n(r_2) - \rho_n(r_1) }{ r_2 - r_1 } (r' - r_1) + \rho_n(r_1)\DIFdelbegin \DIFdel{,
+    }\DIFdelend \DIFaddbegin \DIFadd{.
+    }\DIFaddend \label{eq:density-reference-line}
+\end{equation}
+
+\textit{Step 2}:
+Evaluate the \DIFdelbegin \DIFdel{normalized and linear density functions }\DIFdelend \DIFaddbegin \DIFadd{normalised density function and the straight line }\DIFaddend on a range of $N$ radii
+between $r_1$ and $r_2$.
+We have opted for $N = 101$ but the specific value of $N$ is not critical to the
+algorithm.
+
+\textit{Step 3}:
+Compute the absolute difference between the values of the \DIFdelbegin \DIFdel{linear and normalised density
+functions}\DIFdelend \DIFaddbegin \DIFadd{straight line and the
+normalised density function}\DIFaddend :
+
+\begin{equation}
+    \Delta \rho (r') = | \rho_n(r') - \rho_l(r') |.
+    \label{eq:density-abs-diff}
+\end{equation}
+
+\textit{Step 4}:
+If the following inequality holds, the tesseroid will not be divided:
+
+\begin{equation}
+    \text{max}\{ \Delta \rho(r') \} \frac{L_r}{L_r^\text{orig}} \le \delta,
+    \label{eq:delta-density}
+\end{equation}
+
+\noindent
+in which $L_r$ is the radial dimension of the tesseroid being considered for division,
+
+\begin{equation}
+    L_r = r_2 - r_1,
+\end{equation}
+
+\noindent $L_r^\text{orig}$ is the radial dimension of the original tesseroid, and
+$\delta$ is a positive constant henceforth called the \textit{delta ratio}.
+
+\textit{Step 5}:
+If inequality~\ref{eq:delta-density} is not satisfied, then the tesseroid is split in
+two parts at the radius $r_\text{max}$ at which the maximum absolute difference
+(Eq.~\ref{eq:density-abs-diff}) takes place.
+Repeat steps 1-5 for each smaller tesseroid produced in this step.
+
+\textit{Final step}:
+Once all smaller tesseroids satisfy inequality.~\ref{eq:delta-density}, each one is
+subjected to the two dimensional adaptive discretization algorithm described earlier to
+calculate their gravitational effects.
+
+On the first iteration, the ratio \DIFdelbegin \DIFdel{$L_r/L_r^\text{orig} = 1$ }\DIFdelend \DIFaddbegin \DIFadd{$L_r/L_r^\text{orig}$ equals one }\DIFaddend because the tesseroid
+being divided is the original one.
+For further iterations, the ratio will be progressively smaller than one as the
+tesseroids get smaller.
+This is intended to limit the number of divisions to the ones that will
+significantly reduce the numerical error:
+dividing a large tesseroid with a small $\text{max}\{ \Delta \rho(r') \}$ would
+improve the integration accuracy more than dividing a small tesseroid with a
+higher $\text{max}\{ \Delta \rho(r') \}$.
+
+The higher $\delta$ is, the fewer divisions will be made, and vice-versa.
+Thus, it controls how many times the tesseroids will be divided based on the density
+function and, indirectly, determines the accuracy and computation time of
+numerical integration.
+This raises the need to determine a maximum value of $\delta$ that
+ensures an acceptable accuracy while minimising the computation time.
+
+
+\subsection{Algorithm summary}
+
+In summary, given a tesseroid with density varying in depth according to an arbitrary
+continuous function, we propose the following steps to numerically compute its
+gravitational fields on an external point:
+
+\textit{Step 1:}
+Apply the density-based discretization algorithm to discretize the tesseroid in the
+radial dimension, producing a set of tesseroids with the same longitudinal and
+latitudinal dimensions as the original one but with different radial boundaries.
+
+\textit{Step 2:}
+Apply the two dimensional adaptive discretization algorithm for each tesseroid obtained
+in the previous step.
+If needed, the algorithm will divide each tesseroid in the latitudinal and longitudinal
+direction, generating a set of smaller tesseroids.
+
+\textit{Step 3:}
+Apply a second-order GLQ to numerically compute the gravitational fields
+(Eq.~\ref{eq:glq-var-dens}) generated by each tesseroid obtained in the
+previous step.
+The numerical integration includes the density function and can be applied
+without modification to any continuous function.
+The sum of these results is the gravitational field of the original tesseroid.
+
+
+\subsection{Software implementation}
+
+We have implemented the algorithms described in the previous sections in the Python
+programming language.
+The software is based on the Python implementation of \citet{Uieda2016} that is included
+in the Fatiando a Terra library v0.5 \citep{Uieda2013}.
+The more time consuming parts of the algorithm are written in the Cython language to
+achieve higher performance.
+We leverage the dynamic nature of the Python language to allow user-defined radial
+density functions as inputs to the software.
+Thus, our code can evaluate linear, exponential, polynomial, sinusoidal, cubic splines,
+or any other continuous density function without modification.
+This new code is freely available under the BSD 3-clause open-source license.
+It can be freely downloaded from the online repository
+\href{https://github.com/pinga-lab/tesseroid-variable-density}{github.com/pinga-lab/tesseroid-variable-density}.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Determination of the distance-size and delta ratios}
+
+The distance-size ratio $D$ of the adaptive discretization and the delta ratio $\delta$
+of the density-based discretization determine how many times each tesseroid will be
+divided and thus indirectly control the numerical error of the integration.
+Optimal values for $D$ and $\delta$ must be determined in order to ensure both
+acceptable numerical accuracy and computation efficiency for the algorithm.
+
+\citet{Uieda2016} compared the numerical integration of homogeneous density tesseroids
+with the analytical solution of a spherical shell \citep{Mikuska2006, Grombein2013} in
+order to obtain default values for the distance-size ratio $D$.
+We will follow this idea but for our needs the spherical shell must
+have the same density function of radius as our tesseroid model.
+\citet{Lin2018} show the analytical solution of the gravitational potential generated by
+a spherical shell with linear density in the radial coordinate.
+\DIFdelbegin \DIFdel{We derive an expression }\DIFdelend \DIFaddbegin \DIFadd{Applying the Newton's Shell Theorem \mbox{%DIFAUXCMD
+\citep{Chandrasekhar1995, Binney2008}}\hspace{0pt}%DIFAUXCMD
+,
+we derive expressions }\DIFaddend for the gravitational potential of a spherical shell with
+\DIFdelbegin \DIFdel{an arbitrary density function in depth (Eq.~\ref{eq:shell-pot}),
+from which we obtained
+expressions for }\DIFdelend linear, exponential, and sinusoidal density functions
+(see Appendix~\ref{sec:shell}).
+
+In order to compare the numerical results with the analytical solution we must build
+spherical shell models out of tesseroids.
+We divide the spherical shell along the latitudinal and longitudinal directions to
+obtain a shell model made out of $6 \times 12 = 72$ tesseroids of size
+$30^\circ \times 30^\circ$.
+In order to asses the density-based discretization in the radial dimension,
+we use spherical shell models with different thicknesses (Table~\ref{tab:shell-models}).
+The thickness values were chosen to represent a range of applications, from topographic
+to lithospheric scale models.
+Because the amount of tesseroid divisions in the adaptive discretization will be
+proportional to the tesseroid size (Eq.~\ref{eq:condition}),
+some of these configurations represent worse-case scenarios.
+Most practical applications will use tesseroids smaller than
+$30^\circ \times 30^\circ \times 1000\ \text{km}$.
+
+The differences between the analytical and numerical solutions could be calculated on a
+single computation point due to the rotational symmetry of the spherical shell.
+However, the numerical results depend on the relative location between the computation
+point and the tesseroid \citep{Ku1977, Asgharzadeh2007, Uieda2016}.
+We account for this effect by calculating the differences on regular grids and keeping
+only the maximum absolute difference.
+All calculations are repeated for four different computation grids
+(Table~\ref{tab:grids}):
+a local grid at the pole, a local grid at the equator, a global grid at zero height
+above the shell, and a global grid at a height of 260 km (representing the nominal
+height of the GOCE satellite).
+These grids span a broad scenario of use cases and ensure an acceptable accuracy on each
+one of them.
+
+We perform comparisons between the analytical solutions for the spherical shell and the
+numerical integration results for linear, exponential, and sinusoidal density
+functions.
+The \DIFaddbegin \DIFadd{sinusoidal density case is included in order to test the numerical approximation to
+its limits.
+The }\DIFaddend comparisons are repeated for all combinations of tesseroid models in
+Table~\ref{tab:shell-models} and computation grids in Table~\ref{tab:grids}.
+From these results, we generalize optimal values for $D$ and $\delta$ that ensure a
+numerical error lower than 0.1\% of the spherical shell values for most use cases.
+
+\begin{table}
+\caption{
+    Description of the tesseroid models used to build spherical shells and characterize
+    the accuracy of the numerical integration.
+    The outer radius ($R_2$) of every shell model is equal to the mean Earth radius
+    (6378.137 km), while the inner radius ($R_1$) is determined by its thickness.
+    The horizontal dimensions of the tesseroids and the total number of
+    tesseroids in the shell model are given in the latitudinal and longitudinal
+    dimensions, respectively.
+}
+\label{tab:shell-models}
+\begin{tabular}{rccccc}
+    Thickness & Tesseroid size & Number of tesseroids \\ \hline
+    0.1 km  & $30^\circ \times 30^\circ$ & $6 \times 12 = 72$ \\
+    1 km    & $30^\circ \times 30^\circ$ & $6 \times 12 = 72$ \\
+    10 km   & $30^\circ \times 30^\circ$ & $6 \times 12 = 72$ \\
+    100 km  & $30^\circ \times 30^\circ$ & $6 \times 12 = 72$ \\
+    1000 km & $30^\circ \times 30^\circ$ & $6 \times 12 = 72$ \\
+\end{tabular}
+\end{table}
+
+\begin{table}
+\caption{
+    Description of the computation grids used to characterize the accuracy of the
+    numerical integration.
+    Grid height is defined above the mean Earth radius.
+}
+\label{tab:grids}
+\begin{tabular}{lccc}
+    Name & Grid spacing & Grid region (degrees) & Grid height (km)
+    \\ \hline
+    Pole      & $0.1^\circ$ &   0E /   1E / 89N / 90N & 0   \\
+    Equator   & $0.1^\circ$ &   0E /   1E /  0N / 1N  & 0   \\
+    Global    & $ 10^\circ$ & 180W / 180E / 90S / 90N & 0   \\
+    Satellite & $ 10^\circ$ & 180W / 180E / 90S / 90N & 260 \\
+\end{tabular}
+\end{table}
+
+
+\subsection{Linear Density}
+
+A spherical shell with a linear density function given by
+
+\begin{equation}
+    \rho(r') = ar' + b,
+    \label{eq:density-linear}
+\end{equation}
+
+\noindent
+has an analytical solutions for the gravitational potential and its vertical derivative
+given by Eqs.~\ref{eq:shell-pot-linear} and~\ref{eq:shell-gz}.
+The values of the angular and linear coefficients ($a$ and $b$)
+can be chosen so that the density assumes the values of $\rho_\text{in} = 3300$~kg/m$^3$
+and $\rho_\text{out} = 2670$~kg/m$^3$ on the inner ($R_\text{in}$) and outer
+($R_\text{out}$) radii of the shell, respectively,
+
+\begin{equation}
+    a = \frac{\rho_\text{out} - \rho_\text{in}}{R_\text{out} - R_\text{in}},
+\end{equation}
+
+\begin{equation}
+    b = \rho_\text{out} -
+    \frac{\rho_\text{out} - \rho_\text{in}}{R_\text{out} - R_\text{in}} R_\text{out}.
+\end{equation}
+
+
+\begin{figure*}
+\centering
+\includegraphics[width=\linewidth]{figures/linear-density-diffs.pdf}
+\caption{
+    Differences between the gravitational fields generated by each tesseroid shell model
+    and the analytical solution as a function of the distance-size ratio $D$.
+    Each model has a linear density function (Eq.~\ref{eq:density-linear}).
+    The computations were performed on the four grids described in Table~\ref{tab:grids}
+    and using the shell models detailed in Table~\ref{tab:shell-models}.
+    Each line represents the maximum absolute difference between the numerical results
+    and the analytical solution for a given shell model.
+    Due to the linearity of the density function, the density-based discretization
+    algorithm is not applied.
+    Differences are reported as a percentage of the analytical solutions.
+    The horizontal dashed black line represents a target difference of 0.1\%.
+}
+\label{fig:D-linear}
+\end{figure*}
+
+The absolute density difference defined on equation~\ref{eq:density-abs-diff} will
+always be zero for the linear density case.
+As a result, the inequality~\ref{eq:delta-density} will always be satisfied and no
+divisions will ever be performed during the density-based discretization.
+Therefore, the two dimensional adaptive discretization algorithm is the
+only mechanism that controls the accuracy of the numerical integration for the linear
+density case.
+For this reason, we will ignore the values of $\delta$ and only determine the minimum
+value of $D$ needed in order to guarantee an acceptable accuracy.
+
+We compute the gravitational potential ($V$) and its vertical derivative ($g_z$) for
+each shell model in Table~\ref{tab:shell-models} on each computation grid in
+Table~\ref{tab:grids}.
+The horizontal derivatives of the potential are equal to zero outside of the shell due
+to the rotational symmetry and are thus omitted from the analysis.
+The computations are repeated for values of the distance-size ratio $D$ ranging from 0.5
+to 5 in increments of 0.5.
+We then calculate the absolute difference between the numerical results and the
+analytical solution for the shell.
+Fig.~\ref{fig:D-linear} shows the maximum absolute difference for each shell model and
+computation grid as a function of $D$.
+The differences are relative to the shell value.
+Finally, we set the optimal value of $D$ as the smallest value for which the difference
+is below 0.1\%.
+
+We observe from Fig.~\ref{fig:D-linear} that the relative errors for the potential and
+$g_z$ fall below the 0.1\% threshold at $D=1$ and $D=2.5$, respectively.
+Notably, a value of $D=2$ would suffice for $g_z$ in the case of the satellite height
+grid.
+For all other configurations, these values are consistent and independent of the shell
+model thickness or geographic location.
+
+
+\subsection{Exponential Density}
+
+For an exponential density function, the density-based discretization will be applied
+before the adaptive discretization algorithm.
+This means that optimal values for both the distance-size ratio $D$ and the delta ratio
+$\delta$ (Eq.~\ref{eq:delta-density}) must be determined.
+We perform an error analysis similar to what was done for the linear density case.
+Now the spherical shell will have an exponential density function that assumes the
+values of $\rho_\text{out} = 2670$~kg/m$^3$ and $\rho_\text{in} = 3300$~kg/m$^3$ on the
+outer and inner surfaces, respectively, defined as follows:
+
+\begin{equation}
+    \rho(r') = A e^{- b \frac{r' - R_1}{R_2 - R_1}} + C,
+    \label{eq:density-exp}
+\end{equation}
+
+\noindent where
+
+\begin{equation}
+    A = \frac{\rho_\text{in} - \rho_\text{out}}{1 - e^{-b}},
+\end{equation}
+
+\begin{equation}
+    C = \rho_\text{in} - A,
+\end{equation}
+
+\noindent and $b$ is a dimensionless
+constant that determines the variability of the function.
+A higher value of $b$ increases the maximum slope of the density function
+(Fig.~\ref{fig:exp-densities}).
+
+\begin{figure}
+\centering
+\iftwocol{
+\includegraphics[width=\linewidth]{figures/exponential-densities.pdf}
+}{
+\includegraphics[width=0.5\linewidth]{figures/exponential-densities.pdf}
+}
+\caption{
+    Exponential density functions assigned to the spherical shell models for
+    $\delta$ ratio determination.
+    Each density function corresponds to a different value of $b$ on
+    Eq.~\ref{eq:density-exp}.
+}
+\label{fig:exp-densities}
+\end{figure}
+
+
+\subsubsection{$D$-$\delta$ space exploration}
+
+We aim to find a combination of the $D$ and $\delta$ that produces a numerical error
+lower than the 0.1\% threshold while minimizing computation time.
+We use a grid search method and compute the numerical error for every ($D$, $\delta$)
+pair belonging to a grid on the $D$-$\delta$ space (Fig.~\ref{fig:grid-search}).
+For optimum algorithm performance, we search for the ($D$, $\delta$) pair that minimizes
+the number of tesseroid division while keeping a numerical error under the 0.1\%
+threshold.
+This requirement translates into the smallest possible value of $D$ and the highest
+possible value of $\delta$.
+
+Because this is a time consuming computation, we limit the analysis to a high value of
+$b=30$ (Fig.\ref{fig:exp-densities}) and the global grid defined in
+Table~\ref{tab:grids}.
+We compute the relative difference between the numerical and analytical results
+of the gravitational potential ($V$) and its vertical derivative ($g_z$) for all shell
+models defined in Table~\ref{tab:shell-models}.
+For the sake of brevity, Fig.~\ref{fig:grid-search} shows the maximum difference values
+obtained from all shell models.
+The dotted lines in Fig.~\ref{fig:grid-search} represent a contour of 0.1\% relative
+error.
+Points inside the dotted are within the acceptable threshold.
+Also shown in Fig.~\ref{fig:grid-search} are the $D$ values determined for the linear
+density function in the previous section ($D_\text{linear}$).
+
+The smallest values of $D$ that are within the 0.1\% threshold coincide with
+$D_\text{linear}$ for both $V$ and $g_z$.
+These results indicate that $D_\text{linear}$ can be safely extrapolated to non-linear
+density cases.
+This is not surprising considering that the two dimensional adaptive
+discretization and the density-based discretization are independent of each other.
+The former divides the tesseroid in the horizontal dimensions, while the latter only
+divides in the radial dimension.
+Hence, the optimal value of $\delta$ is likely to be independent of the optimal value of
+$D$.
+Because the grid search was limited to a specific computation grid and value of $b$,
+we perform a more detailed analysis in the following section to determine an optimal
+value of $\delta$ for the exponential density case.
+
+\begin{figure}
+\centering
+\iftwocol{
+\includegraphics[width=\linewidth]
+    {figures/grid-search.pdf}
+}{
+\includegraphics[width=0.5\linewidth]
+    {figures/grid-search.pdf}
+}
+\caption{
+    Numerical error exploration in the $D$-$\delta$ space.
+    The percentage difference values were obtained from the comparison between the
+    analytical solution and the numerical approximation of the gravitational fields ($V$
+    and $g_z$) generated by a spherical shell with an exponential density function
+    (Eq.~\ref{eq:density-exp}).
+    These comparisons were carried out on the ``Global'' grid (Table~\ref{tab:grids}),
+    with the spherical shell models detailed in Table~\ref{tab:shell-models}, and an
+    exponential density function with $b = 30$.
+    The percentage difference values are obtained as the maximum difference
+    between every shell model.
+    The points inside the dashed line are the ones that present an error lower than
+    0.1\%.
+    The $D$ value obtained for the linear density case for each gravitational field is
+    also shown ($D_\text{linear}$).
+    }
+\label{fig:grid-search}
+\end{figure}
+
+
+\subsubsection{Delta ratio determination}
+
+\begin{figure*}
+\centering
+\includegraphics[width=\linewidth]{figures/exponential-density-diffs.pdf}
+\caption{
+    Difference between the numerical and analytical solutions as a function of $\delta$
+    ratio for different exponential density functions.
+    These comparisons were carried out for every shell model
+    (Table~\ref{tab:shell-models}) and computation grid (Table~\ref{tab:grids})
+    using a fixed value of $D$.
+    Each curve corresponds to the maximum difference out of all shell models
+    for a particular value of $b$ (Eq.~\ref{eq:density-exp}).
+    Differences are reported as a percentage of the analytical solutions.
+    The horizontal dashed black line represents a target difference of 0.1\%.
+    }
+\label{fig:delta-exponential}
+\end{figure*}
+
+Having chosen values of $D$ equal to the ones obtained for the linear density case, we
+are free to explore the integration error as a function of $\delta$ in more detail.
+We will compute the difference between the numerical and analytical results for all
+combinations of computation grid (Table~\ref{tab:grids}) and spherical shell model
+(Table~\ref{tab:shell-models}), varying $\delta$ from $10^{-3}$ to $10^{1}$.
+The calculations are repeated for each $b \in \{1, 2, 5, 10, 30, 100\}$
+(Fig.~\ref{fig:exp-densities}) to examine the accuracy of the method for density
+functions of different sharpness.
+Because larger $\delta$ values result in fewer tesseroid divisions,
+our intention is to find the highest value of $\delta$ that produces a relative
+difference bellow the $0.1\%$ threshold.
+
+Fig.~\ref{fig:delta-exponential} shows the resulting relative
+differences for $V$ and $g_z$ as a function of $\delta$.
+For the sake of brevity, each curve corresponds to the maximum difference between all
+shell models.
+The curves for $b=1$ and $b=2$ are below the 0.1\% threshold for all values of $\delta$
+and do not change for $\delta > 0.8$, indicating that the density
+functions are sufficiently smooth and no density discretizations are necessary.
+For all other values of $b$, the difference falls below the 0.1\% threshold
+if $\delta = 0.1$.
+These results indicate that there is no significant relationship between the
+sharpness of the exponential density function and the numerical error.
+
+
+\subsection{Sinusoidal Density}
+
+So far we have tested the density-based discretization algorithm against linear and
+exponential density functions.
+Nevertheless, this new algorithm is well suited to more complex continuous functions,
+for example non-monotonic functions or those with multiple inflection points.
+Although such density functions are rarely, if ever, seen in geological structures,
+we want to subject our algorithm to such cases in order to show that it can solve more
+complex situations than linear and exponential functions.
+\DIFaddbegin \DIFadd{Furthermore, acquiring an optimal value for the $\delta$ ratio in case of unrealistic
+density functions allow to extrapolate it to simpler realistic cases.
+Thus this tests are only intended to submit the algorithm to the extreme and not to
+emulate a real case scenario.
+}\DIFaddend
+
+We will consider spherical shells with a sinusoidal density function defined as follows:
+
+\begin{equation}
+    \rho(r') = A \sin \left( 2 \pi b \frac{r' - R}{R_2 - R_1} \right) + A,
+    \label{eq:density-sine}
+\end{equation}
+
+\noindent in which $A$ is a constant that controls the amplitude and vertical shift of
+the sine function, $R$ is the mean Earth radius, and $b$ is a dimensionless constant
+that regulates how many periods of the trigonometric function are included inside the
+inner and outer radii.
+The analytical solutions for $V$ and $g_z$ of a spherical shell with a sinusoidal
+density function can be found on Appendix~\ref{sec:shell}.
+
+We compute the relative difference between the numerical and analytical results for $V$
+and $g_z$ for all combinations of spherical shell models (Table~\ref{tab:shell-models})
+and computation grids (Table~\ref{tab:grids}).
+We fixed the distance-size ratio $D$ to the ones obtained for the linear density case
+and explored values of $\delta$ ranging from $10^{-4}$ to $1$.
+The calculations are repeated for values of $b$ equal to 1, 2, 5 and 10
+(Fig.~\ref{fig:sine-densities}).
+For all computations, the value of $A$ is fixed at 1650 kg/m$^3$.
+
+\begin{figure}
+\centering
+\iftwocol{
+\includegraphics[width=\linewidth]{figures/sine-densities.pdf}
+}{
+\includegraphics[width=0.5\linewidth]{figures/sine-densities.pdf}
+}
+\caption{
+    Sinusoidal density functions assigned to the spherical shells in the $\delta$ ratio
+    determination.
+    Each density function corresponds to a different value of $b$ on
+    Eq.~\ref{eq:density-sine}.
+}
+\label{fig:sine-densities}
+\end{figure}
+
+\begin{figure*}
+\centering
+\includegraphics[width=\linewidth]{figures/sine-density-diffs.pdf}
+\caption{
+    Difference between the numerical and analytical solutions as a function of $\delta$
+    ratio for different sinusoidal density functions.
+    These comparisons were carried out for every shell model
+    (Table~\ref{tab:shell-models}) and computation grid (Table~\ref{tab:grids})
+    using a fixed value of $D$.
+    Each curve corresponds to the maximum difference out of all shell models
+    for a particular value of $b$ (Eq.~\ref{eq:density-sine}).
+    Differences are reported as a percentage of the analytical solutions.
+    The horizontal dashed black line represents a target difference of 0.1\%.
+    }
+\label{fig:delta-sine}
+\end{figure*}
+
+Fig.~\ref{fig:delta-sine} shows the relative differences between the analytical
+and the numerical solutions for sinusoidal density case.
+Once again, each curve corresponds to the maximum difference between all shell models.
+For all values of $b$ except for $b=10$,
+the differences fall below the 0.1\% threshold for $\delta = 0.1$.
+In the case of $b=10$, a lower value of $\delta = 0.01$ is required to achieve 0.1\%
+difference.
+We note that, even for the case of $b=10$, the differences for $\delta = 0.1$ are below
+1\%.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Algorithm performance}
+
+Because the density-based discretization algorithm introduces more divisions along the
+radial dimension, it is reasonable that the computation time for variable densities will
+be higher than the homogeneous density case.
+Directly comparing the computation time of both cases cannot be done in a meaningful
+way because it is highly dependent on the implementation of the algorithm,
+the choice of programming language, and the particular density function used.
+In order to obtain an indicator of the increase in the computation time,
+we chose the number of tesseroid divisions in the density-based discretization as a
+proxy measure.
+
+We analyse exponential density functions (Eq.~\ref{eq:density-exp}) with values of $b$
+equal to 1, 2, 5, 10, 30 and 100, and sinusoidal density functions
+(Eq.~\ref{eq:density-sine}) with values of $b$ equal to 1, 2, 5, and 10.
+We then apply the density-based discretization algorithm on each function and record the
+number divisions carried out.
+Figs.~\ref{fig:number-of-tesseroids}a and~\ref{fig:number-of-tesseroids}b show the
+exponential and sinusoidal density functions and the resulting discretization points as
+orange dots.
+
+For the exponential density functions, the algorithm performs a single division
+independently of the value of $b$.
+Therefore, the computation time would likely be at least twice that of the homogeneous
+density case (assuming equal implementations).
+On the other hand, Fig.~\ref{fig:number-of-tesseroids}c shows an almost linear relation
+between the number of divisions in the sinusoidal density case and the value of $b$.
+Thus, the computation time is likely to be dependent on the number of wavelengths
+of the sinusoidal function that are contained within the tesseroid.
+
+\begin{figure*}
+\centering
+\includegraphics[width=\linewidth]{figures/number-of-tesseroids.pdf}
+\caption{
+    Number of divisions performed by the density-based discretization algorithm
+    (with $\delta = 0.1$) in case of
+    (a)~exponential density functions with the same values of $b$ shown in
+    Fig.~\ref{fig:exp-densities},
+    (b)~sinusoidal density functions with the same values of $b$ shown in
+    Fig.~\ref{fig:sine-densities}.
+    On both figures, the locations of the tesseroid divisions are are marked with orange
+    dots.
+    (c) shows the number of discretized tesseroids for the sinusoidal density functions
+    as a function of $b$.
+}
+\label{fig:number-of-tesseroids}
+\end{figure*}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Application to the Neuqu\'en Basin}
+
+We applied the new algorithms and optimal values of $D$ and $\delta$ determined
+previously to calculate the gravitational effects of the Neuqu\'en Basin,
+a sedimentary basin located to the east of the Andes, between 32$^\circ$S and
+40$^\circ$S latitude (Fig.~\ref{fig:neuquen-basin}a).
+The basin includes continental and marine siliciclastics, carbonates, and evaporites
+accumulated over the Jurassic and the Cretaceous constituting a stratigraphic record up
+to 5000m of depth \citep{Howell2005}.
+
+\begin{figure*}
+\centering
+\includegraphics[width=\linewidth]{figures/neuquen-basin.pdf}
+\caption{
+    Gravitational effects of the Neuqu\'en sedimentary basin modelled
+    using tesseroids with an exponential density function of depth.
+    (a)~Topography of the Neuqu\'en Basin (in km) and its location in South America,
+    (b)~thickness of the sedimentary basin \citep[in meters;][]{Heine2007},
+    (c)~resulting gravitational potential $V$,
+    (d)~resulting vertical component of the gradient ($g_z$),
+    calculated at 10km of height over the mean Earth radius.
+}
+\label{fig:neuquen-basin}
+\end{figure*}
+
+\begin{figure}
+\centering
+\iftwocol{
+\includegraphics[width=\linewidth]{figures/neuquen-basin-densities.pdf}
+}{
+\includegraphics[width=0.5\linewidth]{figures/neuquen-basin-densities.pdf}
+}
+\caption{
+    Linear and exponential densities used to compute the gravitational fields generated
+    by a tesseroid model of the Neuqu\'en sedimentary basin.
+    The height is defined above the mean Earth radius, and its axis is spanned between
+    the deepest and the highest point of the basin.
+}
+\label{fig:neuquen-basin-densities}
+\end{figure}
+
+
+\begin{figure*}
+\centering
+\includegraphics[width=\linewidth]{figures/neuquen-basin-diffs.pdf}
+\caption{
+    Differences between the gravitational fields generated by the tesseroid model of the
+    Neuqu\'en basin with an exponential density contrast and with a homogeneous and
+    linear density variation.
+    \mbox{(a)-(b)}~Differences on $V$ and $g_z$ between the exponential density model
+    and the homogeneous density one,
+    \mbox{(c)-(f)}~differences on $V$ and $g_z$ between the exponential density model
+    and the linear density one, calculated at 10km of height over the mean Earth radius.
+}
+\label{fig:neuquen-basin-diffs}
+\end{figure*}
+
+The thickness of the sediment pack was digitized from \citet{Heine2007} on a regular
+grid with a resolution of 0.05$^\circ$ on both longitude and latitude directions
+(Fig.~\ref{fig:neuquen-basin}b).
+We created a tesseroid model of the sediment pack by placing a
+$0.05^\circ \times 0.05^\circ$ tesseroid on each node of the grid.
+The top of each tesseroid was fixed at the median of the topography of the basin
+(845~m above mean Earth radius) and the bottom at corresponding thickness of the basin.
+
+We must also define a density function for the tesseroid model.
+\citet{Sigismondi2012} measured a minimum and maximum density contrast for
+the Neuqu\'en basin of -412kg/m$^3$ and -275kg/m$^3$, respectively.
+We have chosen an exponential density variation (Eq.~\ref{eq:density-exp}) that assumes
+the minimum value on the top surface and the maximum at 5014m depth (the thickest part
+of the basin), with a value of $b$ equal to 3.
+This density variation is in the order of magnitude of the ones used by
+\citet{Cowie1990} and \citet{Cordell1973}.
+This density function can be seen on Fig.~\ref{fig:neuquen-basin-densities}.
+
+Finally, we computed the gravitational potential $V$ and the vertical component of the
+gradient ($g_z$) on a computation grid of $159\times163$ nodes ($0.05^\circ$ spacing on
+both longitude and latitude) at a 10 km height over the mean Earth radius.
+The resulting fields can be seen in Fig.~\ref{fig:neuquen-basin}c-d.
+
+We computed the differences between the results for the exponential density function and
+those generated by the same model but now with a constant density (the mean of
+-412kg/m$^3$ and -275kg/m$^3$).
+We also computed the differences between the exponential density and a linear density
+that assumes these two values on the highest and the deepest point of the basin
+(Fig.~\ref{fig:neuquen-basin-densities}).
+Fig.~\ref{fig:neuquen-basin-diffs}a-b and Fig.~\ref{fig:neuquen-basin-diffs}c-d show the
+differences with the constant and the linear density, respectively.
+The maximum absolute difference in the computed $g_z$ is approximately 8 mGal for the
+homogeneous case and approximately 6 mGal for the linear density case.
+Both are well above the accuracy of most available data products.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Discussion}
+
+By including the density function into the GLQ integration, the method described here
+can be applied without modification to tesseroids with density following any continuous
+function of radius.
+A density-based discretization algorithm divides the tesseroid in the radial dimension
+to ensure accurate integration of the density function.
+This algorithm is independent of the GLQ integration and could potentially be used to
+determine an optimal discretization when approximating a density function by piecewise
+linear \citep{Lin2018} or piecewise polynomial \citep{Fukushima2018} functions.
+
+Our numerical experiments show that the two dimensional adaptive discretization is
+enough to achieve 0.1\% accuracy with a second-order GLQ in the case of a linear density
+function (Fig.~\ref{fig:D-linear}).
+Values of the distance-size ratio determined here for the gravitational potential
+($D=1$) and its vertical derivative ($D=2.5$) are compatible with \citet{Uieda2016}.
+These results also show that there is no significant relationship between the accuracy
+of the method and the thickness of the tesseroid model.
+
+The $D$-$\delta$ space exploration for the exponential density function
+(Fig.~\ref{fig:grid-search}) showed that values of $D$ determined for the linear density
+case are equally applicable to the exponential density case.
+Furthermore, the difference with respect to the analytical solution only falls below
+0.1\% for values of $\delta$ lower than 0.1.
+It follows that the density-based discretization is required to achieve the desired
+accuracy level for non-linear density functions.
+
+More detailed error analyses showed that $\delta = 0.1$ is sufficient to guarantee an
+accuracy of 0.1\% for all exponential density functions tested
+(Fig.~\ref{fig:delta-exponential})
+and most of the sinusoidal functions tested (Fig.~\ref{fig:delta-sine}).
+The exception is the case of a sinusoidal function with $b = 10$
+(Eq.~\ref{eq:density-sine}), for which $\delta = 0.01$ is required to achieve 0.1\%
+accuracy.
+Nevertheless, using $\delta = 0.1$ in this case would still produce results with an
+error of less than 1\%.
+
+While the algorithms proposed here can be applied to any continuous density function,
+the optimal values for $D$ and $\delta$ are empirically determined only for linear,
+exponential, and sinusoidal density functions.
+Thus, we can only say with certainty that these values will produce results with 0.1\%
+accuracy for these functions.
+However, all of our numerical tests include worse-case scenarios (zero computation
+heights, large tesseroids, highly variable density functions, etc).
+For this reason, these optimal values of $D$ and $\delta$ can plausibly be
+extrapolated to any realistic continuous density function.
+Notwithstanding, we encourage users of the algorithms and software to perform similar
+tests in order evaluate the accuracy when using density functions more complex than the
+ones tested here.
+
+The algorithm performance analysis shows that the computation time using variable
+densities is likely to be at least two times larger than the homogeneous density case.
+It is also likely to increase proportionally to the number of inflection points of the
+density function.
+As is the case for most numerical methods, there is a trade-off between computation time
+and accuracy.
+Nevertheless, density profiles will have few inflection points for most geophysical
+applications.
+Therefore, the computation time would be in the same order of
+magnitude as the one for the homogeneous density in most real world applications.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Conclusions}
+
+We have developed a new methodology to compute the gravitational potential and its
+gradient for a tesseroid with a density given by a continuous function of radius.
+It numerically solves the volume integrals through Gauss-Legendre Quadrature (GLQ) by
+including the density function in the numerical integration.
+By implementing the algorithm in the dynamic Python programming language, users can
+define their own density function to supply to the software.
+This allows the use of any arbitrary continuous function without modification to the
+method or software.
+The accuracy of the numerical integration is automatically controlled by a two
+dimensional adaptive discretization algorithm and a new density-based discretization
+algorithm.
+The former divides the tesseroid in half if the ratios of the distance to the
+computation point and the latitudinal or the longitudinal size of the tesseroid are
+smaller than a predefined distance-size ratio $D$.
+This algorithm minimises the integration error when the computation point is close to
+the tesseroid.
+Nevertheless, the adaptive discretization alone is not sufficient to guarantee the
+accuracy of the method in case of tesseroids with non-linear density functions.
+To overcome this challenge, the density-based discretization algorithm
+divides the tesseroid along the radial dimension on the points at which the maximum
+variations of the density function take place.
+The number of radial divisions performed, and thus the accuracy of the computation, is
+controlled by the $\delta$ parameter.
+This new algorithm is intended to minimise the error due to the inability of
+the GLQ to produce precise approximations of density functions with sharp variations.
+
+We empirically determined optimal values for $D$ and $\delta$ by comparing the numerical
+results with analytical solutions.
+Our analysis included a range of tesseroid models and computation grids as well as
+common density functions.
+These values minimize the computational load while maintaining the numerical error below
+0.1\% of an analytical solution.
+The density functions used to establish the optimal values were a linear, an
+exponential, and a sinusoidal function.
+The linear function represents the smoothest variation of density and does not require
+density-based discretization at all.
+Through this analysis, we have obtained optimal values for the distance-size ratio $D$
+of 1 and 2.5 for the potential \DIFdelbegin \DIFdel{an }\DIFdelend \DIFaddbegin \DIFadd{and }\DIFaddend its gradient, respectively.
+We analysed the error for exponential functions ranging from smooth to sharp and
+sinusoidal function of different wavelengths to test the accuracy of the density-based
+discretization.
+\DIFaddbegin \DIFadd{It worth noting that the sinusoidal density tests were carried out in order to test the
+algorithm to the extreme and not to emulate a real world scenario.
+}\DIFaddend Values of $\delta$ equal to 0.1 are sufficient to guarantee a 0.1\% accuracy for most
+realist cases tested.
+These results could be extrapolated to other continuous density functions that are
+sufficiently smooth, as is the case for most common geophysical applications.
+Smaller values of $\delta$ can \DIFaddbegin \DIFadd{be }\DIFaddend used for more highly variable density functions to
+increase the accuracy of the integration accordingly.
+
+Some computational performance is sacrificed in order to obtain an accurate and general
+purpose method.
+The density-based discretization adds to the computation time by increasing
+the number of GLQ integrations.
+Likewise, allowing users to supply custom density functions incurs an overhead cost
+because of the added function evaluations.
+It is also impossible to optimize the source code and formulas without knowledge of the
+specific density function.
+Nonetheless, the density-based discretization is independent of the adaptive
+discretization and GLQ integration.
+It can be viewed as a type of pre-processing step that can be combined with other more
+specialized integration methods.
+
+An application to modelling the Neuqu\'en Basin, Argentina, demonstrates that the
+effects of sediment compaction cannot be ignored.
+When compared to an exponential density function, a homogeneous density with depth would
+result in an error of up to -8 mGal, while a linear density function would result in up
+to -6 mGal error.
+Accurate and robust forward modelling is a key component to any gravity inversion
+method.
+Errors of this magnitude could result in significant overestimation of sedimentary
+basin thickness, for example.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Acknowledgments}
+
+We are indebted to the developers and maintainers of the open-source software without
+which this work would not have been possible.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\bibliographystyle{gji}
+\bibliography{references}
+
+\appendix
+
+\section{Analytical Solutions for Spherical Shell}
+\label{sec:shell}
+
+\DIFdelbegin %DIFDELCMD < \begin{figure}
+%DIFDELCMD < \centering
+%DIFDELCMD < \includegraphics[width=0.5\linewidth]{figures/spherical-shell.pdf}
+%DIFDELCMD < %%%
+%DIFDELCMD < \caption{%
+{%DIFAUXCMD
+\DIFdelFL{Spherical shell with inner and outer radii $R_1$ and $R_2$, respectively.
+    The computation point $Q$ is located on the $z$ axis at a distance $r$ from
+    the origin of the coordinates system.
+    For our purposes we will assume that $Q$ is outside of the shell,
+    i.e.~$r > R_2$.
+}}
+%DIFAUXCMD
+%DIFDELCMD < \label{fig:spherical-shell}
+%DIFDELCMD < \end{figure}
+%DIFDELCMD <
+
+%DIFDELCMD < %%%
+\DIFdelend Consider a spherical shell with inner radius $R_1$ and outer radius $R_2$,
+whose density is a function $\rho(r')$ of the radial coordinate\DIFdelbegin \DIFdel{(Fig.
+~\ref{fig:spherical-shell}).
+The }\DIFdelend \DIFaddbegin \DIFadd{.
+We want to get an analytical expression for the gravitational fields the shell generates
+on any external point located at a distance $r$ from the centre of the shell
+($r > R_2$).
+}
+
+\DIFadd{According to Newton's Shell Theorem (Theorem XXXI)
+\mbox{%DIFAUXCMD
+\citep{Chandrasekhar1995, Binney2008}}\hspace{0pt}%DIFAUXCMD
+, the }\DIFaddend gravitational potential generated by the
+shell on \DIFdelbegin \DIFdel{an arbitrary external point $Q$ can be written as follows}\DIFdelend \DIFaddbegin \DIFadd{any external point is the same as it would be if its mass were concentrated on
+a point located at its centre}\DIFaddend :
+
+\begin{equation}
+    V_\text{sh}(\phi, \lambda, r) = \DIFdelbegin \DIFdel{G
+    \int}%DIFDELCMD < \limits%%%
+\DIFdel{_0^{2\pi}
+    \int}%DIFDELCMD < \limits%%%
+\DIFdel{_{-\frac{\pi}{2}}^\frac{\pi}{2}
+    \int}%DIFDELCMD < \limits%%%
+\DIFdel{_{R_1}^{R_2}
+    \frac{\rho(r')}{\ell} }%DIFDELCMD < {%%%
+\DIFdel{r'}%DIFDELCMD < }%%%
+\DIFdel{^2 \cos\phi' \,
+    dr' d\phi' d\lambda'}\DIFdelend \DIFaddbegin \DIFadd{\frac{GM}{r}}\DIFaddend ,
+\end{equation}
+
+\noindent where \DIFdelbegin \DIFdel{$\ell$ is defined in equation~\ref{eq:ell}.
+}%DIFDELCMD <
+
+%DIFDELCMD < %%%
+\DIFdel{For $Q$ located along the $z$ axis (i.e., $\phi=90^\circ$) at a distance $r$ from the
+origin, equation~\ref{eq:ell} simplifies to:
+}%DIFDELCMD <
+
+%DIFDELCMD < %%%
+\begin{displaymath}
+    \DIFdel{\ell = \sqrt{r'^2 + r^2 - 2 r r' \sin\phi'}.
+}\end{displaymath}%DIFAUXCMD
+%DIFDELCMD <
+
+%DIFDELCMD < \noindent
+%DIFDELCMD < %%%
+\DIFdel{Because of the rotational symmetry along the $z$ axis, the integration in $\lambda'$ is
+straightforward}\DIFdelend \DIFaddbegin \DIFadd{$M$ is the total mass of the shell, which can be easily computed as
+follows}\DIFaddend :
+
+\begin{equation}
+    \DIFdelbegin \DIFdel{V_\text{sh}}\DIFdelend \DIFaddbegin \DIFadd{M =
+    }\iiint\limits\DIFadd{_{\Omega} \rho}\DIFaddend (r\DIFaddbegin \DIFadd{'}\DIFaddend ) \DIFaddbegin \DIFadd{dV }\DIFaddend =
+    \DIFdelbegin \DIFdel{2}\DIFdelend \DIFaddbegin \DIFadd{4}\DIFaddend \pi \DIFdelbegin \DIFdel{G
+    }\DIFdelend \int\limits\DIFdelbegin \DIFdel{_{-\frac{\pi}{2}}^\frac{\pi}{2}
+    \int}%DIFDELCMD < \limits%%%
+\DIFdelend _{R_1}^{R_2} \DIFdelbegin \DIFdel{\frac{\rho(r') {r'}^2 \cos\phi'}{\sqrt{r'^2 + r^2 - 2 r r' \sin\phi'}}
+    \, dr}\DIFdelend \DIFaddbegin \DIFadd{\rho(r}\DIFaddend '\DIFdelbegin \DIFdel{d\phi}\DIFdelend \DIFaddbegin \DIFadd{) }{\DIFadd{r}\DIFaddend '\DIFaddbegin }\DIFadd{^2 dr'}\DIFaddend ,
+\end{equation}
+
+\noindent \DIFdelbegin \DIFdel{while the integration in $\phi'$ can be performed independently of the density function.
+Making use of SymPy \mbox{%DIFAUXCMD
+\citep{sympy2017}}\hspace{0pt}%DIFAUXCMD
+, a Python library for symbolic mathematics, we obtained }\DIFdelend \DIFaddbegin \DIFadd{where $\Omega$ symbolizes the volume of the shell.
+}
+
+\DIFadd{Combining the two previous equations, we get }\DIFaddend the following expression for the potential:
+
+\DIFdelbegin %DIFDELCMD < \iftwocol{
+%DIFDELCMD < \begin{displaymath}
+%DIFDELCMD <     \begin{split}
+%DIFDELCMD <         V_\text{sh}(r) = 2\pi G
+%DIFDELCMD <         \int\limits_{R_1}^{R_2}
+%DIFDELCMD <         \Big[ & \sqrt{r^2 + r'^2 + 2rr'} - \\
+%DIFDELCMD <         & \sqrt{r^2 + r'^2 - 2rr'}
+%DIFDELCMD <         \Big] \frac{r'\rho(r')}{r} \, dr'.
+%DIFDELCMD <     \end{split}
+%DIFDELCMD < \label{eq:shell-pot-sqrts}
+%DIFDELCMD < \end{displaymath}
+%DIFDELCMD < }{
+%DIFDELCMD < \begin{displaymath}
+%DIFDELCMD <     V_\text{sh}(r) = 2\pi G
+%DIFDELCMD <     \int\limits_{R_1}^{R_2}
+%DIFDELCMD <     \Big[ \sqrt{r^2 + r'^2 + 2rr'}  -
+%DIFDELCMD <     \sqrt{r^2 + r'^2 - 2rr'}
+%DIFDELCMD <     \Big] \frac{r'\rho(r')}{r} \, dr'.
+%DIFDELCMD < \label{eq:shell-pot-sqrts}
+%DIFDELCMD < \end{displaymath}
+%DIFDELCMD < }
+%DIFDELCMD <
+
+%DIFDELCMD < %%%
+\DIFdel{Because the computation point $Q$ is outside of the shell, $r > r'$ and the square roots
+in equation~\ref{eq:shell-pot-sqrts} simplify to
+}%DIFDELCMD <
+
+%DIFDELCMD < %%%
+\DIFdelend \begin{equation}
+    \DIFdelbegin \DIFdel{\sqrt{r^2 + r'^2 + 2rr'} }\DIFdelend \DIFaddbegin \DIFadd{V_\text{sh}(r) }\DIFaddend = \DIFdelbegin \DIFdel{|}\DIFdelend \DIFaddbegin \DIFadd{\frac{4\pi G}{r}
+    \int\limits}\DIFadd{_{R_1}^{R_2} }{\DIFaddend r\DIFdelbegin \DIFdel{+ r}\DIFdelend '\DIFdelbegin \DIFdel{| = }\DIFdelend \DIFaddbegin }\DIFadd{^2 \rho(}\DIFaddend r\DIFdelbegin \DIFdel{+ r}\DIFdelend '\DIFaddbegin \DIFadd{) \, dr'}\DIFaddend ,
+\DIFaddbegin \label{eq:shell-pot}
+\DIFaddend \end{equation}
+
+\DIFdelbegin \begin{displaymath}
+    \DIFdel{\sqrt{r^2 + r'^2 - 2rr'} = |r - r'| = r - r',
+}\end{displaymath}%DIFAUXCMD
+%DIFDELCMD <
+
+%DIFDELCMD < %%%
+\DIFdelend \noindent which \DIFdelbegin \DIFdel{leads to the following expression for the potential:
+}\DIFdelend \DIFaddbegin \DIFadd{is in agreement with the one obtained by \mbox{%DIFAUXCMD
+\citet[p.62]{Binney2008}}\hspace{0pt}%DIFAUXCMD
+.
+}\DIFaddend
+
+\DIFdelbegin \begin{displaymath}
+    \DIFdel{V_\text{sh}(r) = \frac{4\pi G}{r}
+    \int\limits_{R_1}^{R_2} }{\DIFdel{r'}}\DIFdel{^2 \rho(r') \, dr'.
+%DIFDELCMD < \label{eq:shell-pot}%%%
+}\end{displaymath}%DIFAUXCMD
+%DIFDELCMD <
+
+%DIFDELCMD < %%%
+\DIFdelend The gradient of potentials that depends solely on $r$ have only one non zero components:
+the vertical component of the gradient ($g_z$).
+Following \citet{Grombein2013}:
+
+\begin{equation}
+    g_z(r) = \frac{V_\text{sh}(r)}{r}\DIFdelbegin \DIFdel{,
+}\DIFdelend \DIFaddbegin \DIFadd{.
+}\DIFaddend \label{eq:shell-gz}
+\end{equation}
+
+From Eq.~\ref{eq:shell-pot} we can obtain expressions of the gravitational potential for
+different density functions.
+\DIFaddbegin \DIFadd{The integration of the following density functions have been carried out by SymPy
+\mbox{%DIFAUXCMD
+\citep{sympy2017}}\hspace{0pt}%DIFAUXCMD
+, a Python library for symbolic mathematics.
+}\DIFaddend
+
+\subsection{Linear density}
+
+For a linear density function
+
+\begin{equation}
+    \rho(r') = ar' + b\ ,
+\end{equation}
+
+\noindent
+the gravitational potential at any external point is
+
+\begin{equation}
+    V_\text{sh}^\text{lin}(r) = \pi G \left[
+    a \frac{R_2^4 - R_1^4}{r} +
+    b \,\frac{4}{3} \frac{R_2^3 - R_1^3}{r} \right].
+    \label{eq:shell-pot-linear}
+\end{equation}
+
+\noindent The first term on this equation reproduces the potential generated
+by a spherical shell with variable density $\rho(r') = ar'$, while the second
+term constitutes the potential generated by a spherical shell with homogeneous
+density $\rho = b$ \citep{Mikuska2006,Grombein2013}.
+Eq~\ref{eq:shell-pot-linear} is in agreement with the one obtained by \citet{Lin2018}.
+
+\subsection{Exponential density}
+
+For an exponential density function
+
+\begin{equation}
+    \rho(r') = A e^{- k (r' - R)},
+\end{equation}
+
+\noindent
+where $A$, $k$ and $R$ are constants, the gravitational potential on any external point
+is
+
+\begin{equation}
+    \begin{split}
+    V_\text{exp}(r) = \frac{4\pi G}{r} \frac{A}{k^3} \Big[
+    & \left( R_1^2 k^2 + 2 R_1 k + 2 \right) e^{- k (R_1 - R)} - \\
+    & \left( R_2^2 k^2 + 2 R_2 k + 2 \right) e^{- k (R_2 - R)}
+    \Big].
+    \end{split}
+\end{equation}
+
+
+\subsection{Sinusoidal density}
+
+For an sinusoidal density function
+
+\begin{equation}
+    \rho(r') = A \sin ( k (r' - R)),
+\end{equation}
+
+\noindent
+where $A$, $k$ and $R$ are constants, the gravitational potential on any external point
+is
+
+\begin{equation}
+    \DIFdelbegin %DIFDELCMD < \begin{split}
+%DIFDELCMD <     V_\text{sine}(r) = \frac{4\pi G}{r} \frac{A}{k^3} \Big[
+%DIFDELCMD <     & (2 - k^2 R_2^2) \cos(k(R_2 - R)) + 2 k R_2 \sin(k(R_2 - R)) - \\
+%DIFDELCMD <     & (2 - k^2 R_1^2) \cos(k(R_1 - R)) - 2 k R_1 \sin(k(R_1 - R))
+%DIFDELCMD <         \Big]
+%DIFDELCMD <     \end{split}%%%
+\DIFdelend \DIFaddbegin \begin{split}
+    V_\text{sine}(r) = \frac{4\pi G}{r} \frac{A}{k^3} \Big[
+    & (2 - k^2 R_2^2) \cos(k(R_2 - R)) + 2 k R_2 \sin(k(R_2 - R)) - \\
+    & (2 - k^2 R_1^2) \cos(k(R_1 - R)) - 2 k R_1 \sin(k(R_1 - R))
+        \Big].
+    \end{split}\DIFaddend
+\end{equation}
+
+\end{document}
+
