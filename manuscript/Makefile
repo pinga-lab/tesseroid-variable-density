@@ -103,6 +103,14 @@ $(OUTPUT)/%.pdf: %.tex $(STY_FILES) $(CLS_FILES) $(FIGS_PDF_FILES) $(BIB_FILES) 
 # MAKE THE VERSION WITH MARKED DIFFERENCES
 ###############################################################################
 
+# You need to add the following lines insde you ~/.gitconfig file in order to make these
+# targets work as expected:
+#
+# [difftool.latex]
+#     cmd = latexdiff "$LOCAL" "$REMOTE"
+# [alias]
+#     ldiff = difftool -y -t latex
+
 r1: $(OUTPUT)/$(R1).pdf
 
 $(R1).tex: $(PROJECT).tex
