@@ -6,15 +6,18 @@ Agustina Pesce,
 Mario E. Gimenez,
 Leonardo Uieda
 
-This paper has been accepted for publication in *Geophysical Journal International*.
+This paper has been published in *Geophysical Journal International*.
 The version of record
 
 > Soler, S. R., Pesce, A., Gimenez, M. E., & Uieda, L., 2019. Gravitational field
-> calculation in spherical coordinates using variable densities in depth, 
-> *Geophysical Journal International*, 
+> calculation in spherical coordinates using variable densities in depth,
+> *Geophysical Journal International*,
 > doi:[10.1093/gji/ggz277](https://doi.org/10.1093/gji/ggz277)
 
 is available online at: [doi.org/10.1093/gji/ggz277](https://doi.org/10.1093/gji/ggz277)
+
+A preprint version is available at:
+[doi.org/10.31223/osf.io/3548g](https://doi.org/10.31223/osf.io/3548g)
 
 **This repository contains the data and code used to produce all results and figures shown
 in the paper.**
