@@ -45,6 +45,40 @@ Use the `Makefile` to build, test, and lint the software:
 
         make coverage
 
+
+## Scripts
+
+Inside `scripts` we can find the Python scripts that create the results and figures
+shown on the manuscript.
+
+- `density-based-discretization.py`: Create example figure for how the
+  discretization-based algorithm works.
+- `linear_density.py`: Compares the numerical results of a spherical shell with its
+  analytical solution in case of a linear density in depth. Only the adaptive
+  discretization algorithm is performed.
+- `grid_search.py`: Performs a grid search by comparing the numerical results of
+  a spherical shell with its analytical solution in case of an exponential density. The
+  grid search is done by exploring values of distance-size ratio (D) and delta ratio.
+- `exponential_density.py`: Compares the numerical results of a spherical shell with its
+  analytical solution in case of an exponential density in depth. It fixes the
+  distance-size ratio (D) for the values obtained on the linear density case.
+- `sine_density.py`: Compares the numerical results of a spherical shell with its
+  analytical solution in case of a sinusoidal density in depth. The purpose of this
+  comparison is only to test the behaviour of the numerical approximation even on
+  a highly varying density function. These kind of density functions are not intended to
+  be applied on an actual geophysical case.
+- `computation_time.py`: Compare the algorithm performance for different density
+  settings.
+- `neuquen_basin.py`: Apply the new methodology to forward model the Neuquén Basin with
+  an exponential increasing density in depth and compare it with the results for an
+  homogeneous and a linear density.
+- `number-of-tesseroids.py`
+- `results`
+
+Extra files:
+- `tesseroid_model.py`
+
+
 ## Notebooks
 
 Inside `notebooks` we can find notebooks that show examples on how to use the
