@@ -29,10 +29,6 @@ RESULTS = $(RESDIR)/linear           \
 PYTEST_ARGS = --doctest-modules -v
 PYTEST_COV_ARGS = --cov-report=term-missing
 
-# Execute a notebook on the command line. Modifies the notebook inplace so the
-# final execution order will be linear (from top to bottom). Running notebooks
-# like this helps ensure that the final results are not a product of a
-# non-linear execution order that can't be reproduced.
 RUN = python
 
 
