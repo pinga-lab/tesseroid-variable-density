@@ -1,4 +1,4 @@
-# Manages building, testing, and cleaning the code as well as running the code
+# Manages building and cleaning the code as well as running the code
 # to generate the results and figures for the paper.
 
 # CONFIGURATION
@@ -7,7 +7,6 @@
 # Set the package name
 PACKAGE = tesseroid_density
 
-TESTDIR = tests
 SCRIPTSDIR = scripts
 RESDIR = $(SCRIPTSDIR)/results
 
@@ -26,9 +25,6 @@ RESULTS = $(RESDIR)/linear           \
 		  $(RESDIR)/computation_time \
 		  $(RESDIR)/neuquen          \
 
-PYTEST_ARGS = --doctest-modules -v
-PYTEST_COV_ARGS = --cov-report=term-missing
-
 RUN = python
 
 
@@ -38,10 +34,8 @@ RUN = python
 help:
 	@echo "Commands:"
 	@echo ""
-	@echo "  all            runs 'build', 'test', and 'figures'"
+	@echo "  all            runs 'build' and 'figures'"
 	@echo "  build          build and install the package"
-	@echo "  test           run the test suite (including doctests)"
-	@echo "  coverage       calculate test coverage"
 	@echo "  check          run all code quality checks (pep8, linter)"
 	@echo "  pep8           check for PEP8 style compliance"
 	@echo "  lint           run static analysis using pylint"
@@ -55,12 +49,12 @@ help:
 # the results of long running computations.
 clean:
 	find . -name "*.pyc" -exec rm -v {} \;
-	rm -rvf build dist MANIFEST *.egg-info __pycache__ .coverage .cache
+	rm -rvf build dist MANIFEST *.egg-info __pycache__ .cache
 
 
 # Run all steps to generate the final figures. Results files are generated
 # based on the figure requirements (see below).
-all: build test figures
+all: build figures
 
 
 # Generating figures
@@ -78,22 +72,16 @@ results:
 	$(foreach script, $(SCRIPTS), $(RUN) $(script);)
 
 
-# Building and testing the code
+# Building and linting the code
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 build:
 	pip install --no-deps -e .
 
-test:
-	pytest $(PYTEST_ARGS) $(PACKAGE) $(TESTDIR)
-
-coverage:
-	pytest $(PYTEST_COV_ARGS) --cov=$(PACKAGE) $(PYTEST_ARGS) $(PACKAGE) $(TESTDIR)
-
 check: pep8 lint
 
 pep8:
-	flake8 $(PACKAGE) $(TESTDIR) setup.py
+	flake8 $(PACKAGE) setup.py
 
 lint:
 	pylint $(PACKAGE) setup.py

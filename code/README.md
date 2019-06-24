@@ -3,7 +3,6 @@
 The code is divided between Python modules in `tesseroid-density`, Jupyter
 notebooks in `notebooks`, and analysis scripts in `scripts`.
 The modules implement the methodology and code that is reused in different applications.
-This code is tested using `pytest` with the test code in `tests`.
 
 The `Makefile` automates all processes related to executing code.
 Run the following to perform all actions from building the software to
@@ -24,9 +23,9 @@ function to every tesseroid by defining a regular Python function with a single
 `height` argument (float or numpy 1d array) that returns a float.
 
 
-## Building, testing, and linting
+## Building and linting
 
-Use the `Makefile` to build, test, and lint the software:
+Use the `Makefile` to build and lint the software:
 
 * Build and install:
 
@@ -35,15 +34,6 @@ Use the `Makefile` to build, test, and lint the software:
 * Run the static checks using flake8 and pylint:
 
         make check
-
-* Run the tests in `tests` and doctests in docstrings:
-
-        make test
-
-* Calculate the test coverage of the main Python code (not including the
-  notebooks):
-
-        make coverage
 
 
 ## Scripts
