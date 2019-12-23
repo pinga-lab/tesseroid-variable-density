@@ -10,8 +10,7 @@ PACKAGE = tesseroid_density
 SCRIPTSDIR = scripts
 RESDIR = $(SCRIPTSDIR)/results
 
-SCRIPTS = $(SCRIPTSDIR)/computation_time.py             \
-          $(SCRIPTSDIR)/density-based-discretization.py \
+SCRIPTS = $(SCRIPTSDIR)/density-based-discretization.py \
           $(SCRIPTSDIR)/exponential_density.py          \
           $(SCRIPTSDIR)/grid_search.py                  \
           $(SCRIPTSDIR)/linear_density.py               \
