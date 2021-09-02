@@ -1,0 +1,28 @@
+# Setup a basic environment for running the code
+name: tesseroids-variable-density
+channels:
+  - numba
+  - free
+  - conda-forge
+dependencies:
+  - basemap=1.0.7
+  - cython=0.26.1
+  - fatiando=0.5
+  - future=0.16.0
+  - futures=3.3.0
+  - gcc_linux-64=7.5.0
+  - jupyter=1.0.0
+  - jupyter_client=5.3.4
+  - jupyter_console=5.2.0
+  - jupyter_core=4.6.3
+  - matplotlib=2.2.3
+  - matplotlib-base=2.2.3
+  - numba=0.35.0
+  - numpy=1.11.3
+  - pandas=0.18.1
+  - pillow=6.2.1
+  - proselint=0.10.2
+  - pytest=3.10.1
+  - python=2.7.15
+  - scipy=0.19.1
+  - sympy=1.1.1
