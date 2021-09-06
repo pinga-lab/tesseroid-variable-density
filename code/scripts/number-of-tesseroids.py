@@ -159,7 +159,7 @@ ax.yaxis.set_label_position("right")
 ax.set_yticks(np.arange(3, 21, 2))
 ax.set_xticks(np.arange(1, 11, 2))
 ax.set_xlabel(r"$b$")
-ax.set_ylabel("Número de tesseroides")
+ax.set_ylabel("Cantidad de tesseroides")
 ax.set_title("(c)")
 
 outer_grid.tight_layout(fig)

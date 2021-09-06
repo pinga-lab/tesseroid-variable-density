@@ -15,6 +15,7 @@ SCRIPTS = $(SCRIPTSDIR)/density-based-discretization.py \
           $(SCRIPTSDIR)/grid_search.py                  \
           $(SCRIPTSDIR)/linear_density.py               \
           $(SCRIPTSDIR)/neuquen_basin.py                \
+          $(SCRIPTSDIR)/number-of-tesseroids.py                \
           $(SCRIPTSDIR)/sine_density.py
 
 RESULTS = $(RESDIR)/linear           \
