@@ -145,7 +145,7 @@ ax.plot(heights, normalized_density(heights),
 ax.plot(divisions, normalized_density(divisions), 'o')
 
 # Configure axes
-axes[0].set_ylabel("Normalized Density")
+axes[0].set_ylabel("Densidad Normalizada")
 for ax, label in zip(axes, labels):
     ax.text(0.03, 0.91, label,
             fontdict={'weight': 'bold'},
@@ -157,10 +157,10 @@ for ax, label in zip(axes, labels):
 
 # Create legend
 axes[-1].legend((line1[0], line3[0], line2[0], dots[0]),
-                ("Norm. density",
-                 "Straight Line",
-                 "Max. difference",
-                 "Discretizations"),
+                ("Densidad norm.",
+                 "Linea recta",
+                 "Diferencia max.",
+                 "Discretizaciones"),
                 fontsize="x-small",
                 loc=(0.03, 0.46),
                 )

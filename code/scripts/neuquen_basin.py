@@ -195,10 +195,10 @@ heights = np.linspace(bottom, top, 101)
 # Initialize figure and subplots
 fig, ax = plt.subplots(figsize=(3.33, 3))
 
-ax.plot(heights, linear_density(heights), label="Linear")
-ax.plot(heights, density_exponential(heights), label="Exponential")
-ax.set_xlabel("Height [m]")
-ax.set_ylabel(r"Density [kg/m$^3$]")
+ax.plot(heights, linear_density(heights), label="Lineal")
+ax.plot(heights, density_exponential(heights), label="Exponencial")
+ax.set_xlabel("Altitud [m]")
+ax.set_ylabel(r"Densidad [kg/m$^3$]")
 ax.legend()
 ax.grid()
 fig.tight_layout()
@@ -251,7 +251,7 @@ fig, axes = plt.subplots(nrows=2, ncols=2, figsize=(6.66, 7))
 ax = axes[0, 0]
 bm.ax = ax
 ax.set_title("(a)", y=1.08, loc='left')
-ax.set_title("Neuquen Basin", y=1.08, loc="center")
+ax.set_title("Cuenca Neuquina", y=1.08, loc="center")
 x, y = bm(topography['lon'], topography['lat'])
 shape = topography['shape']
 vmax = np.abs([np.nanmin(topography['topo']),
@@ -307,7 +307,7 @@ axins.add_patch(rectangle)
 ax = axes[0, 1]
 bm.ax = ax
 ax.set_title("(b)", y=1.08, loc='left')
-ax.set_title("Basin Thickness", y=1.08, loc="center")
+ax.set_title("Espesor de la cuenca", y=1.08, loc="center")
 x, y = bm(sediments['lon'], sediments['lat'])
 im = bm.pcolormesh(x.reshape(sediments['shape']),
                    y.reshape(sediments['shape']),

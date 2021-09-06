@@ -184,7 +184,7 @@ for field, ax in zip(fields, axes):
                     norm=matplotlib.colors.LogNorm())
 
     # Add colorbar
-    plt.colorbar(cm, label=r"Differences (\%)", ax=ax)
+    plt.colorbar(cm, label=r"Diferencia (\%)", ax=ax)
 
     # Bellow error points contour
     D_step = (D_values.max() - D_values.min()) / D_values.size

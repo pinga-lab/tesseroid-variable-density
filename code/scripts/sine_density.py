@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from __future__ import division, print_function
 import os
 import warnings
@@ -164,7 +165,7 @@ for b_factor, ax in zip(b_factors, axes):
     ax.plot(heights, density_sine(heights), color=colors[b_factor],
             label="b={}".format(b_factor))
     ax.set_xticks([bottom, top])
-    ax.set_xticklabels(["Inner Radius", "Outer Radius"])
+    ax.set_xticklabels(["Radio interior", "Radio exterior"])
     # ax.legend(loc=1)
 
     # Add field annotation on each axe
@@ -178,7 +179,7 @@ for b_factor, ax in zip(b_factors, axes):
                   'linewidth': 0.5, 'pad': 5,
                   'boxstyle': 'square, pad=0.4'},
             transform=ax.transAxes)
-fig.text(0, 0.5, r"Density [kg/m$^3$]", va='center', rotation='vertical')
+fig.text(0, 0.5, r"Densidad [kg/m$^3$]", va='center', rotation='vertical')
 plt.tight_layout(pad=1.8)
 fig.subplots_adjust(hspace=0)
 plt.savefig(figure_fname, dpi=300)
@@ -190,10 +191,10 @@ plt.show()
 figure_fname = os.path.join(script_path,
                             "../../manuscript/figures/sine-density-diffs.pdf")
 field_titles = dict(zip(fields, '$V$ $g_z$'.split()))
-grid_titles = {"pole": "Pole",
-               "equator": "Equator",
+grid_titles = {"pole": "Polo",
+               "equator": "Ecuador",
                "global": "Global",
-               "260km": "Satellite"}
+               "260km": "Satelite"}
 grid_names = ["pole", "equator", "global", "260km"]
 colors = dict(zip(b_factors, plt.cm.viridis(np.linspace(0, 0.9, len(b_factors)))))
 
@@ -274,7 +275,7 @@ for grid_name in grid_names:
         ax.set_yscale('log')
         ax.set_xlim(6.31e-5, 1.58e0)
         ax.set_yticks(ax.get_yticks()[2:-2])
-        ax.set_ylabel(r'Difference (\%)')
+        ax.set_ylabel(r'Diferencia (\%)')
         ax.grid(True, linewidth=0.5, color='#aeaeae')
 
     # Add legend

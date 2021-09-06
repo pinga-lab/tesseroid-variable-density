@@ -166,9 +166,9 @@ for b_factor in b_factors:
     heights = np.linspace(bottom, top, 101)
     ax.plot(heights, density_exponential(heights), color=colors[b_factor],
             label="b={}".format(b_factor))
-ax.set_ylabel(r"Density [kg/m$^3$]")
+ax.set_ylabel(r"Densidad [kg/m$^3$]")
 ax.set_xticks([bottom, top])
-ax.set_xticklabels(["Inner Radius", "Outer Radius"])
+ax.set_xticklabels(["Radio interior", "Radio exterior"])
 ax.legend()
 plt.tight_layout()
 plt.savefig(figure_fname, dpi=300)
@@ -180,10 +180,10 @@ plt.show()
 figure_fname = os.path.join(script_path,
                             "../../manuscript/figures/exponential-density-diffs.pdf")
 field_titles = dict(zip(fields, '$V$ $g_z$'.split()))
-grid_titles = {"pole": "Pole",
-               "equator": "Equator",
+grid_titles = {"pole": "Polo",
+               "equator": "Ecuador",
                "global": "Global",
-               "260km": "Satellite"}
+               "260km": "Satelite"}
 grid_names = ["pole", "equator", "global", "260km"]
 colors = dict(zip(b_factors, plt.cm.viridis(np.linspace(0, 0.9, len(b_factors)))))
 
@@ -264,7 +264,7 @@ for grid_name in grid_names:
         ax.set_yscale('log')
         ax.set_xlim(6.31e-4, 1.58e1)
         ax.set_yticks(ax.get_yticks()[2:-2])
-        ax.set_ylabel(r'Difference (\%)')
+        ax.set_ylabel(r'Diferencia (\%)')
         ax.grid(True, linewidth=0.5, color='#aeaeae')
 
     # Add legend

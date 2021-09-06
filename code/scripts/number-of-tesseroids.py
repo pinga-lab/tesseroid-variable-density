@@ -92,8 +92,8 @@ for i, b_factor in enumerate(b_factors):
     ax.set_yticks([])
     ax.set_xticks([bottom, top])
     ax.set_xticklabels([r"$r_1$", r"$r_2$"])
-    ax.set_ylabel("Density")
-    ax.set_xlabel("Depth")
+    ax.set_ylabel("Densidad")
+    ax.set_xlabel("Profundidad")
     ax.set_title("(a)")
 
 
@@ -143,7 +143,7 @@ for i, b_factor in enumerate(b_factors):
     axes[i].set_yticks([])
     axes[i].set_xticks([bottom, top])
     axes[i].set_xticklabels([r"$r_1$", r"$r_2$"])
-    axes[i].set_xlabel("Depth")
+    axes[i].set_xlabel("Profundidad")
     if i == 0:
         axes[i].set_title("(b)")
 
@@ -159,7 +159,7 @@ ax.yaxis.set_label_position("right")
 ax.set_yticks(np.arange(3, 21, 2))
 ax.set_xticks(np.arange(1, 11, 2))
 ax.set_xlabel(r"$b$")
-ax.set_ylabel("Number of tesseroids")
+ax.set_ylabel("Número de tesseroides")
 ax.set_title("(c)")
 
 outer_grid.tight_layout(fig)

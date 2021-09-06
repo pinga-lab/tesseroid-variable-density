@@ -128,10 +128,10 @@ except Exception as e:
 figure_fname = os.path.join(script_path,
                             "../../manuscript/figures/linear-density-diffs.pdf")
 field_titles = dict(zip(fields, '$V$ $g_z$'.split()))
-grid_titles = {"pole": "Pole",
-               "equator": "Equator",
+grid_titles = {"pole": "Polo",
+               "equator": "Ecuador",
                "global": "Global",
-               "260km": "Satellite"}
+               "260km": "Satelite"}
 grid_names = ["pole", "equator", "global", "260km"]
 colors = dict(zip(thicknesses, plt.cm.viridis(np.linspace(0, 0.9, len(thicknesses)))))
 markers = dict(zip(thicknesses, ["o", "^", "s", "d", "x"]))
@@ -210,7 +210,7 @@ for grid_name in grid_names:
         # Configure axes
         ax.set_yscale('log')
         ax.set_yticks(ax.get_yticks()[2:-2])
-        ax.set_ylabel(r'Difference (\%)')
+        ax.set_ylabel(r'Diferencia (\%)')
         ax.grid(True, linewidth=0.5, color='#aeaeae')
         ax.set_xticks(np.arange(0, 6, 1))
         ax.set_xlim(0.3, 5.2)
